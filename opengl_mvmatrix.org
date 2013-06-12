@@ -1,0 +1,205 @@
+#+TITLE:     模型视图矩阵
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:nil f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./opengl_index.html
+
+#+BEGIN_HTML
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+#+END_HTML
+
+   模型视图矩阵是个\(4\times 4\)的矩阵，代表经过变换的坐标系统，我们可以用这个坐标系统放置物体并设置其方向。我们为图元所提供的顶点将按照单列矩阵（也就是一个向量）的形式使用，并乘以一个模型视图矩阵，将产生与视觉坐标系统相对应的经过变换的新坐标。
+
+   示例：一个包含了单个顶点数据的矩阵与模型视图矩阵相乘，产生了新的视觉坐标。这个顶点数据实际上由4个元素表示，包括那个 *额外的表示缩放因子的* \(\omega\) *值* 。这个值在默认情况下设置为1.0，我们很少需要自己修改这个值。
+
+\[\begin{bmatrix} X \\ Y \\ Z \\ \omega \end{bmatrix}\begin{bmatrix} 4 \times 4 \\ M \end{bmatrix}=\begin{bmatrix}X_0 \\ Y_0 \\ Z_0 \\ W_0 \end{bmatrix}\]
+
+* 构造模型视图矩阵
+
+  OpenGL在表示一个\(4\times 4\)的矩阵时并没有使用浮点型的二维数组，而是用了一个包含16个浮点值的一维数组来表示。这个方法和许多数学函数库所使用的方法不同，后者常常采用二维数组来表示矩阵。例如，在下面这两个例子中，OpenGL更倾向于使用前者。
+
+#+BEGIN_SRC c
+GLfloat matrix[16];	// OpenGL所采用的友好矩阵
+GLfloat matrix[4][4];	// 更为流行，但不如OpenGL所采用的方式高效
+#+END_SRC
+
+  OpenGL也可以使用第二种类型的表示形式，但第一种类型更为高效。其中的缘由很快就会变得更清楚。这16个元素代表一个\(4\times 4\)的矩阵，如下所示。
+  
+  \[\begin{bmatrix} a_0 & a_4 & a_8 & a_{12} \\ a_1 & a_5 & a_9 & a_{13} \\ a_2 & a_6 & a_{10} & a_{14} \\ a_3 & a_7 & a_{11} & a_{15} \end{bmatrix}\]
+  
+  当我们按列逐个遍历数组中的元素时，就称为列主序的矩阵顺序。在内存中，用二维数组表示的\(4\times 4\)矩阵是以行主序存储的。这两种方向之间是转置关系。
+  
+  真正的奥秘在于这16个值表示空间中 *一个特定的位置和三个轴的方向* 。
+  
+  下面是一个变换矩阵的例子：
+
+\[\begin{bmatrix} X_x & Y_x & Z_x & T_x \\ X_y & Y_y & Z_y & T_y \\ X_z & Y_z & Z_z & T_z \\ 0 & 0 & 0 & 1 \end{bmatrix}\]
+
++ 前三列：方向向量，表示空间中x、y和z轴的方向。在绝大多数情况下，这3个向量相互之间呈90°垂直（正交）。
++ 最后一列：经过变换的坐标系统的x、y和z值。
+  
+  最奇妙的是：如果一个\(4\times 4\)的矩阵包含了一个不同的坐标系统的位置和方向。那么，把一个顶点（以一个列矩阵或向量的形式）与这个矩阵相乘，其结果就是一个变换到该坐标系统的新顶点。这意味着空间中的任何位置以及自己所需要的任何方向都可以通过一个\(4\times 4\)的矩阵进行唯一的定义，并且，如果把一个物体的所有顶点与这个矩阵相乘，就可以把整个物体变换到空间中指定的位置和方向！
+  
+** 单位矩阵
+#+INDEX: glMatrixMode
+#+INDEX: glLoadIdentity  
+#+INDEX: glSolidSphere
+
+  有一些重要类型的变换矩阵，在我们开始尝试使用它们之前，首先要熟悉它们。第一个就是单位矩阵，将一个向量乘以一个单位矩阵，就相当于用这个向量乘以1，不会发生改变。
+  
+  \(\begin{bmatrix} 8.0 \\ 4.5 \\ -2.0 \\ 1.0 \end{bmatrix}\begin{bmatrix} 1.0 & 0 & 0 & 0 \\ 0 & 1.0 & 0 & 0 \\ 0 & 0 & 1.0 & 0 \\ 0 & 0 & 0 & 1.0 \end{bmatrix}=\begin{bmatrix}  8.0 \\ 4.5 \\ -2.0 \\ 1.0 \end{bmatrix}\)
+
+  使用单位矩阵绘制的对象不会发生变换，他们还在原点（最后一列），并且x轴、y轴和z轴与视觉坐标中一样。
+  
+  我们可以在OpenGL中这样生成一个单位矩阵：
+
+  #+BEGIN_SRC c
+    GLfloat m[] = { 1.0f, 0.0f, 0.0f, 0.0f,  // X Column
+                    0.0f, 1.0f, 0.0f, 0.0f,  // Y Column
+                    0.0f, 0.0f, 1.0f, 0.0f,  // Z Column 
+                    0.0f, 0.0f, 0.0f, 1.0f }; // Translation
+  #+END_SRC
+
+  或者使用 math3d 的 =M3DMatrix44f= 类型：
+  #+BEGIN_SRC c
+    M3DMatrix44f m = { 1.0f, 0.0f, 0.0f, 0.0f,  // X Column
+                       0.0f, 1.0f, 0.0f, 0.0f,  // Y Column
+                       0.0f, 0.0f, 1.0f, 0.0f,  // Z Column 
+                       0.0f, 0.0f, 0.0f, 1.0f }; // Translation
+  #+END_SRC
+
+  在math3d库中还有一个快捷函数 =m3dLoadIdentity44= ，这个函数初始化一个空单位矩阵。
+
+#+INDEX: m3dLoadIdentity  
+
+  #+BEGIN_SRC c
+  void m3dLoadIdentity44(M3DMatrix44f m);
+  #+END_SRC
+
+  我们可以回忆一下，我们使用过的第一个存储（顶点）着色器就叫做[[./opengl_shadermanager.html#sec-3-1][单位着色器]]。这个着色器完全不对顶点做任何改变，而是将这些顶点绘制在默认坐标系中，并且不在这些顶点上应用任何矩阵。
+
+  加载单位矩阵意味着在顶点上不进行任何变换。从本质上来说，它相当于把模型视图矩阵重置回原点。
+
+  变换函数的效果是累积性的。如果不希望前面的操作影响后面的变换，那就需要将模型视图矩阵重置为一个已知的状态。
+
+  我们可以通过在模型视图矩阵中加载单位矩阵来实现把它重置到原点的目标。单位矩阵表示没有发生变换，加载单位矩阵的效果相当于在绘图时所指定的所有坐标都位于视觉坐标中。所谓单位矩阵，就是矩阵对角线的元素均为1,其余元素均为0的矩阵。当这种矩阵与任意顶点矩阵相乘时，其结果就是顶点矩阵不会发生改变。
+
+** 平移
+
+#+INDEX: m3dTranslationMatrix44
+   
+   一个平移矩阵仅仅是将我们的顶点沿着3个坐标中的一个或多个进行平移。
+
+   我们可以调用math3d库中的 =m3dTranslationMatrix44= 函数来使用变换矩阵。
+
+   #+BEGIN_SRC c
+     void m3dTranslationMatrix44(M3DMatrix44f m, float x, float y, float z);
+   #+END_SRC
+   
+** 旋转
+#+INDEX: m3dRotationMatrix
+#+INDEX: m3dDegToRad   
+
+   为了将一个对象沿着3个坐标轴中的一个或者任意向量进行旋转，需要找到一个旋转矩阵，又有一个math3d函数来帮助我们了。
+   
+   #+BEGIN_SRC c
+   m3dRotationMatrix44(M3DMatrix44f m, GLfloat angle, GLfloat x, GLfloat y, GLfloat z;
+   #+END_SRC
+
+   在此，我们绕着由x、y和z参数所指定的向量执行旋转操作。旋转的角度就是angle参数所指定的度数（以 *弧度* 为单位， *逆时针方向* ）。在最简单的情况下，旋转是绕着其中一条轴进行的。
+
+   我们也可以用x、y和z指定一个向量，让旋转围绕这个向量进行。为了观察旋转的角度，只需画一条由原点到点(x,y,z)的直线。下面的代码绕着向量(1,1,1)所指定的轴旋转45°。
+
+   #+BEGIN_SRC c
+     M3DMatrix44f m;
+     m3dRotationMatrix(m3dDegToRad(45.0), 1.0f, 1.0f, 1.0f);
+   #+END_SRC
+
+   注意在这个例子中 math3d 宏 =m3dDegToRad= 的使用。这个宏将角度换成弧度值。
+
+** 缩放
+#+INDEX: m3dScaleMatrix   
+   
+   缩放变换可以沿着3个坐标轴方向按照指定因子放大或缩小所有顶点，从而改变物体的大小。使用 math3d 库创建一个缩放矩阵，方法与创建平移或旋转矩阵的方法类似。
+
+   #+BEGIN_SRC c
+     M3DMatrix44f m;
+     void m3dScaleMatrix44(M3DMatrix44f m, float xScale, float yScale, float zScale);
+   #+END_SRC
+
+   缩放并不一定是一致的，可以在不同的方向上分别扩大或缩小物体。
+
+** 综合变换
+
+#+INDEX: m3dMatrixMultiply   
+   
+   我们很少会只进行这些变换类型的一种。实际上，我们总是想同时进行这些变换。为了将对象移动到想要的位置，我们可能需要先将它平移到指定位置，然后再旋转到想要的方向。由于 \(4\times 4\)变换矩阵包含一个位置和一个方向，我们可能会想到，一个变换矩阵就可以完成这两种操作。我们是对的！
+
+   将两种变换加在一起很简单，只需要将两个矩阵相乘（或者叫做“连接”）。不过在矩阵乘法中有一个小陷阱需要注意，就是运算的顺序是有影响的。例如，用一个旋转矩阵乘以一个平移矩阵，与用一个平移矩阵乘以一个旋转矩阵是不同的。
+
+   math3d库函数 =m3dMatrixMultiply44= 用来将两个矩阵相乘并返回运算结果。
+
+   #+BEGIN_SRC c
+     void m3dMatrixMultiply44(M3DMatrix44f product, const M3DMatrix44f a, const M3DMatrix44f b);
+   #+END_SRC
+
+* 运用模型视图矩阵
+
+  运用模型视图矩阵，可以使用[[./opengl_shadermanager.html#sec-3-2][平面着色器]]，接受 \(4\times 4\) 变换矩阵作为它的参数之一。
+
+  #+BEGIN_SRC c
+  GLShaderManager::UseStockShader(GLT_SHADER_FLAT, GLfloat mvp[16], GLfloat vColor[4]); 
+  #+END_SRC
+
+  这个着色器在对图元进行渲染之前用每个向量乘以矩阵m。
+
+  下面的示例程序是对[[./opengl_animation.html#sec-2][Move程序]]的修改版，我们使用变量yPos和xPos来记录正方形的位置。现在可以方便的创建一个变换矩阵了。
+
+  #+BEGIN_SRC c
+  m3dTranslationMatrix44(mTranslationMatrix, xPos, yPos, 0.0f);
+  #+END_SRC
+
+  然后，这个变换矩阵就可以在绘制之前被发送到着色器了，如下所示。
+
+  #+BEGIN_SRC c
+    shaderManager.UseStockShader(GLT_SHADER_FLAT, mTranslationMatrix, vRed);
+  #+END_SRC
+
+  为了让事情更加有趣，我们在移动这个正方形的同时还对它进行了旋转。在xy平面中旋转这个正方形也包括围绕z轴旋转。下面程序演示了 Move 示例程序中的整个 =RenderScene= 函数。
+
+  #+BEGIN_SRC c
+    ///////////////////////////////////////////////////////////////////////////////
+    // Called to draw scene
+    void RenderScene(void)
+    {
+      // Clear the window with current clearing color
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    
+      GLfloat vRed[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+        
+      M3DMatrix44f mFinalTransform, mTranslationMatrix, mRotationMatrix;
+        
+      // Just Translate
+      m3dTranslationMatrix44(mTranslationMatrix, xPos, yPos, 0.0f); // 平移变换矩阵
+        
+      // Rotate 5 degrees evertyime we redraw
+      static float yRot = 0.0f;
+      yRot += 5.0f;
+      m3dRotationMatrix44(mRotationMatrix, m3dDegToRad(yRot), 0.0f, 0.0f, 1.0f); // 旋转变换矩阵
+        
+      m3dMatrixMultiply44(mFinalTransform, mTranslationMatrix, mRotationMatrix); // 两个变换矩阵相乘，得到一个综合变换矩阵
+        
+      shaderManager.UseStockShader(GLT_SHADER_FLAT, mFinalTransform, vRed); 
+      squareBatch.Draw();
+    
+      // Perform the buffer swap
+      glutSwapBuffers();
+    }
+  #+END_SRC
+
+  平面着色器只接受一个矩阵变量，然后它会用这些顶点乘以这个矩阵。这个“模型视图”矩阵通过在默认坐标系中平移这些顶点来使我们的正方形在屏幕上移动，我们可以回忆一下，在这个坐标系中所有3个坐标轴范围都在 -1 和 +1 之间。然后，这个简单的坐标系并不是总能满足我们的需要，而且在更大的坐标空间中考虑我们的对象会更加方便。那么就可能会有另外一个矩阵能够允许我们将任何我们想要的坐标空间缩放到 -1 到 +1 的范围内。确实，这就是第二种类型的矩阵变换，称为投影，很快就会介绍相关内容。
+

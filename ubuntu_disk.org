@@ -1,0 +1,101 @@
+#+TITLE:     分区挂载
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu分区挂载
+#+KEYWORDS: 分区 mount umount
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+
+* 分区挂载
+  
+** 查看硬盘的分区
+
+    #+begin_example
+    sudo fdisk -l
+    #+end_example
+
+** 分区挂载
+
+    #+begin_example
+sudo mount -t 文件系统类型 设备路经 访问路经 
+#常用文件类型如下： iso9660 光驱文件系统, vfat fat/fat32分区, ntfs ntfs分区, smbfs windows网络共享目录, reiserfs、ext3、xfs Linux分区
+#如果中文名无法显示尝试在最後增加 -o nls=utf8 或 -o iocharset=utf8 
+#如果需要挂载後，普通用户也可以使用，在 -o 的参数後面增加 ,umask=022 如：-o nls=utf8,umask=022
+    #+end_example
+
+** 挂载ISO文件
+
+    #+begin_example
+    sudo mount -t iso9660 -o loop,utf8 xxx.iso /mnt/iso
+    #+end_example
+
+** 优盘没法卸载
+
+    #+begin_example
+    fync
+    fuser -km /media/usbdisk
+    #+end_example
+
+
+* 分区卸载
+** 分区卸载
+    
+    #+begin_example
+    sudo umount 目录名或设备名
+    #+end_example
+
+** 优盘没法卸载
+
+    #+begin_example
+    fync
+    fuser -km /media/usbdisk
+    #+end_example
+    
+    
+* 其他技巧
+** 查看硬盘剩余空间
+
+    #+begin_example
+    df
+    #+end_example
+
+    用法：df [选项]... [文件]...显示每个<文件>所在的文件系统的信息，默认是显示所有文件系统。
+
+    #+begin_example
+    长选项必须用的参数在使用短选项时也是必需的。
+  -a, --all             包括大小为 0 个块的文件系统
+  -B, --block-size=大小 块以指定<大小>的字节为单位
+  -h, --human-readable  以容易理解的格式印出文件系统大小 (例如 1K 234M 2G)
+  -H, --si              类似 -h，但取 1000 的次方而不是 1024
+  -i, --inodes          显示 inode 信息而非块使用量
+  -k                    即 --block-size=1K
+  -l, --local           只显示本机的文件系统
+      --no-sync         取得使用量数据前不进行同步动作 (默认)
+  -P, --portability     使用 POSIX 兼容的输出格式
+      --sync            取得使用量数据前先进行同步动作
+  -t, --type=类型       只印出指定文件系统为指定<类型>的信息
+  -T, --print-type      印出文件系统类型
+  -x, --exclude-type=类型   只印出文件系统不是指定<类型>信息
+  -v                    (忽略)
+      --help     显示此帮助信息并离开
+      --version  显示版本信息并离开
+    #+end_example
+  
+** 使用文件来增加交换空间
+
+    #+begin_example
+    #创建一个512M的交换文件 /swapfile
+    sudo dd if=/dev/zero of=/swapfile bs=1M count=512 
+    sudo mkswap /swapfile
+    sudo swapon /swapfile
+    #sudo vim /etc/fstab #加到fstab文件中让系统引导时自动启动
+    /swapfile swap swap defaults 0 0
+    #+end_example
+
+     

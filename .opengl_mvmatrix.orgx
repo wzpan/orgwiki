@@ -1,0 +1,9 @@
+INDEX: (sec-1-1) glMatrixMode
+INDEX: (sec-1-1) glLoadIdentity
+INDEX: (sec-1-1) glSolidSphere
+INDEX: (sec-1-1) m3dLoadIdentity
+INDEX: (sec-1-2) m3dTranslationMatrix44
+INDEX: (sec-1-3) m3dRotationMatrix
+INDEX: (sec-1-3) m3dDegToRad
+INDEX: (sec-1-4) m3dScaleMatrix
+INDEX: (sec-1-5) m3dMatrixMultiply

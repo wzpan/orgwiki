@@ -1,0 +1,94 @@
+#+TITLE:     网络管理
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu网络管理
+#+KEYWORDS: Ubuntu ip MAC
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+* 网络管理     
+** 查看当前IP地址
+
+    #+begin_example
+    ifconfig eth0 |awk '/inet/ {split($2,x,":");print x[2]}'
+    #+end_example
+    
+** 查看当前外网的IP地址
+
+    #+begin_example
+    w3m -no-cookie -dump www.ip138.com/ip2city.asp|grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'
+    w3m -no-cookie -dump ip.loveroot.com|grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'
+    curl ifconfig.me
+    #+end_example
+    
+** 察看当前网卡的物理地址
+
+    #+begin_example
+    ifconfig eth0 | head -1 | awk '{print $5}'
+    #+end_example
+
+** 修改网卡MAC地址
+
+    #+begin_example
+    sudo ifconfig eth0 down #关闭网卡
+    sudo ifconfig eth0 hw ether 00:AA:BB:CC:DD:EE #然后改地址
+    sudo ifconfig eth0 up #然后启动网卡
+    #+end_example
+
+    永久改地址方法
+
+    #+begin_example
+    sudo gedit /etc/network/interfaces
+    #+end_example
+
+    在 iface eth0 inet static 后面添加一行：
+
+    #+begin_example 
+    pre-up ifconfig eth0 hw ether 01:01:01:01:01:01
+    #+end_example
+    
+    
+    配置文件应该像如下
+
+    #+begin_example
+    iface eth0 inet static
+    pre-up ifconfig eth0 hw ether 01:01:01:01:01:01
+    address 192.168.1.10
+    netmask 255.255.255.0
+    gateway 192.168.1.1
+    #+end_example
+    
+    最后是 logout 或者reboot
+
+** 查看网络的当前流量
+
+    #+begin_example
+#安装 ethstatus 软件
+sudo apt-get install ethstatus
+#查看 ADSL 的速度
+sudo ethstatus -i ppp0
+#查看 网卡 的速度
+sudo ethstatus -i eth0
+#或安装 bwm-ng 
+sudo apt-get install bwm-ng
+#查看当前网络流量
+bwm-ng
+    #+end_example
+
+
+* 其它技巧    
+** 查看域名的注册备案情况
+
+#+begin_example
+    whois baidu.cn
+#+end_example
+
+
+
+
+     

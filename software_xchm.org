@@ -1,0 +1,55 @@
+#+TITLE:     xCHM's Notes
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: xCHM
+#+KEYWORDS: xCHM
+#+LANGUAGE:  ch
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./software_index.html
+
+* 什么是xCHM？
+
+xCHM是在chmlib的基础上实现的GUI版本的CHM阅读器，官方主页在：http://xchm.sourceforge.net/ 。它是我认为Linux下最好的CHM阅读器，原因有以下几点：
+
+  1. 轻量级，无论GNome还是KDE都适用，甚至还可以用在Windows和Mac OSX下。这点优于GnoCHM和KCHMViewer；
+  2. 可以展示目录树，这点优于Ubuntu等系统自带的CHM阅读器；
+  3. 更新维护的频率比较快，目前最新的版本是2011年5月份发布的1.80，这点优于GnoCHM等久未更新的阅读器；
+  4. 在1.80版本之后支持使用类似Vim的键盘操作方式（k、j上下滚动，p、n上下翻页），符合像我这样的喜欢偷懒的用户的使用习惯。
+
+下面以Ubuntu为例，介绍xCHM的两种安装方法。
+
+* 安装方法一：直接从源里下载
+
+如果你的系统是Ubuntu 11.10或者更高的版本，源里已经带了最新的1.80版本，可以直接从源里下载：
+
+#+BEGIN_EXAMPLE shell
+sudo apt-get install xchm
+#+END_EXAMPLE
+
+如果你的Ubuntu是11.04的话，则源里自带的是1.70，这个版本没有提供键盘操作的支持。如果想要安装更新的版本，请看下一个方法。
+
+* 安装方法二：编译安装xCHM
+
+如果要安装新版本的xCHM的话，则需要下载源码进行编译安装。
+
+1) Wxwidget编译环境安装与配置
+	
+#+BEGIN_EXAMPLE shell -n
+sudo apt-get install build-essential  #C++基本环境
+sudo apt-get install libwxgtk2.8-dev  #wxgtk2.8开发工具包
+#+END_EXAMPLE
+
+2) 编译安装CHMLib
+	
+#+BEGIN_EXAMPLE shell -n
+wget http://www.jedrea.com/chmlib/chmlib-0.40.tar.gz
+tar -zxvf chmlib-0.40.tar.gz
+cd chmlib-0.40
+./configure && sudo make
+sudo make install  
+#+END_EXAMPLE
+

@@ -1,0 +1,68 @@
+#+TITLE:     常用软件 
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu常用软件
+#+KEYWORDS: Ubuntu Software
+#+LANGUAGE:  ch
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./index.html
+
+- 窗口管理
+  
+  - [[./software_awesome.html][Awesome]]
+
+- 网络应用
+
+  - 社交通讯
+
+    - QQ
+
+  - 上传下载
+
+    - wget
+
+    - Axel
+
+    - Lftp
+
+    - aMule  
+
+  - 网络浏览
+
+    - Chrome
+
+    - w3m
+
+    - Liferea      
+
+- 办公处理
+
+  - [[./software_pdf.html][PDF相关]]
+  
+  - [[./software_mindmap.html][心智图]]
+
+  - [[./software_xchm.html][xCHM]]
+
+- 影音图像
+
+  - 图形图像
+
+    - ImageMagicK
+  
+    - Shutter
+
+  - 媒体播放
+
+    - MPlayer
+  
+- 环境模拟
+
+  - Wine
+
+  - Virtualbox  
+
+

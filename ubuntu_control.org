@@ -1,0 +1,57 @@
+#+TITLE:     系统控制
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu 系统控制命令
+#+KEYWORDS: Ubuntu 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+* 如何使用命令关闭显示器
+  #+begin_example
+  xset dpms force off
+  #+end_example
+
+* 设置CPU的频率
+  #+begin_example
+  sudo apt-get install cpufrequtils
+  #查看cpu当前频率信息
+  sudo cpufreq-info 
+  #设置模式,对应于{最省电（最低频率），用户控制，最高或最低，正常，最大性能} 
+  cpufreq-set -g {powersave, userspace, ondemand, conservative, performance}
+  #+end_example
+
+* 命令关机
+  #+begin_example
+  sudo halt
+  sudo shutdown -h now              #现在关机
+  #+end_example
+
+* 定时关机
+  #+begin_example
+  sudo shutdown -h 23:00           #晚上11点自动关机
+  sudo shutdown -h +60          #60分钟后关机
+  #+end_example
+
+* 命令重启电脑
+  #+begin_example
+  sudo reboot
+  sudo shutdown -r now
+  #+end_example
+  
+* 关闭笔记本的触摸板
+  #+begin_example
+  synclient touchpadoff=1
+  那么开启触摸板就是：
+  synclient touchpadoff=0
+  #+end_example
+
+* 从命令行通知桌面消息
+  #+begin_example
+  #sudo apt-get install libnotify-bin
+  notify-send "hello world"  
+  #+end_example

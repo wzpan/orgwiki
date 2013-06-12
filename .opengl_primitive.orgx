@@ -1,0 +1,6 @@
+INDEX: (sec-1) GL_QUADS
+INDEX: (sec-1-1) GL_QUAD_STRIP
+INDEX: (sec-2) GL_POLYGON
+INDEX: (sec-3) GL_POLYGON_STIPPLE
+INDEX: (sec-3) glPolygonStipple
+INDEX: (sec-5) glEdgeFlag

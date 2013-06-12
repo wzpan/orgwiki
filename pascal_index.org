@@ -1,0 +1,22 @@
+#+TITLE:     Pascal's Notes
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:nil f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./index.html
+
+这里收集了我制作的Pascal语言基础的课件。
+
+- [[http://ishare.iask.sina.com.cn/f/22765316.html][第一讲 Pascal基础知识]]
+- [[http://ishare.iask.sina.com.cn/f/22794874.html][第二讲 顺序结构]]
+- [[http://ishare.iask.sina.com.cn/f/22813509.html][第三讲 选择结构]]
+- [[http://ishare.iask.sina.com.cn/f/22843331.html][第四讲 循环结构]]
+- [[http://ishare.iask.sina.com.cn/f/22906039.html][第五讲 数组类型]]
+- [[http://ishare.iask.sina.com.cn/f/22918599.html][第六讲 函数与过程]]
+- [[http://ishare.iask.sina.com.cn/f/22930494.html][第七讲 集合与数据类型]]
+- [[http://ishare.iask.sina.com.cn/f/22950594.html][第八讲 文件操作]]
+- [[http://ishare.iask.sina.com.cn/f/22954993.html][第九讲 指针与链表]]
+ 

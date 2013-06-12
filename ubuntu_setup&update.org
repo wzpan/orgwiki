@@ -1,0 +1,150 @@
+#+TITLE:     软件安装、升级和清理
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu
+#+KEYWORDS: Wiki
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+* 软件包
+
+** 查看软件xxx安装内容
+
+    #+begin_example
+    dpkg -L xxx 
+    #+end_example
+
+** 查找软件库中的软件
+
+     #+begin_example
+     apt-cache search 正则表达式
+     或
+     aptitude search 软件包
+     #+end_example
+     
+** 显示系统安装包的统计信息
+
+     #+begin_example
+     apt-cache stats
+     #+end_example
+
+** 显示系统全部可用包的名称
+
+   #+begin_example
+   apt-cache pkgnames
+   #+end_example
+
+** 显示包的信息
+
+     #+begin_example
+     apt-cache show k3b
+     #+end_example
+
+** 查询软件xxx依赖哪些包
+
+     #+begin_example
+     apt-cache depends xxx
+     #+end_example
+
+* 系统更新和升级     
+     
+** 增加一个光盘源
+
+     #+begin_example
+     sudo apt-cdrom add
+     #+end_example
+
+** 系统更新
+
+    #+begin_example
+    sudo apt-get update (这一步更新包列表)
+    #+end_example
+
+    #+begin_example
+    sudo apt-get dist-upgrade (这一步安装所有可用更新)
+    或者
+    sudo apt-get upgrade (这一步安装应用程序更新，不安装新内核等)
+    #+end_example
+
+** 增加一个ppa源
+
+    #+begin_example
+    sudo add-apt-repository ppa:user/ppa-name
+    #使用 ppa 的地址替换 ppa:user/ppa-name
+    #+end_example
+
+** 系统升级
+
+    1. 这里指的是版本间的升级，例如 9.04->10.04。
+
+    2. 使用该升级方式通常需要使用 backports 源。
+
+    #+begin_example
+    sudo apt-get update
+    sudo apt-get install update-manager-core
+    sudo do-release-upgrade
+    #+end_example
+    
+
+* 备份与还原
+  
+** 备份当前系统安装的所有包的列表
+
+    #+begin_example
+    dpkg --get-selections | grep -v deinstall > ~/somefile
+    #+end_example
+
+** 从上面备份的安装包的列表文件恢复所有包
+
+    #+begin_example
+    dpkg --set-selections < ~/somefile
+    sudo dselect
+    #+end_example
+
+* 软件包清理    
+
+** 清除所有已删除包的残馀配置文件
+
+    #+begin_example
+    dpkg -l |grep ^rc|awk '{print $2}' |sudo xargs dpkg -P 
+    #+end_example
+
+    如果报如下错误，证明你的系统中没有残留配置文件了，无须担心。
+
+    #+begin_src shell -t -h 7 -w 80
+    dpkg: --purge needs at least one package name argument
+
+    Type dpkg --help for help about installing and deinstalling packages [*];
+    Use `dselect' or `aptitude' for user-friendly package management;
+    Type dpkg -Dhelp for a list of dpkg debug flag values;
+    Type dpkg --force-help for a list of forcing options;
+    Type dpkg-deb --help for help about manipulating *.deb files;
+    Type dpkg --license for copyright license and lack of warranty (GNU GPL) [*].
+    Options marked [*] produce a lot of output - pipe it through `less' or `more' !
+    #+end_src
+
+    
+** 清理旧版本的软件缓存
+
+    #+begin_example
+    sudp apt-get autoclean
+    #+end_example
+    
+** 清理所有软件缓存
+
+    #+begin_example
+    sudo apt-get clean
+    #+end_example
+
+** 删除系统不再使用的孤立软件
+
+    #+begin_example
+    sudo apt-get autoremove
+    #+end_example
+
+

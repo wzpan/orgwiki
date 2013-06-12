@@ -1,0 +1,64 @@
+#+TITLE:     编译和打包
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu编译和打包
+#+KEYWORDS: Ubuntu make makefile
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+
+* 安装通用编译环境
+  #+begin_example
+  sudo apt-get install build-essential
+  #+end_example
+
+* 通用的编译安装步骤
+  #+begin_example
+  ./configure && make && sudo make install
+  #+end_example
+
+* 获得源代码包
+  #+begin_example
+  sudo apt-get source mysql-server
+  #+end_example
+
+* 解压缩还原源代码包
+  #+begin_example
+  dpkg-source -x mysql-dfsg-5.1_5.1.30-1.dsc
+  #+end_example
+
+* 安装编译打包环境
+  #+begin_example
+  sudo apt-get build-dep mysql-server
+  #+end_example
+
+* 重新编译并打包Debian化的源码
+  #+begin_example
+  dpkg-buildpackage -rfakeroot
+  #+end_example
+
+* 获得源码并重新打包
+
+  #+begin_example
+apt-get source php5-cgi  
+#或手工下载源码后使用 dpkg-source -x  php5_5.2.6.dfsg.1-3ubuntu4.1.dsc 解开源码
+sudo apt-get build-dep php5-cgi
+cd php5-5.2.6.dfsg.1
+dpkg-buildpackage -rfakeroot -uc -b
+  #+end_example
+
+* 给源代码打补丁
+  #+begin_example
+  patch -p0 < mysql.patch
+  #+end_example
+
+* 安装 gtk+ 编译环境
+  #+begin_example
+  sudo apt-get install build-essential libgtk2.0-dev
+  #+end_example
+

@@ -1,0 +1,88 @@
+#+TITLE:     压缩
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu压缩
+#+KEYWORDS: Ubuntu 压缩 7zip zip rar
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+* 压缩软件
+** 增加 7Z 压缩软件   
+
+   #+begin_example
+增加 7Z 压缩软件
+#支持 7Z,ZIP,Zip64,CAB,RAR,ARJ,GZIP,BZIP2,TAR,CPIO,RPM,ISO,DEB 压缩文件格式
+sudo apt-get install p7zip p7zip-full p7zip-rar
+#将所有已txt结尾的文件都加入到files.7z
+7z a -t7z files.7z *.txt
+#解压缩files.zip
+7z x files.zip
+#删除 files.zip中所有已bak结尾的文件
+7z d -r files.zip *.bak 
+#列出file.7z中所有的文件信息
+7z l files.7z
+#测试files.zip中所有doc结尾文件的正确性
+7z t -r files.zip *.doc 
+#更新files.zip中的所有doc结尾的文件（不是所有的压缩格式都支持更新这一选项）
+7z u files.zip *.doc
+   #+end_example
+
+** 增加 rar 软件压缩和解压缩支持
+
+    #+begin_example
+    sudo apt-get install rar unrar
+    #+end_example
+    
+** 增加 zip 格式压缩和解压缩支持
+
+    #+begin_example
+    sudo apt-get install zip unzip
+    #+end_example
+
+** 增加 lha 支持
+
+    #+begin_example
+    sudo apt-get install lha
+    #+end_example
+
+** 增加解 cab 文件支持
+
+    #+begin_example
+    sudo apt-get install cabextract
+    #+end_example
+
+    
+
+* 解压    
+** 解压缩 xxx.tar.gz
+
+    #+begin_example
+    tar -zxvf xxx.tar.gz
+    #+end_example
+    
+** 解压缩 xxx.tar.bz2
+
+    #+begin_example
+    tar -jxvf xxx.tar.bz2
+    #+end_example
+
+
+* 压缩    
+** 压缩aaa bbb目录为xxx.tar.gz
+
+    #+begin_example
+    tar -zcvf xxx.tar.gz aaa bbb
+    #+end_example
+
+** 压缩aaa bbb目录为xxx.tar.bz2
+
+    #+begin_example
+    tar -jcvf xxx.tar.bz2 aaa bbb
+    #+end_example
+
+    

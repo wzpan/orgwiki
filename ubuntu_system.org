@@ -1,0 +1,71 @@
+#+TITLE:     查看系统信息
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu查看系统信息
+#+KEYWORDS: 系统信息 Ubuntu
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+
+* 查看系统信息
+  
+** 查看内核
+
+    #+begin_example
+    uname -a
+    #+end_example
+
+** 查看系统是32位还是64位
+
+    #+begin_example
+    #查看long的位数，返回32或64
+    getconf LONG_BIT
+    #查看文件信息，包含32-bit就是32位，包含64-bit就是64位
+    file /sbin/init
+    #+end_example
+
+** 查看Ubuntu版本
+
+    #+begin_example
+    cat /etc/issue
+    或 cat /etc/lsb-release 
+    或 lsb_release -dsc
+    #+end_example
+
+** 查看内核加载的模块
+
+    #+begin_example
+    lsmod
+    #+end_example
+
+** 查看CPU信息
+
+    #+begin_example
+    cat /proc/cpuinfo
+    #+end_example
+
+** 显示当前硬件信息
+
+    #+begin_example
+    sudo lshw
+    #+end_example
+
+** 显示当前内存大小
+
+    #+begin_example
+    free -m |grep "Mem" | awk '{print $2}'
+    #+end_example
+    
+** 查看硬盘温度
+
+    #+begin_example
+    sudo apt-get install hddtemp
+    sudo hddtemp /dev/sda
+    #+end_example
+
+    

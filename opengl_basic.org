@@ -1,0 +1,349 @@
+#+TITLE:     OpenGL入门知识
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:nil f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./opengl_index.html
+
+* 函数名约定
+
+  绝大多数OpenGL函数都遵循一种命名约定，说明了这个函数来自哪个函数库，并且常常提示了这个函数将接受的参数的数量和类型。所有函数名都具有一个根名称，表示这个函数对应的OpenGL点类型的参数。所有的OpenGL函数都采用了下面的格式。
+
+#+BEGIN_EXAMPLE
+<函数库前缀><根命令><可选的参数数量><可选的参数类型>
+#+END_EXAMPLE
+
+例如：
+
+#+BEGIN_EXAMPLE
+glColor3f(...)
+#+END_EXAMPLE
+
+所有遵循标准的C/C++编译器都假定所有浮点型字面值的类型为double，除非显式地用后缀进行了指定。使用字面值作为浮点型参数时，如果不把这些参数值指定为float类型（而不是double类型），那么编译器在编译时会发出警告信息，因为它检测到了向一个定义为只接受float参数的函数传递了double类型的参数，结果可能导致精度的损失。随着OpenGL程序规模的增长，这类警告信息很可能会迅速增加，达到数百个之多，结果难以找到真正的语法错误。虽然可以通过适当的编译器选项关闭这些警告信息，但我们建议不要这么做。更好的办法是一开始就编写清晰、可移植的代码。
+
+* 数据类型
+
+#+INDEX: GLbyte
+#+INDEX: GLshort
+#+INDEX: GLint
+#+INDEX: GLsizei
+#+INDEX: GLdouble
+#+INDEX: GLfloat
+#+INDEX: GLclampf  
+#+INDEX: GLclampd
+#+INDEX: GLushort                    
+#+INDEX: GLunit
+#+INDEX: GLenum
+#+INDEX: GLbitfield
+#+INDEX: GLchar
+#+INDEX: GLsizeiptr
+#+INDEX: GLintptr
+
+为了保证移植性，OpenGL定义了自己的数据类型。表2.1列出了OpenGL数据类型、它们在32位
+环境（Win32/OS X等）中对应的C/C++数据类型以及正确的字面值后缀。
+
+| OpenGL数据类型             | 内部表示形式   | 对应的C数据类型 | C字面值后缀 |
+|----------------------------+----------------+-----------------+-------------|
+| GLbyte                     | 8位整数        | signed char     | b           |
+| GLshort                    | 16位整数       | short           | s           |
+| GLint, GLsizei             | 32位整数       | long            | l           |
+| GLfloat, GLclampf          | 32位浮点数     | float           | f           |
+| GLdouble, GLclampd         | 64位浮点数     | double          | d           |
+| GLubyte, GLboolean         | 8位无符号整数  | unsigned char   | ub          |
+| GLushort                   | 16位无符号整数 | unsigned short  | us          |
+| GLunit, GLenum, GLbitfield | 32位无符号整数 | unsigned long   | ui          |
+| GLchar                     | 8位的字符      | char            | 无          |
+| GLsizeiptr, GLintptr       | 本地指针       | ptrdiff_t       | 无           |
+
+    所有的数据类型都以GL开头，表示OpenGL。随后是它们对应的C数据类型（如byte、short、int、float等），有些前面还有个u，表示这是一种无符号数据类型。在有些用法中，OpenGL使用了更具描述性的名字，比如在类型中增加一个size表示这种类型的长度或深度。例如，GLsizei是一个OpenGL变量，它用一个整数来表示一个size参数；clamp则是一种提示，表示这个值的范围将“截取”在0.0～1.0的范围内；GLboolean变量表示真假条件；GLenum表示枚举变量；GLbitfield表示那些包含二进制位段的变量。
+
+    OpenGL并没有对指针和数组做特殊的考虑。我们可以像下面这样声明一个包含10个GLshort变量的数组：
+
+#+BEGIN_SRC c
+GLshort shorts[10];
+#+END_SRC
+
+    下面这行代码则声明了一个长度为10的GLdouble类型的指针数组：
+
+#+BEGIN_SRC c
+GLdouble *doubles[10];
+#+END_SRC
+
+    
+
+    
+* 错误
+
+    OpenGL提供了一种有用的机制，可在代码中执行一种场合性的完整性检查。
+
+** 当良好代码中混入了不好的东西时
+
+   OpenGL在内部维护了一组标志（共6个）。每个标志代表一种不同类型的错误。当一个错误发生时，与这个错误相对应的标志就会被设置。为了观察哪些标志被设置，可以调用 =glGetError= 函数。
+
+#+INDEX: glGetError   
+#+INDEX: GL_INVALID_ENUM      
+#+INDEX: GL_INVALID_VALUE       
+#+INDEX: GL_INVALID_OPERATION 
+#+INDEX: GL_STACK_OVERFLOW    
+#+INDEX: GL_STACK_UNDERFLOW   
+#+INDEX: GL_OUT_OF_MEMORY     
+#+INDEX: GL_TABLE_TOO_LARGE   
+#+INDEX: GL_NO_ERROR
+#+INDEX: gluErrorString             
+
+   #+BEGIN_SRC c
+   GLenum glGetError(void);
+   #+END_SRC
+
+   =glGetError= 函数返回下表所列的其中一个值。GLU函数库自己定义了3个错误，但这些错误正好与其中已经存在的2个标志匹配。如果被设置的标志不止一个， =glGetError= 仍然只返回一个唯一的值。当 =glGetError= 函数被调用时，这个值随后被清除，然后 =glGetError= 将再次返回一个错误标志或 =GL_NO_ERROR= 。通常，需要在一个循环中调用 =glGetError= 函数，持续检查错误标志，直到返回值是 =GL_NO_ERROR= 。
+
+   #+CAPTION: OpenGL错误代码
+
+   | 错误代码             | 描述                         |
+   |----------------------+------------------------------|
+   | GL_INVALID_ENUM      | 枚举参数超出范围             |
+   | GL_INVALID_VALUE     | 数值参数超出范围             |
+   | GL_INVALID_OPERATION | 在当前的状态中操作非法       |
+   | GL_STACK_OVERFLOW    | 这条命令将导致堆栈上溢       |
+   | GL_STACK_UNDERFLOW   | 这条命令将导致堆栈下溢       |
+   | GL_OUT_OF_MEMORY     | 没有足够的内存来执行这条命令 |
+   | GL_TABLE_TOO_LARGE   | 指定的表太大                 |
+   | GL_NO_ERROR          | 没有错误出现                 |
+   
+   我们可以使用GLU函数库的另一个函数 =gluErrorString= 来获得一个描述错误标志的字符串。
+
+   #+BEGIN_SRC c
+   const GLubyte* gluErrorString(GLenum errorcode);
+   #+END_SRC
+
+   这个函数将错误标志（由 =glGetError= 函数返回）作为它的唯一参数，并返回一个描述这个错误的静态字符串。例如，错误标志 =GL_INVALID_ENUM= 将返回下面这个字符串。
+
+   #+BEGIN_SRC c
+   invalid enumerant（无效的枚举）
+   #+END_SRC
+
+   如果一个错误是由于对OpenGL的非法调用所致，那么这条命令或函数调用将会被忽略。对此，我们可能会稍微感到安心。此时，唯一可能造成麻烦的是那些接受指向内存的指针作为参数的函数（如果指针无效，可能导致程序崩溃）。   
+
+* 确认版本
+
+  有时候我们希望利用一个特定环境所提供的一些特定功能。如果知道自己的程序将运行于一个特定生产商所生产的图形卡之上，就可能想依赖这个生产商特有的一些性能特征来改进程序。我们还可能希望限制这个特定厂商所提供的驱动程序的最低版本号。为此，需要查询OpenGL的渲染引擎（OpenGL驱动程序）的生产商和版本号。GL函数库和GLU函数库都可以返回与它们的版本号和生产商有关的特定信息。
+
+** 获得GL函数库的信息
+
+#+INDEX: glGetString
+
+为了确定GL函数库的信息，可以调用 =glGetString= 。
+
+#+BEGIN_SRC c
+const GLubyte *glGetString(GLenum name);
+#+END_SRC
+
+这个函数返回一个静态的字符串，描述了GL函数库的相关信息。
+
+** 获得GLU函数库的信息
+
+#+INDEX: gluGetString  
+  
+GLU函数库提供了另一个对应的函数 =gluGetString= 。
+
+#+BEGIN_SRC c
+const GLubyte *gluGetString(GLenum name);
+#+END_SRC
+
+这个函数返回一个字符串，描述它所请求的GLU函数的相关信息。
+
+* 使用 glHint 获取线索
+#+INDEX: glHint
+
+  glHint函数允许我们指定偏重于视觉质量还是速度，以适应各种不同类型的操作需求。这个函数定义如下所示。
+
+  #+BEGIN_SRC c
+    void glHint(GLenum target, GLenum mode);  
+  #+END_SRC
+
+  我们可以在target参数中指定希望进行修改的行为类型。mode参数告诉OpenGL我们最为关心的是什么，例如更快的渲染质量还是最好的输出质量。
+  
+* 状态机
+
+  状态机是一个抽象的模型，表示一组状态变量的集合。每个状态变量可以有各种不同的值，例如可以打开或关闭等。当我们在OpenGL中进行绘图时，如果每次都要指定所有这些变量显然有点不切实际。反之，OpenGL使用了一种状态模型（或称状态机）来追踪所有的OpenGL状态变量。当一个状态值被设置之后，它就一直保持这个状态，直到其他函数对它进行了修改。许多状态只是简单的打开或关闭。
+
+  例如，光照要么打开，要么关闭。如果几何图形不使用光照，那么在绘制这个几何图形的颜色集合时就不必进行任何光照计算。如果启用了光照效率，那么此后所绘制的几何图形都将进行光照计算。
+
+  为了打开这些类型的状态变量，可以使用下面这个OpenGL函数。
+
+#+INDEX: glEnable  
+
+  #+BEGIN_SRC c
+  void glEnable(GLenum capability);
+  #+END_SRC
+
+  我们可以使用下面这个对应的函数，将这些变量的状态设置为关闭。
+
+#+INDEX: glDisable
+
+  #+BEGIN_SRC c
+  void glDisable(GLenum capability);
+  #+END_SRC
+
+  以光照为例，可以使用下面这个函数调用打开光照效果。
+
+  #+BEGIN_SRC c
+  glEnable(GL_LIGHTING);
+  #+END_SRC
+
+  也可以使用下面这个函数调用关闭光照效果。
+
+  #+BEGIN_SRC c
+  glDisable(GL_LIGHTING);
+  #+END_SRC
+
+  如果希望对一个状态变量进行测试，判断它是否被打开，OpenGL还提供了一种方便的机制。
+
+#+INDEX: glIsEnabled
+
+  #+BEGIN_SRC c
+  GLboolean glIsEnabled(GLenum capability);
+  #+END_SRC
+
+  但是，并不是所有的状态变量都是简单的打开或关闭。许多OpenGL函数专门用于设置变量的值，此后这些变量将一直保持被设置时的值，直到再次被修改。在任何时候，都可以查询这些变量的值，OpenGL提供了一组查询函数，可以查询布尔型、整型、单精度浮点型和双精度浮点型变量的值。这4个函数的原型如下所示。
+
+#+INDEX: glGetBooleanv
+#+INDEX: glGetDoublev
+#+INDEX: glGetFloatv
+#+INDEX: glGetIntegerv
+
+  #+BEGIN_SRC c
+  void glGetBooleanv(GLenum pname, GLboolean *params);
+  void glGetDoublev(GLenum pname, GLdouble *params); 
+  void glGetFloatv(GLenum pname, GLfloat *params);  
+  void glGetIntegerv(GLenum pname, GLint *params);
+  #+END_SRC
+
+  每个函数返回单个值，或者返回一个数组，把一些值存储到参数所指定的地址中。
+
+** 保存和恢复状态
+
+  OpenGL还提供堆栈来保存一组范围内的所有状态值，并在将来恢复它们。
+
+  可以使用下面这个命令，把一个OpenGL状态值或一组范围的相关状态值压入到属性堆栈中。
+
+#+INDEX: glPushAttrib  
+
+  #+BEGIN_SRC c
+  void glPushAttrib(GLbitfield mask);
+  #+END_SRC
+
+  以后，可以使用下面这个命令提取对应的值。
+
+#+INDEX: glPopAttrib
+
+  #+BEGIN_SRC c
+  void glPopAttrib(GLbitfield mask);
+  #+END_SRC
+
+  注意，这两个函数的参数是个位段，也就是一个 *位掩码* ，这意味着可以在单个函数调用中用位OR（在C中使用"|"操作符）操作来表示多个状态。例如，可以用下面这个调用保存光照和纹理状态。
+
+  #+BEGIN_SRC c
+  glPushAttrib(GL_TEXTURE_BIT | GL_LIGHTING_BIT);
+  #+END_SRC
+
+  
+  
+  
+* 颜色
+** OpenGL中的颜色
+
+   在绝大多数OpenGL实现中，GLclampf被定义为float类型。在OpenGL中，一种颜色是由红、绿、蓝成分混合而成。每种成分的值范围可以是从0.0至1.0之间的任何有效的浮点值，因此理论上可以产生的颜色数量是无限的。但从现实的角度讲，在绝大多数设备中，颜色值的输出限制在24位（1600万种颜色）。
+   
+   很自然的，OpenGL接受这个颜色值，并在内部把它转换为能够与可用的视频硬件准确匹配的最接近颜色。
+
+** 一些常见的组合颜色   
+
+   #+CAPTION: 一些常见的组合颜色
+
+   | 组合颜色                | 红色成分 | 绿色成分 | 蓝色成分 |
+   |-------------------------+----------+----------+----------|
+   | Black（黑）             |      0.0 |      0.0 |      0.0 |
+   | Red（红）               |      1.0 |      0.0 |      0.0 |
+   | Green（绿）             |      0.0 |      1.0 |      0.0 |
+   | Yellow（黄）            |      1.0 |      1.0 |      0.0 |
+   | Blue（蓝）              |      0.0 |      0.0 |      1.0 |
+   | Magenta（洋红）         |      1.0 |      0.0 |      1.0 |
+   | Cyan（青）              |      0.0 |      1.0 |      1.0 |
+   | Dark gray（深灰）       |     0.25 |     0.25 |     0.25 |
+   | Light gray（浅灰）      |     0.75 |     0.75 |     0.75 |
+   | Brown（褐）             |     0.60 |     0.40 |     0.12 |
+   | Pumpkin orange(南瓜橙)  |     0.98 |    0.625 |     0.12 |
+   | Pastel pink（粉红）     |     0.98 |     0.04 |      0.7 |
+   | Barney purple（巴尼紫） |     0.60 |     0.40 |     0.70 |
+   | White（白）             |      1.0 |      1.0 |      1.0 |
+
+** alpha成分
+
+   alpha成分用于混合，并可以产生一种特殊的效果，例如透明度。透明是指一个物体允许光线穿透它。假定我们希望创建一块染成红色的玻璃，并且它的后面正好有一束蓝色的光。这道蓝光就会影响这块玻璃上的红色（蓝+红=紫）。我们可以用alpha成分值生成一种半透明的红色，使它看上去像是一块玻璃——它后面的物体也能够显示。这种类型的效果涉及很多复杂的地方，并不仅仅使alpha值就行了。
+
+   
+   
+   
+   
+   
+* 使用扩展
+OpenGL允许硬件生产商通过扩展机制提供创新。这种机制以两种方式发挥作用。首先，生产商可以向OpenGL API添加新的函数，供开发人员使用。其次，只要能够为原有OpenGL函数（如glEnable）所认识，生产商就可以添加新的标记或枚举定义。
+
+使用新的枚举或标记是件非常简单的事，只要在项目中增加生产商所提供的头文件就可以了。生产商必须向OpenGL Working Group（Khronos Group的一个子集）注册它们的扩展，这样就可以防止一个生产商使用其他生产商已经使用的值。为了方便起见，标准头文件glext.h包含了一些最常见的扩展。
+
+** 检查扩展
+
+   我们可以检查一个字符串，确认OpenGL驱动程序的生产商和版本号。我们还可以获取一个包含了由驱动程序所支持的所有OpenGL扩展的标志符的字符串。下面这行代码返回一个字符数组，表示了扩展的名称。
+
+   #+BEGIN_SRC c
+   const char *szExtensions = glGetString(GL_EXTENSIONS);
+   #+END_SRC
+
+   这个字符串包含了由驱动程序所支持的所有扩展的名称（用空格分隔）。然后，我们就可以在这个字符串中查找，查找希望使用的扩展标志符。例如，我们可以像下面这样快速查找一种Windows特定的扩展。
+
+   #+BEGIN_SRC c
+   if(strstr(extensions, "WGL_EXT_swap_control" != NULL))
+	 {
+	 wglSwapIntervalEXT =
+		 (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+
+	 if(wqlSwapIntervalEXT != NULL)
+		 wglSwapIntervalEXT(1);
+	 }
+   #+END_SRC
+
+   如果使用这种方法，还应该确保扩展名后面的那个字符是空格或NULL。否则，如果这个扩展被WGL_EXT_swap_control2所取代，那会发生什么情况呢？此时，C运行时函数strstr仍然找到第一个字符串，但是我们无法确定第二个扩展的行为是不是完全和第一个相同。
+
+** 这是谁的扩展
+
+   使用OpenGL扩展，我们可以在代码中提供代码路径，以改进a渲染性能和视觉质量，甚至添加只由一个特定生产商的硬件所支持的特殊效果。但是，是谁拥有这个扩展呢？也就是说，是哪个生产商创建并支持一个特定的扩展呢？通常我们只需观察扩展名就可以作出判断。每个扩展标识符的前面都有一个3字母的前缀，标明了扩展的来源。
+
+   下表提供了扩展标识符的一些例子。
+
+   #+CAPTION: OpenGL扩展前缀的一些例子
+
+   | 前缀 | 厂商             |
+   |------+------------------|
+   | SGI_ | Silicon Graphics |
+   | ATI_ | ATI Technologies |
+   | NV_  | NVIDIA           |
+   | IBM_ | IBM              |
+   | WGL_ | Microsoft        |
+   | EXT_ | 跨厂商           |
+   | ARB_ | ARB 批准         |
+
+   一个生产商支持另一生产商的扩展的情况并非罕见。例如，有些NVidia扩展得到了广泛应用，并受到ATI硬件的支持。此时，进行竞争的生产商必须遵循原生产商的规范（扩展如何实现的细节）。有时候，所有生产商都认为某个扩展非常好并予以支持，此时这个扩展就将具有EXT_前缀，表示它不偏向于任何生产商并且受到了跨平台的广泛支持。
+
+   最后，还有一种ARB扩展的扩展。这种类型的扩展已经通过了OpenGL ARB的审查（并进行了辩论）。这些扩展所提供的新技巧或新函数很快就将融入到核心OpenGL规范。
+
+
+
+
+
+  
+
+  

@@ -1,0 +1,209 @@
+#+TITLE:     使用OpenGL和GLUT生成动画
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:nil f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./opengl_index.html
+
+
+* 原理
+
+#+INDEX: glutTimerFunc  
+
+  GLUT函数库允许我们注册一个回调函数，使我们可以方便的设置一个简单的动画序列。这个函数就是 =glutTimerFunc= ，它的参数包括需要调用的函数名以及这个函数被调用之前的等待时间。
+
+  #+BEGIN_SRC c
+  void glutTimerFunc(unsigned int msecs, void (*func)(int value), int value);
+  #+END_SRC
+
+  这个函数使GLUT等待msecs毫秒，然后再调用func函数。可以通过value参数向这个函数传递一个用户定义的值。这个由计时器所调用的函数具有下面的原型。
+
+  #+BEGIN_SRC c
+  void TimerFunction(int value);
+  #+END_SRC
+
+  当指定的时间到期时，这个函数 *只会触发一次* 。为了产生连续的动画，必须在计时器函数中重新设置计时器。
+
+* 代码
+
+  注意：这个例子用的是老的管道。仅供参考。
+
++ [[file:./program/opengl/bounce.cpp][bounce.cpp]]
+  
+#+BEGIN_SRC c
+// Bounce.cpp
+// Demonstrates a simple animated rectangle program with GLUT
+// OpenGL SuperBible, 3rd Edition
+// Richard S. Wright Jr.
+// rwright@starstonesoftware.com
+
+#include <GL/glut.h>	// OpenGL toolkit
+
+
+// 方块的初始位置和大小
+GLfloat x = 0.0f;
+GLfloat y = 0.0f;
+GLfloat rsize = 25;
+
+// 在x和y方向的步进大小
+// （每次移动的像素）
+GLfloat xstep = 1.0f;
+GLfloat ystep = 1.0f;
+
+// 跟踪窗口宽度和高度的变化
+GLfloat windowWidth;
+GLfloat windowHeight;
+
+///////////////////////////////////////////////////////////
+// 绘制场景
+void RenderScene(void)
+{
+  // 用当前的清楚颜色清除窗口
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  // 把当前的绘图颜色设置为红色
+  //		   R	 G	   B
+  glColor3f(1.0f, 0.0f, 0.0f);
+
+  // 用当前颜色绘制一个填充矩形
+  glRectf(x, y, x + rsize, y - rsize);
+
+  // 刷新绘图命令并进行交换
+  glutSwapBuffers();
+}
+
+///////////////////////////////////////////////////////////
+// 当空闲时由GLUT函数库调用（窗口未改变大小或移动时）
+void TimerFunction(int value)
+{
+  // 在到达左边或右边时翻转方向
+  if(x > windowWidth-rsize || x < -windowWidth)
+    xstep = -xstep;
+
+  // 在到达顶边或底边时翻转方向
+  if(y > windowHeight || y < -windowHeight + rsize)
+    ystep = -ystep;
+
+  // 实际移动方块
+  x += xstep;
+  y += ystep;
+
+  // 检查边界，这是为了防止方块在反弹时窗口变小，使方块出现在新的裁剪区域之外
+  if(x > (windowWidth-rsize + xstep))
+    x = windowWidth-rsize-1;
+  else if(x < -(windowWidth + xstep))
+    x = -windowWidth -1;
+
+  if(y > (windowHeight + ystep))
+    y = windowHeight-1; 
+  else if(y < -(windowHeight - rsize + ystep))
+    y = -windowHeight + rsize - 1;
+
+  // 用新的坐标重新绘制场景
+  glutPostRedisplay();
+  glutTimerFunc(33,TimerFunction, 1);
+}
+
+
+///////////////////////////////////////////////////////////
+// 设置渲染状态
+void SetupRC(void)
+{
+  // 把清除颜色设置为蓝色
+  glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+}
+
+
+///////////////////////////////////////////////////////////
+// 当窗口改变大小时由GLUT函数库调用
+void ChangeSize(int w, int h)
+{
+  GLfloat aspectRatio;
+
+  // 防止被 0 所除
+  if(h == 0)
+    h = 1;
+
+  // 把视口设置为窗口的大小
+  glViewport(0, 0, w, h);
+
+  // 重置坐标系统
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  // 建立裁剪区域（左、右、底、顶、近、远）
+  aspectRatio = (GLfloat)w / (GLfloat)h;
+  if (w <= h) 
+  {
+    windowWidth = 100;
+    windowHeight = 100 / aspectRatio;
+    glOrtho (-100.0, 100.0, -windowHeight, windowHeight, 1.0, -1.0);
+  }
+  else 
+  {
+    windowWidth = 100 * aspectRatio;
+    windowHeight = 100;
+    glOrtho (-windowWidth, windowWidth, -100.0, 100.0, 1.0, -1.0);
+  }
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+}
+
+///////////////////////////////////////////////////////////
+// 主程序入口
+int main(int argc, char* argv[])
+{
+  glutInit(&argc, argv);
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+  glutInitWindowSize(800,600);
+  glutCreateWindow("Bounce");
+  glutDisplayFunc(RenderScene);
+  glutReshapeFunc(ChangeSize);
+  glutTimerFunc(33, TimerFunction, 1);
+
+  SetupRC();
+
+  glutMainLoop();
+
+  return 0;
+}
+#+END_SRC
+
+* 输出
+
+  [[./images/opengl_fig04.png]]
+
+* 分析
+    
+** 双缓冲
+
+   所有图形程序包最重要的特性之一就是对双缓冲的支持。这个特性允许在一个屏幕之外的缓冲区中执行绘图代码，然后使用一条交换命令把完成绘制的图形立即显示在屏幕上。
+
+   双缓冲有两个用途：
+
+   1. 合成图像后再显示。一些复杂的绘图可能需要很长的时间，我们可能并不希望在屏幕上显示图形合成的每个步骤。使用双缓冲，可以合成一幅图像，并在完成之后再显示。用户绝不会看到一幅不完整的图像，图像只有在完全完成之后才会在屏幕上显示。
+   2. 动画。每个帧都在屏幕之外的缓冲区中绘制，等绘图完成之后快速交换到屏幕中。
+      
+   在程序中，我们使用 =GLUT_DOUBLE= ，这个修改将导致所有的绘图代码在一个屏幕之外的缓冲区中进行渲染。接着，我们还修改了RenderScene函数的尾部。
+
+#+INDEX: glutSwapBuffers   
+
+   #+BEGIN_SRC c
+   ...
+   // 刷新绘图命令并进行交换
+   glutSwapBuffers();
+   #+END_SRC
+
+   我们不再调用 [[file:opengl_simple.org::#sec-4-10][glFlush]] ，这个函数已不再需要，因为在执行缓冲区交换时，就已经隐式地执行了一次刷新操作。
+
+   这些修改的结果就是产生了一个平滑的反弹方块动画。即使在单缓冲模式下进行， =glutSwapBuffers= 仍然执行刷新任务。我们可以在这个程序中简单的把 =GLUT_DOUBLE= 改回到 =GLUT_SINGLE= ，观察不使用双缓冲的动画效果。可以看到，方块不断地闪烁和停顿。也就是说，在单缓冲模式下，动画的效果是非常差的。
+
+   
+      
+      
+      
+      

@@ -1,0 +1,21 @@
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012/Debian) (format=xelatex 2013.3.19)  19 MAR 2013 17:32
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**\input software_index.org.tex
+
+! Emergency stop.
+<*> \input software_index.org.tex
+                                 
+*** (job aborted, file error in nonstop mode)
+
+ 
+Here is how much of TeX's memory you used:
+ 2 strings out of 494003
+ 28 string characters out of 3152809
+ 48083 words of memory out of 3000000
+ 3367 multiletter control sequences out of 15000+200000
+ 3640 words of font info for 14 fonts, out of 3000000 for 9000
+ 1144 hyphenation exceptions out of 8191
+ 4i,0n,3p,1b,8s stack positions out of 5000i,500n,10000p,200000b,50000s
+No pages of output.

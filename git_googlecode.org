@@ -1,0 +1,117 @@
+#+TITLE:     Google Code安装配置Git
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-06-01 五
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./git_index.html
+
+Google Code 在2011年开始支持使用 Git 来做版本控制，与 Github 不同，Google Code 在 push 的时候是使用 https 协议而非 SSH 来进行加密，因此 Google Code 在我们创建帐号之后会给我们提供一个密钥，你可以在这里看到 https://code.google.com/hosting/settings 。你也许会抱怨这个密钥很不好记。通过设置，你可以直接使用帐号的密码作为密钥，但出于安全考虑，强烈建议不要这么做。
+
+  要在 Google Code 上使用 Git 来做版本控制并不复杂，下面将分几个步骤介绍Google Code上配置Git的过程。
+
+* 创建项目并使用Git协议	#<<create>>
+
+   访问 http://code.google.com/hosting/createProject ，填好项目信息，在其中的 Version control system 一项勾选 Git。
+
+   完成后，进入主面板【Administer】 -> 【Source】，查看版本控制信息，其中的 Repositories 选项下的 default 和 wiki 将是你的项目的版本库和 wiki 页面存放的地址。
+
+   http://i41.servimg.com/u/f41/16/31/59/00/eao_0111.png
+
+* 查看自己的密钥
+
+   访问 https://code.google.com/hosting/settings ，在 GoogleCode.com Password 栏目下可以看到如下图所示的内容：
+
+   [[http://i41.servimg.com/u/f41/16/31/59/00/eao_0110.png]]，
+
+   图中加粗的文本就是 Google Code 分配的密钥，如果密钥泄露了，还可以点击下面的 Regenerate 按钮重新生成一个。
+
+* 创建 .netrc 文件
+
+   这一步不是必需的。如果不想每次提交代码都要输入密钥，可以在你的用户目录下创建一个.netrc文件。
+
+   #+BEGIN_SRC sh
+   echo machine code.google.com login cs.wzpan@gmail.com password eV5rc5Bs9AR2 >> ~/.netrc
+   chmod go= ~/.netrc
+   #+END_SRC
+
+   记住把 cs.wzpan@gmail.com 和 eV5rc5Bs9AR2 改成你自己的账户名和密码。
+
+* 初始化本地Git
+
+   接下来为在本地的某个工程文件夹初始化Git。
+   
+   #+BEGIN_SRC sh
+   git init
+   git add .
+   git commit -m "My first backup"
+   #+END_SRC
+
+   此时可以看到目录中已经有一个 .git 文件夹，使用下面的命令可以看到刚刚提交的信息。
+
+   #+BEGIN_SRC sh
+   git log
+   #+END_SRC
+
+   关于 Git 的用法这里不赘述，用兴趣的可以看看 [[http://gitref.org/index.html][Git 的文档]]。
+
+* 连接Google Code并提交
+
+   接下来到了关键的一步，我们要把本地的代码库连接到Google Code上。
+
+   #+BEGIN_SRC sh
+   git remote add googlecode https://code.google.com/p/scnuthesis/
+   #+END_SRC
+
+   其中， googlecode 是你为这个版本库起的别名，你也可以取其它的名字。注意把上面的地址改成你在Google Code上实际的项目版本库地址，即 [[target][上面]] 提到的 default 的地址。
+
+   然后可以 push 你的项目，如果设置了.netrc文件，可以不需要使用密码：
+
+   #+BEGIN_SRC sh
+   git push googlecode master:master
+   #+END_SRC
+
+   也可以不启用这个别名直接使用版本库的地址来提交：
+
+   #+BEGIN_SRC sh
+   git push https://code.google.com/p/scnuthesis/ master
+   #+END_SRC
+
+   如果没有设置.netrc文件，则需要在提交的时候加上账户名和密码：
+
+   #+BEGIN_SRC sh
+   git push https://cs.wzpan@gmail.com:eV5rc5Bs9AR2@code.google.com/p/scnuthesis master
+   #+END_SRC
+
+   记住把 cs.wzpan@gmail.com 和 eV5rc5Bs9AR2 改成你自己的账户名和密码。
+   
+* 我的 wiki 去了哪里？
+
+   如果你之前用的是 SVN 来做管理，后来切换到 Git ，你会发现 wiki 下的内容不见了。不要紧张，这是因为更换了版本库后，原先的 SVN 版本库内的内容都被隐藏起来了。我们可以把原先的 SVN 版本库里的 wiki 页面克隆到 Git 版本库里。
+
+   #+BEGIN_SRC sh
+   git clone https://code.google.com/p/scnuthesis.wiki/ projectWiki #备份当前的Git版本库的wiki页面
+   svn checkout https://code.google.com/p/scnuthesis.wiki/ wiki #抓取老的SVN版本库的wiki页面
+   cp wiki/*.wiki projectWiki #将老的SVN版本库下的*.wiki文件复制到projectWiki目录下
+   cd projectWiki
+   git add .
+   git commit -a -m "Imported from old SVN wiki"
+   git push
+   #+END_SRC
+
+   注意把上面的地址改为你的 Git 版本库的 wiki 页面存放地址。使用同样的方法还可以抓取以前SVN仓库中的其他内容。如果想恢复你的维护历史，可以使用这条命令：
+
+   #+BEGIN_SRC sh
+   git svn clone
+   #+END_SRC
+
+* 本文参考资料
+
+  1. http://alblue.bandlem.com/2011/07/setting-up-google-code-with-git.html
+

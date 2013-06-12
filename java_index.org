@@ -1,0 +1,33 @@
+#+TITLE:     Java's Notes
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Java笔记
+#+KEYWORDS: Java
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./index.html
+
+* java6 的安装和配置
+
+** Ubuntu安装sun-java  
+  
+    #+begin_example
+    #下面是ubuntu安装标准的sun-java，安装过程中需要使用tab键切换同意其授权协议
+    sudo add-apt-repository "deb http://archive.canonical.com/ `lsb_release -c | awk '{print $2}'` partner"
+    sudo apt-get update
+    sudo apt-get install sun-java6-jdk sun-java6-plugin ttf-wqy-microhei
+    sudo apt-get remove ttf-kochi-gothic ttf-kochi-mincho ttf-unfonts ttf-unfonts-core
+    sudo mkdir -p /usr/lib/jvm/java-6-sun/jre/lib/fonts/fallback
+    sudo ln -s /usr/share/fonts/truetype/arphic/wqy-microhei.ttc /usr/lib/jvm/java-6-sun/jre/lib/fonts/fallback
+    #+end_example
+
+** 配置默认Java环境
+    
+    #+begin_example
+    sudo update-alternatives --config java
+    #+end_example
+

@@ -1,0 +1,177 @@
+#+TITLE:     大成的漫画展示厅
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:nil f:t *:t <:t author:nil
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ../index.html 
+
+这是好朋友
+#+ATTR_HTML: target="_blank"
+[[http://blog.sina.com.cn/renjiacheng001][大成]]
+#+ATTR_HTML: target="_blank"
+（[[http://weibo.com/n/%25E8%2588%2592%25E7%25B1%25B3%25E8%25BE%25BE][@舒米达]]）
+的漫画作品，作为他的粉丝之一，好作品要帮忙推广！
+也请大家多多关注这个年轻的艺术家！
+
+#+BEGIN_CENTER
+
+#+ATTR_HTML: target="_blank" title="大成"
+[[http://blog.sina.com.cn/renjiacheng001][../images/dacheng2.jpg]]
+
+(点击头像访问 *大成* 的博客)
+
+#+END_CENTER
+
+* 舒米达系列
+
+  1. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01014d3i.html][梦想]]
+  2. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f010157oo.html][进步1]]
+  3. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01015hgo.html][进步2<舒米达初设定>]]
+  4. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01015hvl.html][成全]]   
+  5. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01015tk2.html][做个温暖的人]]      
+  6. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01015w6j.html][如果喜欢]]      
+  7. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01015z3i.html][强大]]
+  8. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01015zuq.html][对待别人]]      
+  9. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f010161wi.html][下坡路]]     
+  10. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f010162wp.html][郁闷了]]     
+  11. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f010165df.html][枯燥与繁琐]]     
+  12. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f010166or.html][对自己好]]     
+  13. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f010167n4.html][一个人的生活]]
+  14. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01016cdz.html][孤独]]
+  15. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01016gjb.html][累]] 
+  16. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01016mip.html][别人的/自己的]] 
+  17. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01016pd0.html][做一个简单的人]]
+  18. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f010174u0.html][努力]]	 
+  19. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01017d25.html][成熟]]  [[../images/new.gif]]
+
+* 舒米达表情季
+
+  1. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01016t4x.html][舒米达QQ表情季1-2]]
+  2. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f010179g0.html][舒米达表情季3-作揖]]
+
+* 大成绘图日记
+
+  1. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01011o89.html][技能——之自我鉴定]]
+  2. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01011tma.html][画阿龟]]
+  3. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01011ur7.html][感冒了]]
+  4. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01011vqh.html][感冒了（2）]]
+  5. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01011zy4.html][工作1 siggraph的战斗]]
+  6. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f010124ji.html][工作2 siggraph的挑战]]
+  7. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01012ewf.html][去老妹家玩1]]
+  8. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01013d7g.html][去老妹家玩2]]
+  9. 
+     #+ATTR_HTML: target="_blank"
+     [[http://blog.sina.com.cn/s/blog_657f2a2f01013g98.html][大成的形象说明]]
+  10. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01013h05.html][南澳归来“后遗症”]]
+  11. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01013ln1.html][去南澳玩]]
+  12. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01013pbo.html][好友海松]]
+  13. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01013qwz.html][在路上-去南澳玩2]]
+  14. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01013vi8.html][榨汁喽]]
+  15. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01013ysn.html][西天“取经”四人组]]
+  16. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01014007.html][危机感]]
+  17. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f0101467k.html][计划]]
+  18. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01014c56.html][聊绘图]]
+  19. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01014j3y.html][聊绘图2]]
+  20. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01014mic.html][聊绘图4 ]]
+  21. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01014oib.html][聊绘图5（真谛）]]
+  22. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01014yeo.html][聊绘图3《形象诞生记》]]    
+  23. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01015538.html][口吃症1—某某症1]]    
+  24. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01015jqq.html][口吃症2]]    
+  25. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01015rii.html][秋乏1 ]]    
+  26. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01015slv.html][秋乏1之补充]]    
+  27. 
+      #+ATTR_HTML: target="_blank"
+      [[http://blog.sina.com.cn/s/blog_657f2a2f01015ube.html][秋乏2]] 

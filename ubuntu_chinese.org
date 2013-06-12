@@ -1,0 +1,102 @@
+#+TITLE:     中文解决方案
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu中文解决方案
+#+KEYWORDS: Ubuntu iconv 乱码 编码
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+
+* 编码转换
+** 查看文件编码
+
+   #+begin_example
+   enca 文件名
+   #+end_example
+
+   #+begin_example
+   file 文件名
+   #+end_example
+
+** 转换文件名由GBK为UTF8
+
+   #+begin_example
+   sudo apt-get install convmv
+   convmv -r -f cp936 -t utf8 --notest --nosmart *
+   #+end_example 
+
+** 批量转换src目录下的所有文件内容由GBK到UTF8
+
+   #+begin_example
+find src -type d -exec mkdir -p utf8/{} \;
+find src -type f -exec iconv -f GBK -t UTF-8 {} -o utf8/{} \;
+mv utf8/* src
+rm -fr utf8   
+   #+end_example 
+
+** 转换文件内容由GBK到UTF8
+
+    #+begin_example
+    iconv -f gbk -t utf8 $i > newfile
+    #+end_example
+
+** 批量转换文件内容由GBK到UTF8
+
+    #+begin_example
+    for i in `find . *`; do if [ -f "$i" ]; then iconv -f gb2312 -t utf8 $i > "./converted/$i" fi ; done
+    #+end_example
+
+** 转换 mp3 标签编码
+
+    #+begin_example
+    sudo apt-get install python-mutagen
+    find . -iname '*.mp3' -execdir mid3iconv -e GBK {} \;
+    #+end_example
+
+
+* 乱码解决    
+** 程序显示有些字大，有些小
+
+    #+begin_example
+     sudo apt-get remove ttf-kochi-gothic ttf-kochi-mincho ttf-unfonts ttf-unfonts-core
+    #+end_example
+
+** PDF 文件乱码
+
+    #+begin_example
+    sudo apt-get install xpdf-chinese-simplified xpdf-chinese-traditional poppler-data
+    #+end_example
+
+** Flash中文乱码
+
+    #+begin_example
+    sudo gedit /etc/fonts/conf.d/49-sansserif.conf 
+    将倒数第四行 <string>sans-serif</string>
+    改为 <string>sans</string>
+    保存即可，重启firefox
+    #+end_example
+
+** unzip 中文文件名乱码
+
+    #+begin_example
+    sudo apt-get install p7zip-full
+    export LANG=zh_CN.GBK  #临时在控制台修改环境为zh_CN.GBK，然后解压缩即可
+    7za e docs.zip
+    #+end_example
+     
+
+
+** gedit中文乱码的解决
+   #+begin_example
+   gconftool-2 --set /apps/gedit-2/preferences/encodings/auto_detected "[UTF-8,CURRENT,GB18030,BIG5,ISO-8859-15,UTF-16]" --type list --list-type string
+   #+end_example
+** 解决vim中文编码问题，在~/.vimrc中加入
+   #+begin_example
+   let &termencoding=&encoding
+   set fileencodings=utf-8,gbk,ucs-bom,cp936
+   #+end_example

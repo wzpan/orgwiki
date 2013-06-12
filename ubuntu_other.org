@@ -1,0 +1,68 @@
+#+TITLE:     其他技巧
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu其他技巧
+#+KEYWORDS: Ubuntu
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+* 把终端加到右键菜单
+  #+begin_example
+  sudo apt-get install nautilus-open-terminal 
+  #+end_example
+
+* 清除桌面挂载硬盘图标
+  #+begin_example
+gconftool-2 --set /apps/nautilus/desktop/volumes_visible 0 --type bool
+恢复：
+gconftool-2 --set /apps/nautilus/desktop/volumes_visible 1 --type bool
+  #+end_example
+
+* 如何提高wine的反应速度
+  #+begin_example
+  sudo sed -ie '/GBK/,/^}/d' /usr/share/X11/locale/zh_CN.UTF-8/XLC_LOCALE
+  #+end_example
+  可能造成某些游戏帧数降低 
+  
+* 回收站在哪里
+  #+begin_example
+  Ubuntu8.04 Gnome 2.22.2 以后在 $HOME/.local/share/Trash/
+  Ubuntu8.04 之前在 $HOME/.Trash/
+  #+end_example
+
+* 强制清空回收站
+  #+begin_example
+  sudo rm -fr $HOME/.local/share/Trash/files/
+  #+end_example
+  
+* 默认打开方式的配置文件在哪里
+  #+begin_example
+#全局
+/etc/gnome/defaults.list 
+#个人
+~/.local/share/applications/mimeapps.list
+  #+end_example
+
+* Pidgin 的聊天记录在哪里
+  #+begin_example
+  ~/.purple/logs/
+  #+end_example
+
+* 安装PDF打印机
+  #+begin_example
+  sudo apt-get install cups-pdf
+  #+end_example
+  打印生成的pdf文件在 ~/PDF 文件夹里面
+
+* nvidia快速重设显示设置及配置多显示器
+  #+begin_example
+sudo dpkg-reconfigure xserver-xorg
+sudo nvidia-xconfig
+#nvidia-settings 用于设置分辨率和多显示器
+sudo nvidia-settings
+  #+end_example

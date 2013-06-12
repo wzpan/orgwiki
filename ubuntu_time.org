@@ -1,0 +1,72 @@
+#+TITLE:     日期和时间
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed 
+#+DESCRIPTION: Ubuntu 日期和时间
+#+KEYWORDS: Ubuntu 日期 时间
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+* 日期
+  
+**  增加农历
+  #+begin_example
+  sudo apt-get install lunar-applet
+  鼠标点击面板右键 -> 添加到面板 -> 农历日期  
+  #+end_example
+
+** 设置日期
+
+   #+begin_example
+   date -s mm/dd/yy
+   #+end_example
+
+
+
+* 时间
+
+** 设置时间
+
+   #+begin_example
+   date -s HH:MM
+   #+end_example
+
+** 将时间写入CMOS
+
+   #+begin_example
+   hwclock --systohc
+   #+end_example
+
+** 读取CMOS时间
+
+   #+begin_example
+   hwclock --hctosys
+   #+end_example
+
+** 从服务器上同步时间
+
+   #+begin_example
+   sudo ntpdate ntp.ubuntu.com
+   sudo ntpdate time.nist.gov
+   #+end_example
+
+** 设置电脑的时区为上海
+
+   #+begin_example
+   sudo cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+   #+end_example
+   
+** XP 和 Ubuntu 相差了 8 小时的时差
+
+    #+begin_example
+    #关闭UTC，将当前时间写入CMOS。
+    sudo sed -ie 's/UTC=yes/UTC=no/g' /etc/default/rcS
+    sudo hwclock --systohc
+    #+end_example
+
+
+

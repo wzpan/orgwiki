@@ -1,0 +1,72 @@
+#+TITLE:     Ubuntu's Notes
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu
+#+KEYWORDS: Wiki
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./index.html
+
+  下面是一些我常用的Ubuntu命令，大多来源于《[[http://wiki.ubuntu.org.cn/UbuntuSkills][UbuntuSkills]]》。
+
+- 系统管理  
+  
+  - [[./ubuntu_setup&update.html][软件安装、升级和清理]]
+
+  - [[./ubuntu_system.html][查看系统信息]]
+
+  - [[./ubuntu_disk.html][分区挂载]]
+
+  - [[./ubuntu_process.html][进程和端口]]
+
+  - [[./ubuntu_control.html][系统控制]]    
+
+- 网络管理
+
+  - [[./ubuntu_ip.html][网络管理]]
+
+  - [[./ubuntu_download.html][上传下载]]  
+
+- 中文
+
+  - [[./ubuntu_chinese.html][中文解决方案]]
+
+- 文件管理
+
+  - [[./ubuntu_file.html][文件管理]]
+
+- 多媒体
+
+  - [[./ubuntu_media.html][多媒体]]
+
+- 压缩
+
+  - [[./ubuntu_compose.html][压缩]]
+
+- 日期和时间
+
+  - [[./ubuntu_time.html][日期和时间]]
+
+- 控制台
+
+  - [[./ubuntu_terminal.html][控制台]]
+
+    
+- 编译和打包
+
+  - [[./ubuntu_compile.html][编译和打包]]
+    
+
+- 其他技巧
+
+  - [[./ubuntu_other.html][其他技巧]]
+
+  - Thinkpad T420与Ubuntu
+    
+  
+
+

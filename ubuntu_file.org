@@ -1,0 +1,330 @@
+#+TITLE:     文件管理
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu文件管理
+#+KEYWORDS: Ubuntu 文件管理 cat more less grep
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+* 创建
+** 创建两个空文件
+
+    #+begin_example
+    touch file1 file2
+    #+end_example
+
+** 递归式创建一些嵌套目录
+
+    #+begin_example
+    mkdir -pv /tmp/xxs/dsd/efd
+    #+end_example
+
+
+** 复制文件或者目录
+
+    #+begin_example
+    cp -av 原文件或原目录 新文件或新目录
+    #+end_example
+
+    
+
+
+* 查看
+** 一屏查看文件内容
+
+    #+begin_example
+    cat 文件名
+    #+end_example
+
+** 不显示以＃开头的行
+
+    #+begin_example
+    cat /etc/vsftpd.conf |grep -v ^#
+    #+end_example
+
+** 分页查看文件内容
+
+    #+begin_example
+    more 文件名
+    #+end_example
+
+** 可控分页查看文件内容
+
+    #+begin_example
+    less 文件名
+    #+end_example
+
+** 带行号显示文件的内容
+
+    #+begin_example
+    nl 文件名
+    cat -n 文件名
+    #+end_example
+
+** 根据字符串匹配来查看文件部分内容
+
+    #+begin_example
+    grep 字符串 文件名
+    #+end_example
+
+** 回当前用户的宿主目录
+
+    #+begin_example
+    cd ~
+    # 或者更简单的
+    cd
+    #+end_example
+
+** 回到上一次的目录
+
+    #+begin_example
+    cd -
+    #+end_example
+
+** 查看当前所在目录的绝对路经
+
+    #+begin_example
+    pwd
+    #+end_example
+
+
+** 列出当前目录下的所有文件,包括以.开头的隐含文件
+
+    #+begin_example
+    ls -a
+    #+end_example
+
+
+** 查看文件类型
+
+    #+begin_example
+    file filename
+    #+end_example
+
+** 显示xxx文件倒数6行的内容
+
+    #+begin_example
+    tail -6 xxx
+    #+end_example
+
+** 查看文件中间的第五行（含）到第10行（含）的内容
+
+    #+begin_example
+    sed -n '5,10p' /var/log/apache2/access.log    
+    #+end_example
+
+
+** 查看当前目录的子目录
+
+    #+begin_example
+    ls -d */ 或 echo */
+    #+end_example
+
+** 将当前目录下最近2小时到8小时之内的文件显示出来
+
+    #+begin_example
+    find . -mmin +120 -mmin -480 -exec more {} \;
+    #+end_example
+
+    
+
+* 修改
+** 去除文件中的行号
+
+    #+begin_example
+    cut -c 5- a.py
+    #+end_example
+
+** 删除文件中的重复行
+
+    #+begin_example
+    cat file.txt |sort -u
+    #+end_example
+
+** 显示包含或者不包含字符串的文件名
+
+    #+begin_example
+    grep -l -r 字符串 路径　#显示内容包含字符串的文件名
+    grep -L -r 字符串 路径　#显示内容不包含字符串的文件名
+    find . -path './cache' -prune -o -name "*.php" -exec grep -l "date_cache[$format]['lang']" {} \; #显示当前目录下不包含cache目录的所有含有“date_cache[$format]['lang']”字符串的php文件。
+    find . -type f -name \*.php -exec grep -l "info" {} \;
+    #+end_example
+
+** 获得文件的后缀名
+
+    #+begin_example
+    echo xxx.xxx.rmvb |sed 's/.*\(\..*$\)/\1/'    
+    #+end_example
+
+** 去除文件的后缀名
+
+    #+begin_example
+    echo xxx.xxx.rmvb |sed 's/\(.*\)\..*$/\1/'    
+    #+end_example
+
+
+** 移动路径下的文件并改名
+
+    #+begin_example
+    mv 路径/文件  /新路径/新文件名
+    #+end_example
+
+
+** 把所有文件的後辍由rm改为rmvb
+
+    #+begin_example
+    rename 's/.rm$/.rmvb/' *
+    #+end_example
+
+** 把所有文件名中的大写改为小写
+
+    #+begin_example
+    rename 'tr/A-Z/a-z/' *
+    #+end_example
+
+
+** 去掉文件中的\^M
+
+    #+begin_example
+    #注意不要使用同样的文件名，会清空掉原文件
+    cat filename | tr -d "^M" > newfile;
+    或者
+    sed -e "s/^M//g" filename > newfile;
+    或者
+    ex "+:%s/[Ctrl+V][Enter]//g" "+:wq"  filename #直接修改文件    
+    #+end_example
+    
+** 合并多个pdf文件到一个pdf文件
+   
+    
+    #+begin_example
+#apt-get install gs pdftk
+gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=output.pdf -dBATCH input1.pdf input2.pdf
+    #+end_example
+
+** 批量修改文件和目录的权限
+
+   批量修改src目录下所有文件的权限为644：
+
+   #+begin_example
+   find src -type f -exec chmod 644 {} \;
+   #+end_example
+
+   批量修改src目录下的所有子目录的权限为755：
+
+   #+begin_example
+   find src -type d -exec chmod 755 {} \;
+   #+end_example
+
+
+* 删除
+** 递归式删除嵌套目录
+
+    #+begin_example
+    rm -fr /tmp/xxs
+    #+end_example
+
+** 删除特殊文件名的文件，如文件名：--help.txt
+
+    #+begin_example
+    rm -- --help.txt 或者 rm ./--help.txt
+    #+end_example
+
+
+** 删除当前目录里面所有的 .svn 目录
+
+    #+begin_example
+    find . -name .svn -type d -exec rm -fr {} \;
+    #+end_example
+
+** 删除当前目录所有以“~”结尾的临时文件
+
+    #+begin_example
+    find . -name "*~" -exec rm {} \;
+    #+end_example
+
+    
+    
+* 查找    
+** 快速查找某个文件
+
+    #+begin_example
+    whereis filename
+    find 目录 -name 文件名
+    locate 文件名 # 注意，为了得到更好的效果，运行前可以更新下数据库，运行 sudo updatedb 即可，但这个命令每隔一段时间会自动运行，所以不用太在意
+    #+end_example
+
+** 查找不以java和xml结尾,并7天没有使用的文件删除掉
+
+    #+begin_example
+    find . ! -name *.java ! -name ‘*.xml’ -atime +7 -exec rm {} \;
+    #+end_example
+
+** 查找目录下所有有包含abcd文字的文本文件，并替换为xyz
+
+    #+begin_example
+    grep -rIl "abcd" ./* --color=never | xargs sed -i "s/abcd/xyz/g" #注意grep的一个参数是大写的i，一个参数是小写的L
+    #+end_example
+
+    
+
+* 比较    
+** 对比两个文件之间的差异　
+
+    #+begin_example
+    diff file1 file2    
+    #+end_example
+
+** 比较两个目录里面的文件是否有相同
+
+    #+begin_example
+    diff -r dir1 dir2
+    #+end_example
+
+
+
+
+* 统计
+
+** 统计当前文件个数
+
+   #+begin_example
+   ls /usr/bin|wc -w    
+   #+end_example
+
+** 统计最常用的10条命令
+   #+begin_example
+   history | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl | head -n10    
+   #+end_example
+
+   
+** 统计每个单词的出现频率，并排序
+   #+begin_example
+   awk '{arr[$1]+=1 }END{for(i in arr){print arr[i]"\t"i}}' FILE_NAME | sort -rn
+   #+end_example
+
+** 统计80端口的连接个数并按照从大到小排列
+   #+begin_example
+   netstat -na|grep :80|awk '{print $5}'|awk -F: '{print $1}'|sort|uniq -c|sort -r -n
+   #+end_example
+
+
+* 校验
+
+** MD5校验
+
+   #+begin_example
+   md5 filetohashA.txt
+   #+end_example
+
+** 将MD5的值写入文件
+
+   #+begin_example
+    md5sum filetohashA.txt > hash.md5  % 创建hash.md5文件并添加filetohashA.txt的md5值
+    md5sum filetohashB.txt >> hash.md5 % 往hash.md5文件里添加filetohashB.txt的md5值
+   #+end_example

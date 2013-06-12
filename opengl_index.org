@@ -1,0 +1,66 @@
+#+TITLE:     OpenGL' Notes
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-09-27 Thu
+#+DESCRIPTION: Git
+#+KEYWORDS: Wiki
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./index.html
+
+- OpenGL基础知识
+  
+  - [[./opengl_intro.html][3D图形和OpenGL的介绍]]
+
+  - [[./opengl_setup.html][Linux下安装配置OpenGL]]
+    
+  - [[./opengl_basic.html][OpenGL入门知识]]
+    
+  - [[./opengl_simple.html][第一个OpenGL程序]]
+
+  - [[./opengl_key.html][按键]]
+
+  - [[./opengl_animation.html][动画]]
+    
+- 空间绘图
+  
+  - [[./opengl_yuanli.html][基础图形管线]]
+
+  - [[./opengl_shadermanager.html][使用存储着色器]]
+
+  - [[./opengl_vertex.html][点]]
+
+  - [[./opengl_line.html][线]]
+
+  - [[./opengl_triangle.org][三角形]]
+
+  - [[./opengl_batch.html][一个简单批次容器]]
+
+  - [[./opengl_shixinwuti.html][实心物体]]
+
+  - [[./opengl_blending.html][混合]]
+
+  - [[./opengl_primitive.html][其他图元]]
+
+  - [[./opengl_qthcqjq.html][其他缓冲区技巧]]
+
+- 几何变换
+  
+  - [[./opengl_transform.html][理解变换]]
+
+  - [[./opengl_mvmatrix.html][模型视图矩阵]]
+
+  - [[./opengl_trianglebatch.html][三角形批次类]]
+
+  - [[./opengl_pmatrix.html][投影矩阵]]
+
+  - [[./opengl_transpipeline.html][变换管线]]
+
+  - [[./opengl_camera.html][照相机和角色]]
+  
+- 基础纹理
+  
+  

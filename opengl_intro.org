@@ -1,0 +1,50 @@
+#+TITLE:     3D图形和OpenGL的介绍
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-09-27 Thu
+#+DATE:      2012-06-08 五
+#+DESCRIPTION: Git
+#+KEYWORDS: Wiki
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./opengl_index.html
+
+* 3D 图形技术和术语
+
+  + 变换（Transformation）和投影（Projection）
+  + 光栅化（Rasterization）
+  + 着色（Shading）
+  + 纹理贴图（Texture Mapping）
+  + 混合（Blending）
+
+* 3D 编程的基本原则
+
+** 坐标系统
+
+    + 2D笛卡儿坐标
+    + 坐标裁剪
+    + 视口（viewport）
+    + 3D笛卡儿坐标
+  
+** 投影：从3D到2D
+
+    + 正投影（orthographic projection）或平行投影：建筑设计、计算机辅助设计或3D图标中。使用这种投影时，需要指定一个正方形或长方形的可视区域。可视区域外的任何物体都不会被绘制。详见 [[./opengl_pmatrix.html#sec-1][正投影]] 。
+    + 透视投影（pespective projection）：平截头体（frustum），近大远小。详见 [[./opengl_pmatrix.html#sec-2][透视投影]] 。
+
+* OpenGL介绍
+
+** 什么是OpenGL  
+
+   严格地讲，OpenGL被定义为“图形硬件的一种软件接口”。从本质上说，它是一个3D图形和模型库，具有高度的可移植性，并且具有非常快的速度。使用OpenGL，可以创建优雅而漂亮的图形，并且具有非常出色的视觉质量。
+
+   OpenGL并不是一种像C和C++这样的编程语言，它更像是一个C运行时函数库，提供了一些预包装的功能。
+
+** OpenGL支持阵容
+
++ GLUT（OpenGL utility toolkit）：OpenGL实用工具包，由AUX发展而来，它可以实现跨平台的支持。一种新的GLUT实现freeglut已经崛起并取代了它的位置。
++ GLEW：可以获得OpenGL 3.0或更高版本中的特性，已内建在GLTools中。
++ GLTools：GLTools包含一个用于操作矩阵和向量的3D数学库，并依靠GLEW获得OpenGL3.3中用来产生和渲染一些简单3D对象的函数，以及对视觉平截头体、相机类和变换矩阵进行管理的函数的充分支持。
+  

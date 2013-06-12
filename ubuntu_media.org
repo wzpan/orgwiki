@@ -1,0 +1,319 @@
+#+TITLE:     多媒体
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu多媒体
+#+KEYWORDS: Ubuntu 多媒体 avi png mpg rm rmvb pdf swf
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+
+* 视频播放和转换
+  
+** 播放swf文件
+
+    安装swf解码器
+    #+begin_example
+    sudo apt-get install swfmill
+    #+end_example
+
+** 如何保存串流视频(mms/rtsp)
+
+    #+begin_example
+    mplayer -dumpfile dump.rm -dumpstream rstp://....
+    #+end_example
+
+** 批量将rmvb转为avi
+
+    #+begin_example
+    #ipod touch可用
+    for i in *.rmvb; do mencoder -vf harddup -oac mp3lame -lameopts vbr=3 -ovc xvid -xvidencopts fixed_quant=4 -of avi $i -o `echo $i | sed -e 's/rmvb$/avi/'`; done
+    #+end_example
+    
+** 批量将DVD转为avi
+
+    #+begin_example
+    for i in *.VOB; do mencoder -oac mp3lame -lameopts aq=7:vbr=2:q=6 -srate 44100 -ovc xvid -xvidencopts fixed_quant=4 -of avi $i -o `echo $i | sed -e 's/VOB$/avi/'`; done
+    #+end_example
+    
+** 批量将任何格式的电影转为ogv
+
+    #+begin_example
+    #sudo apt-get install ffmpeg2theora   
+    #firefox3.5或chrome直接支持播放，无需安装任何解码器，注意不支持rmvb，rmvb会出现a/v不同步问题
+    for i in *; do ffmpeg2theora --optimize --deinterlace $i; done
+    #+end_example
+
+** 批量将rmvb格式的电影转为ogv
+
+    #+begin_example
+    #!/bin/bash
+for i in *; do
+   mkfifo "/tmp/$i"
+   mencoder -quiet -vf harddup -ovc raw -oac pcm -o "/tmp/$i" "$i" &
+   ffmpeg2theora --optimize --deinterlace "/tmp/$i" -o "`echo $i | sed 's/\(.*\)\..*$/\1/'`.ogv"
+   rm "/tmp/$i"
+   done
+    #+end_example
+
+** 利用gst来转换任意电影为ogv
+
+    #+begin_example
+    #!/bin/bash
+for i in *; do
+   gst-launch-0.10 filesrc location="$i" ! decodebin name=demux \
+   { oggmux name=mux ! filesink location="`echo $i | sed 's/\(.*\)\..*$/\1/'`.ogv" } \
+   { demux. ! queue ! audioconvert ! vorbisenc ! queue ! mux. } \
+   { demux. ! queue ! ffmpegcolorspace ! videorate ! theoraenc ! mux. } 
+done   
+    #+end_example
+
+** 批量转换任意文件为ipod touch使用的mp4
+
+    #+begin_example
+#!/bin/bash
+#ubuntu10.04自带的mencoder由于版权问题，不支持h264编码，需要重新编译；也可以直接参考下面的压缩方法。
+#sudo apt-get install mencoder mplayer
+find . -name '*.avi' -o -name '*.rm' -o -name '*.rmvb' -o -name '*.wmv' -o \
+      -name '*.vob' -o -name '*.asf' -o -name '*.mpg' -o -name '*.ts' -o \
+      -name '*.flv' -o -name '*.mpeg' -o -name '*.ogv' -o -name '*.mov' -o \
+      -name '*.mkv' -o -name '*.dat' | while read i; do
+  basename=`echo $i | sed 's/\(.*\)\..*$/\1/'`
+  font="WenQuanYi Zen Hei"
+
+  if [ -f "${basename}.srt" ] ; then
+     cp "${basename}.srt" $$.srt
+     m0="-vf scale=480:-10,harddup -sub $$.srt -unicode -subcp GB18030 -subfont-text-scale 3"; 
+  else
+     m0="-vf scale=480:-10,harddup"; 
+  fi
+ 
+  x0="-lavfopts format=mp4 -faacopts mpeg=4:object=2:raw:br=160 -oac faac -ovc x264 -sws 9 -x264encopts nocabac:level_idc=30:bframes=0:global_header:threads=auto:subq=5:frameref=6:partitions=all:trellis=1:chroma_me:me=umh:bitrate=500 -of lavf -ofps 24000/1001";
+  mencoder $m0 -fontconfig -font "${font}" $x0 -o "$$.mp4" "$i"
+  mv "$$.mp4" "${basename}.mp4"
+  if [ -f "${basename}.mp4" ] ; then
+     rm "$i"
+  fi
+done    
+    #+end_example
+
+** 转换任意格式的视频到H264
+
+    #+begin_example
+#!/bin/bash
+#sudo apt-get install faac x264 gpac mplayer mencoder
+basename=`echo $1 | sed 's/\(.*\)\..*$/\1/'`
+#获得视频的长宽和帧数
+mplayer -vo null -ao null -identify -frames 0 "$1" 2>/dev/null > video.info
+FPS=`cat video.info | grep ID_VIDEO_FPS | cut -d = -f 2`
+#FPS=23.976
+W=`cat video.info | grep ID_VIDEO_WIDTH | cut -d = -f 2`
+H=`cat video.info | grep ID_VIDEO_HEIGHT | cut -d = -f 2`
+WIDTH=480
+HEIGHT=`expr $WIDTH \* $H \/ $W`
+echo $1 FPS=$FPS WIDTH=$WIDTH HEIGHT=$HEIGHT
+mkfifo audio.wav video.yuv
+faac -o audio.aac audio.wav &
+mplayer -ao pcm:file=audio.wav:fast -vc null -vo null "$1" 
+x264 --profile baseline --fps $FPS -o video.264 video.yuv ${WIDTH}x${HEIGHT} &
+mencoder -vf scale=$WIDTH:$HEIGHT,harddup,pp=fd,format=i420 -nosound -ovc raw -of rawvideo -ofps $FPS -o video.yuv "$1"
+MP4Box -new -add video.264 -add audio.aac -fps $FPS "$basename.mp4"
+rm video.info audio.aac video.264 audio.wav video.yuv
+#使用方法将上面的脚本保存为 x264.sh , x264.sh xxx.avi 来进行转化。
+    #+end_example
+
+** 合并多个 rm 文件为一个 avi 文件
+
+    #+begin_example
+mencoder -ovc lavc 1.rm -oac mp3lame -o 1.avi
+mencoder -ovc lavc 2.rm -oac mp3lame -o 2.avi
+mencoder -idx 1.avi -ovc copy -oac copy -o o1.avi
+mencoder -idx 2.avi -ovc copy -oac copy -o o2.avi
+cat o1.avi o2.avi | mencoder -noidx -ovc copy -oac copy -o output.avi -    
+    #+end_example
+
+** 合并视频到一个文件
+    
+    #+begin_example
+    mencoder -ovc copy -oac copy -idx  -o 目标文件名 文件名1 文件名2
+    #+end_example
+
+** 获取视频文件 xxx.avi 的信息
+
+    #+begin_example
+    mplayer -vo null -ao null -frames 0 -identify "xxx.avi" 2>/dev/null | sed -ne '/^ID_/ { s/[]()|&;<>`'"'"'\\!$" []/\\&/g;p }'
+    #+end_example
+
+** 查看MKV视频文件 xxx.mkv 的信息
+
+    #+begin_example
+    #sudo apt-get install mkvtoolnix
+    mkvinfo -v xxx.mkv
+    #+end_example
+
+
+** 如何删除Totem电影播放机的播放历史记录
+   #+begin_example
+   rm ~/.recently-used
+   #+end_example
+
+    
+
+* 音频抓取和转换    
+** CD 抓轨为 mp3 (有损)
+    
+    #+begin_example
+    #sudo apt-get install abcde
+    abcde -o mp3 -b
+    #+end_example
+    
+** CD 抓轨为 Flac (无损)
+
+    #+begin_example
+    #sudo apt-get install abcde
+    abcde -o flac -b
+    #+end_example
+    
+** ape 转换为 flac
+
+    #+begin_example
+    #sudo apt-get install flac shntool iconv mac
+    iconv -f GB2312 -t UTF-8 example.cue -o example_UTF-8.cue
+    shntool split -t "%n.%p-%t" -f example_UTF-8.cue -o flac example.ape -d flacOutputDir
+    #+end_example
+    
+** ape/flac 转换为 mp3
+
+    #+begin_example
+#sudo apt-get install flac shntool lame 
+#ape 需要安装  monkeys 包
+iconv -f GB2312 -t UTF-8 example.cue -o example_UTF-8.cue
+shntool split -t "%n.%p-%t" -f example_UTF-8.cue -o 'cust ext=mp3 lame --r3mix -b 320 --quiet - %f' example.ape -d mp3OutputDir
+    #+end_example
+    
+** 批量将 ape 转为 mp3
+
+    #+begin_example
+    for f in *.ape; do gst-launch-0.10 filesrc location="$f" ! decodebin ! audioconvert ! lame vbr=0 bitrate=320 ! id3mux ! filesink location="${f%.ape}.mp3"; done
+    #需要安装 shntool
+    for i in *.ape; do shnconv -i ape -o "cust ext=mp3 lame -b 320 - %f" "$i" -d mp3OutputDir; done
+    #+end_example
+    
+** 批量将 ape 转为 m4a
+    
+    #+begin_example
+    for f in *.ape; do ffmpeg -i  "$f" -acodec alac "${f%.ape}.m4a"; done
+    #+end_example
+
+** 批量将 ape 转为 aac
+
+    #+begin_example
+    for f in *.ape; do ffmpeg -i  "$f" -acodec aac -strict experimental -ab 256k "${f%.ape}.aac"; done
+    #+end_example
+    
+** 批量将 flac 转为 mp3
+
+    #+begin_example
+    for i in *.flac; do shnconv -i flac -o "cust ext=mp3 lame -b 320 - %f" "$i" -d mp3OutputDir; done
+    #+end_example
+
+
+* 图像转换    
+** 批量将svg转为png
+
+    #+begin_example
+    for i in *.svg; do inkscape $i --export-png=`echo $i | sed -e 's/svg$/png/'`; done
+    #+end_example
+
+** 批量转换格式到mp3
+    
+    #+begin_example
+    #sudo apt-get install lame mplayer
+for i in *; do base=${i%.*}; mplayer -quiet -vo null -vc dummy -af volume=0,resample=44100:0:1 -ao pcm:waveheader:file
+    #+end_example
+
+** 批量缩小图片到30%
+
+    #+begin_example
+    for i in *.jpg; do convert -resize 30%x30% "$i" "sm-$i"; done
+    #+end_example
+
+** 批量转换jpg到png
+
+    #+begin_example
+    for i in *.jpg; do convert $i `echo $i | sed -e 's/jpg$/png/'`; done
+    #+end_example
+
+** 将文字转为图片
+
+    #+begin_example
+    convert -size 200x30 xc:transparent -font /usr/share/fonts/truetype/wqy/wqy-microhei.ttc -fill red -pointsize 16 -draw "text 5,15 '测试中文转为图片'" test.png
+    #+end_example
+
+** 如何压缩png图片
+
+    #+begin_example
+#sudo apt-get install optipng
+optipng -o7 old.png new.png
+#或 sudo apt-get install pngcrush
+#pngcrush -brute old.png new.png
+    #+end_example
+
+** 将多张图片合并到一个PDF文件
+
+    #+begin_example
+    convert *.jpg out.pdf
+    #+end_example
+
+** 批量把pdf转换为txt并格式化
+
+    #+begin_example
+sudo apt-get install poppler-utils poppler-data
+find ./ -name '*.txt' | while read i; do cat $i | awk '{if ($0 ~ "^space:”) {printf “\n”$0} else {printf $0}}’ | sed ‘/^space:*digit:*$/d’ | sed ’s/^space:\+/    /’ | sed ’s/＂/”/g’ > “../txt/$i”; done
+    #+end_example
+
+** 转换 pdf 到 png
+
+    #+begin_example
+    #sudo apt-get install imagemagick
+    convert -density 196 FILENAME.pdf  FILENAME.png
+    #+end_example
+
+** 获取jpg的扩展信息(Exif)
+
+    #+begin_example
+    identify -verbose xxx.jpg
+    #+end_example
+
+
+* 其它技巧    
+** 抓取桌面操作的视频
+
+    #+begin_example
+    ffmpeg -f x11grab -s wxga -r 25 -i :0.0 -sameq /tmp/out.mpg
+    #+end_example
+
+** 命令行读出文本
+   可以使用espeak在控制命令行中朗读一段文本。
+    #+begin_example
+    espeak -vzh "从前有座山"
+    #+end_example
+
+** 命令行截屏
+
+    #+begin_example
+    scrot -s screenshot.png
+    #+end_example
+
+    
+
+** 延迟截屏
+   #+begin_example
+   gnome-screenshot -d 10 #延迟10秒抓图
+   gnome-screenshot -w -d 5 #延迟5秒抓当前激活窗口
+   #+end_example
+    

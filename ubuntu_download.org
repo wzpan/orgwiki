@@ -1,0 +1,34 @@
+#+TITLE:     上传下载
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu上传下载工具
+#+KEYWORDS: Ubuntu upload download
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+* wget
+  
+** 从当前页面开始镜像整个网站到本地
+
+    #+begin_example
+wget -r -p -np -k http://www.21cn.com
+· -r：在本机建立服务器端目录结构；
+· -p: 下载显示HTML文件的所有图片；
+· -np：只下载目标站点指定目录及其子目录的内容；
+· -k: 转换非相对链接为相对链接。
+    #+end_example
+
+* Transmission BitTorrent
+
+** 让Transmission BitTorrent支持下载pt资源
+
+   #+begin_example
+   apt-get install miredo
+   #+end_example
+   完成后重启Transmission。
+

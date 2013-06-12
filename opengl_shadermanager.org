@@ -1,0 +1,153 @@
+#+TITLE:     使用存储着色器 GLShaderManager
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:nil f:nil *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./opengl_index.html
+
+#+BEGIN_HTML
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+#+END_HTML
+
+本文介绍的存储着色器由GLTools的C++类GLShaderManager进行管理，它们能够满足进行通常渲染的基本要求。
+
+* 初始化
+#+INDEX: InitializeStockShaders
+GLShaderManager在使用前必须初始化，我们可以在所有示例程序源文件顶部附近找到GLShaderManager和调用InitializeStockShaders的例子。
+
+#+BEGIN_SRC c
+GLShaderManager.InitializeStockShaders();
+#+END_SRC
+
+* 属性
+
+#+INDEX: GLT_ATTRIBUTE_VERTEX  
+#+INDEX: GLT_ATTRIBUTE_COLOR   
+#+INDEX: GLT_ATTRIBUTE_NORMAL  
+#+INDEX: GLT_ATTRIBUTE_TEXTURE0
+#+INDEX: GLT_ATTRIBUTE_TEXTURE1  
+
+  OpenGL支持多达16种可以为每个顶点设置的不同类型参数。这些参数编号为从0到15，并且可以与顶点着色器中的任何指定变量相关联。存储着色器为每个变量都使用一致的内部变量命名规则和相同的属性槽（Attribute Slot）。下表列出了这些属性。
+
+#+CAPTION: GLShaderManager预定义的标识符
+  
+| 标识符                 | 描述                    |
+|------------------------+-------------------------|
+| GLT_ATTRIBUTE_VERTEX   | 3分量(x, y, z)顶点位置  |
+| GLT_ATTRIBUTE_COLOR    | 4分量(r, g, b, a)颜色值 |
+| GLT_ATTRIBUTE_NORMAL   | 3分量(x, y, z)表面法线  |
+| GLT_ATTRIBUTE_TEXTURE0 | 第一对2分量(s, t)纹理坐标 |
+| GLT_ATTRIBUTE_TEXTURE1 | 第二对2分量(s, t)纹理坐标 |
+
+* Uniform值
+
+  要对几何图形进行渲染，我们需要为对象递交属性矩阵，但首先要绑定到我们想要使用的着色器程序上，并提供相应的Uniform值。 =UseStockShader= 函数会选择一个存储着色器并提供这个着色器的Uniform值，这些工作通过一次函数调用就能完成。
+
+#+INDEX: UseStockShader
+
+: GLShaderManager::UseStockShader(GLenum shader, ... ...);  
+:                                       |
+:                                       |
+:                                    Uniform值  
+: 
+  
+在C语言（或C++语言）中，……表示函数接受一个可变的参数变量，这些参数就是特定着色器要求的Uniform值。
+
+** 单位（Identity）着色器
+
+   只是简单地使用默认的笛卡尔坐标系（在所有的坐标轴上的坐标范围都是-1.0~1.0）。所有片段都应用统一种颜色，几何图形为实心和未渲染的。
+
+   该着色器对每个顶点设置同一种颜色，因此顶点坐标可以作为属性，颜色值可以作为Uniform值。
+   
+   + 属性：这种着色器只使用一个属性GLT_ATTRIBUTE_VERTEX。
+   + Uniform值：vColor参数包含了要求的颜色。
+     
+#+BEGIN_SRC c
+GLShaderManager::UseStockShader(GLT_SHADER_IDENTITY, GLfloat vColor[4]); 
+#+END_SRC
+     
+** 平面（Flat）着色器
+
+   将统一着色器进行了扩展，允许为几何图形变换指定一个 \(4\time 4\) 变换矩阵。典型情况下这是一种左乘模型视图矩阵和投影矩阵，经常被称作“模型视图投影矩阵”。
+
+   简单来讲，就是在单位着色器的基础上增加了一个变换矩阵，因此相应的要增加一个Uniform值，而属性值不变。
+
+   + 属性值：只使用一个属性 GLT_ATTRIBUTE_VERTEX；
+   + Uniform值：模型视图投影矩阵mvp ，基本色矩阵vColor
+     
+#+BEGIN_SRC c
+  GLShaderManager::UseStockShader(GLT_SHADER_FLAT, GLfloat mvp[16], GLfloat vColor[4]); 
+#+END_SRC
+
+** 上色（Shaded）着色器
+
+   颜色值会被平滑的插入顶点之间（称为平滑着色）。对每个顶点的着色值都不一样，因此需要增加一个针对每个顶点的属性值，而不再需要定义颜色的Uniform值。
+
+   + 属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_COLOR；
+   + Uniform值： 模型视图投影矩阵 mvp。
+     
+#+BEGIN_SRC c
+  GLShaderManager::UseStockShader(GLT_SHADER_SHADED, GLfloat mvp[16]); 
+#+END_SRC     
+
+** 默认光源着色器
+
+    产生类似于由位于观察者位置的单漫射光所产生的（阴影和光照）效果。
+
+   + 属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_NORMAL；
+   + Uniform值：模型视图矩阵 mvMatrix 、投影矩阵 pMatrix 和作为基本色的颜色值 vColor 等Uniform值。大多数着色器都需要正规矩阵（normal matrix）作为Uniform值。着色器从模型视图矩阵中推导出了正规矩阵——很方便，但是效率不太高。 *在性能敏感的应用程序中，我们要充分考虑这一点* 。
+     
+#+BEGIN_SRC c
+  GLShaderManager::UseStockShader(GLT_SHADER_DEFAULT_LIGHT, GLfloat mvMatrix[16], GLfloat pMatrix[16], GLfloat vColor[4]); 
+#+END_SRC     
+
+** 点光源着色器
+
+   和默认光源着色器很相似，但是光源位置可能是特定的，因此这种着色器比默认光源着色器增加了一个表示视点坐标系中的光源位置的Uniform值。
+
+   + 属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_NORMAL；
+   + Uniform值：模型视图矩阵 mvMatrix 、投影矩阵 pMatrix 、视点坐标系中的光源位置 vLightPos 和基本漫反射颜色值 vColor 等Uniform值。
+     
+#+BEGIN_SRC c
+  GLShaderManager::UseStockShader(GLT_SHADER_POINT_LIGHT_DIFF, GLfloat mvMatrix[16], GLfloat pMatrix[16], GLfloat vLightPos[3], GLfloat vColor[4]); 
+#+END_SRC     
+     
+** 纹理替换矩阵
+
+   着色器通过给定的模型视图投影矩阵，使用绑定到 nTextureUnit 指定的纹理单元的纹理对几何图形进行变换。片段颜色是直接从纹理样本中直接获取的。
+
+   + 属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_NORMAL ；
+   + Uniform值： 模型视图投影矩阵 mvpMatrix 、纹理单元 nTextureUnit 。
+     
+#+BEGIN_SRC c
+  GLShaderManager::UseStockShader(GLT_SHADER_TEXTURE_REPLACE, GLfloat mvpMatrix[16], GLint nTextureUnit);
+#+END_SRC     
+
+** 纹理调整着色器
+
+   这种着色器将一个基本色乘以一个取自纹理单元 nTextureUnit 的纹理，因此Uniform值需要多加一个基本色，属性值则需要将 GLT_ATTRIBUTE_NORMAL 换成 GLT_ATTRIBUTE_TEXTURE0 。
+
+   + 属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_TEXTURE0 ；
+   + Uniform值： 模型视图投影矩阵 mvpMatrix 、基本色 vColor、纹理单元 nTextureUnit 。
+     
+#+BEGIN_SRC c
+  GLShaderManager::UseStockShader(GLT_SHADER_TEXTURE_MODULATE, GLfloat mvpMatrix[16], GLfloat vColor[4], GLint nTextureUnit);
+#+END_SRC     
+
+** 纹理光源着色器
+
+   这种着色器将一个纹理通过漫反射照明计算进行调整（相乘），光线在视觉空间中的位置是给定的。
+
+   + 属性值： GLT_ATTRIBUTE_VERTEX 、 GLT_ATTRIBUTE_NORMAL 和 GLT_ATTRIBUTE_TEXTURE0 ；
+   + Uniform值： 模型视图矩阵 mvMatrix 、投影矩阵 pMatrix 、视觉空间中的光源位置 vLightPos 、几何图形的基本色 vColor 、 纹理单元 nTextureUnit。
+     
+#+BEGIN_SRC c
+  GLShaderManager::UseStockShader(GLT_SHADER_TEXTURE_POINT_LIGHT_DIFF, GLfloat mvMatrix[16], GLfloat pMatrix[16], GLfloat vLightPos[3], GLfloat vColor[4], GLint nTextureUnit);
+#+END_SRC
+
+   
+   
+

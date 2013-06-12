@@ -1,0 +1,14 @@
+#+TITLE:     TikZ's Notes
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-4-11 二
+#+KEYWORDS: LaTeX
+#+LANGUAGE:  ch
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_UP:   ./index.html
+
+- [[./tikz_intro.html][TikZ/PGF简介及相关资源汇总]]
+
+
+  

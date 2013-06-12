@@ -1,0 +1,146 @@
+#+TITLE:     使用照相机和角色在OpenGL中移动
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:nil f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./opengl_index.html
+
+#+BEGIN_HTML
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+#+END_HTML
+
++ 固定的物体（如地形）通常不进行变换，它们的顶点通常准确的指定了几何图形在空间中应该怎样进行绘制。
++ 在场景中移动的物体通常称为角色（actor），角色具有它们自己的变换，并且角色所进行的变换不仅与全局坐标系统（视觉坐标系统）有关，而且常常和其他角色有关。自己具有变换的角色被认为具有它自己的参考帧（或称本地对象坐标系统）。对于许多非渲染相关的几何图形测试，在本地和全局坐标系统之间进来来回变换也常常是非常有用的。
+
+* 角色帧
+
+  我们可以用一种简单灵活的方法来表示参考帧，就是使用一个数据结构（或C++中的类）。这个数据结构将包含空间中的：
+  
+  + 一个位置
+  + 一个指向前面的向量
+  + 一个指向上面的向量
+    
+  使用这些量，就可以唯一地标识空间中一个特定的位置和方向。下面这个数据结构例子取自 math3d 函数库，称为GLFrame，它可以存储所有相关的信息。
+
+  #+BEGIN_SRC c
+  class GLFrame
+  {
+	protected:
+		M3DVector3f vLocation;
+		M3DVector3f vUp;
+		M3DVector3f vForward;
+
+	public:
+	...
+  };
+  #+END_SRC
+
+  使用像这样的一个参考帧来表示一个物体的位置和方向是一种非常强大的机制。首先，我们可以使用这些数据直接创建一个\(4\times 4\)的变换矩阵。考虑我们之前在[[./opengl_gjjzcz.html#sec-1][高级矩阵操作]]中画出的一个变换矩阵，向上的向量作为矩阵的y列，向前的向量则作为z列向量，位置则作为移动向量。这样就只缺少x向量了。由于我们知道3个轴是相互垂直的（正交），因此我们可以通过把y和z向量相乘来计算x列向量。下面的程序显示了GLFrame类的函数GetMatrix，它就用来完成这个任务。
+
+  #+BEGIN_SRC c
+    ///////////////////////////////////////////////////////////////////
+    // Derives a 4x4 transformation matrix from a frame of reference
+    void GLFrame::GetMatrix(M3DTMatrix44f mMatrix, bool bRotationOnly = false)
+    {
+      // Calculate the right side (x) vector, drop it right into the matrix
+      M3DVector3f vXAxis;
+      m3dCrossProduct(vXAxis, vUp, vForward);
+      // Set matrix column does not fill in the fourth value...
+      m3dSetMatrixColumn44(matrix, vXAxis, 0);
+      matrix[3] = 0.0f;
+      // Y Column
+      m3dSetMatrixColumn44(matrix, vUp, 1);
+      matrix[7] = 0.0f;
+      // Z Column
+      m3dSetMatrixColumn44(matrix, vForward, 2);
+      matrix[11] = 0.0f;
+      // Translation (already done)
+      if(bRotationOnly == true)
+      {
+        matrix[12] = 0.0f;
+        matrix[13] = 0.0f;
+        matrix[14] = 0.0f;
+      }
+      else
+        m3dSetMatrixColumn44(matrix, vOrigin, 3);
+      matrix[15] = 1.0f;
+    }  
+  #+END_SRC
+  
+  为了对一个角色应用变换，我们只需简单地在结果矩阵上调用 [[file:opengl_gjjzcz.org::#sec-4][glMultMatrix]] 。
+
+* 欧拉角
+
+  欧拉角需要的空间更少，因为它实际上只存储一个物体的位置以及3个角度（表示沿x、y和z轴的旋转，有时称为yaw、pitch和roll）。这种结构可以用来表示一架飞机的位置和方向。
+
+  #+BEGIN_SRC c
+    struct EULER {
+      M3DVector3f     vPosition;
+      GLfloat         fRoll;    
+      GLfloat         fPitch;   
+      GLfloat         fYaw;     
+    };
+  #+END_SRC
+
+  欧拉角的问题是可能会造成“万向节锁”。
+
+* 四元数
+
+  
+
+* 照相机管理
+
+  OpenGl中其实并不存在像照相机变换这样的东西。我们只是用照相机作为一种有用的比喻，帮助我们在某种宽广3D环境中管理观察点。如果我们把照相机想象为一种物体，它在空间中具有某个位置和某个特定的方向，就会发现当前的参考帧系统在3D环境中既可以用角色来表示，也可以用照相机来表示。
+
+  为了应用照相机变换，我们要使用照相机的角色变换并对它进行反转，这样向后移动照相机就相当于向前移动整个场景。类似地，向左旋转相当于把整个场景向右旋转。为了渲染一个特定的场景，我们通常使用下图所规划的方法。
+
+:           
+:         +-\保存单位矩阵
+:         |        
+:         |  应用照相机变换
+:         |        
+:         |  绘制不会移动的物体
+:         |        
+:         |  绘制移动的物体（角色）
+:  循环   |        
+:         |       +\ 保存照相机变换
+:         |       |
+:         |       |  应用角色变换
+:         |  循环 |
+:         |       |  绘制角色几何图形
+:         |       |
+:         |       +- 恢复照相机变换
+:         |  
+:         +--恢复单位矩阵
+:   
+
+  OpenGL工具库包含了一个函数，它所使用的数据与我们存储在帧数据结构中的相同，我们可以用它来创建我们的照相机变换。
+
+  #+BEGIN_SRC c
+    void gluLookAt(GLdouble eyex, GLdouble eyey, GLdouble eyez,
+                   GLdouble centerx, GLdouble centery, GLdouble centerz,
+                   GLdouble upx, GLdouble upy, GLdouble upz);  
+  #+END_SRC
+  
+  这个函数接受观察点的位置、观察点前面直接位置上的一个点以及向上向量的方向。GLFrame类还包含了一个快捷函数，它使用一个内部参考帧完成相同的任务。
+
+  #+BEGIN_SRC c
+  void GLFrame::ApplyCameraTransform(bool bRotOnly = false);
+  #+END_SRC
+
+* 综合应用
+
+  现在，让我们来讨论最后一个例子。这个例子综合了本章目前位置所学习的内容。
+
+  + [[file:./program/opengl/sphereworld.cpp][sphereworld.cpp]]
+    
+#+INCLUDE: "./program/opengl/sphereworld.cpp" src c
+
+  
+  
+
+  
+  

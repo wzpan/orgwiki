@@ -1,0 +1,68 @@
+                                    常用软件
+                                    ========
+
+Author: Joseph Pan
+Date: 2012-04-11 Wed
+
+
+- 窗口管理
+  
+  - [Awesome]
+
+- 网络应用
+
+  - 社交通讯
+
+    - QQ
+
+  - 上传下载
+
+    - wget
+
+    - Axel
+
+    - Lftp
+
+    - aMule  
+
+  - 网络浏览
+
+    - Chrome
+
+    - w3m
+
+    - Liferea      
+
+- 办公处理
+
+  - [PDF相关]
+  
+  - [心智图]
+
+  - [xCHM]
+
+- 影音图像
+
+  - 图形图像
+
+    - ImageMagicK
+  
+    - Shutter
+
+  - 媒体播放
+
+    - MPlayer
+  
+- 环境模拟
+
+  - Wine
+
+  - Virtualbox  
+
+
+
+  [Awesome]: ./software_awesome.html
+  [PDF相关]: ./software_pdf.html
+  [心智图]: ./software_mindmap.html
+  [xCHM]: ./software_xchm.html
+

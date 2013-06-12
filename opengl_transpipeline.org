@@ -1,0 +1,98 @@
+#+TITLE:     变换管线
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:nil f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./opengl_index.html
+
+#+BEGIN_HTML
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+#+END_HTML
+ 
+\[ \begin{bmatrix} x_0 \\ y_0 \\ z_0 \\ w_0 \end{bmatrix} \rightarrow \begin{bmatrix} \mbox{模型视} \\ \mbox{图矩阵} \end{bmatrix} \rightarrow \begin{bmatrix} x_e \\ y_e \\ z_e \\ w_e \end{bmatrix} \rightarrow \begin{bmatrix} \mbox{投影矩阵} \end{bmatrix} \rightarrow \begin{bmatrix} x_c \\ y_c \\ z_c \\ w_c \end{bmatrix} \rightarrow \boxed{\mbox{透视除法}} \rightarrow \begin{bmatrix} x_{c}/w_{c} \\ y_{c}/w_{c} \\ z_{c}/w_{c} \end{bmatrix} \rightarrow \begin{bmatrix} \mbox{视口变换} \end{bmatrix} \rightarrow \begin{bmatrix} \mbox{窗口坐标} \end{bmatrix} \]
+#+BEGIN_CENTER
+顶点变换管线
+#+END_CENTER
+
+* 矩阵堆栈
+
+#+INDEX: GLMatrixStack
+#+INDEX: LoadIdentity
+#+INDEX: LoadMatrix
+#+INDEX: MultMatrix
+#+INDEX: GetMatrix  
+
+  我们常常需要保存当前的变换状态，然后在放置了一些物体之后再恢复到这个状态。当一开始就把模型视图矩阵变换为自己经常使用的视图矩阵时（因此不再位于原点），这种方法是非常方便的。
+
+  习惯上，我们会使用一个矩阵堆栈来帮助完成这些工作，而GLTools库则会在math3d矩阵函数顶部建立实用类。这个类称为 =GLMatrixStack= 。
+
+  这个类的构造函数允许指定堆栈的最大深度，默认的堆栈深度为64。这个矩阵堆栈在初始化时已经在堆栈中包含了单位矩阵。
+
+  #+BEGIN_SRC c
+    GLMatrixStack::GLMatrixStack(int iStackDepth = 64);
+  #+END_SRC
+
+  我们可以通过调用在顶部载入这个单位矩阵。
+
+  #+BEGIN_SRC c
+    void GLMatrixStack::LoadIdentity(void);
+  #+END_SRC
+
+  或者可以在堆栈的顶部载入任何矩阵。
+
+  #+BEGIN_SRC c
+    void GLMatrixStack::LoadMatrix(const M3DMatrix44f m);
+  #+END_SRC
+
+  此外，我们可以用一个矩阵乘以矩阵堆栈的顶部矩阵，相乘得到的结果随后将存储在堆栈的顶部。
+
+  #+BEGIN_SRC c
+  void GLMatrixStack::MultMatrix(const M3DMatrix44f);
+  #+END_SRC
+
+  最后，只要用 =GetMatrix= 函数就可以获得矩阵堆栈顶部的值，这个函数可以进行两次重载，以适应 =GLShaderManager= 的使用，或者仅仅是获得顶部矩阵的副本。
+
+  #+BEGIN_SRC c
+    const M3DMatrix44f& GLMatrixStack::GetMatrix(void);
+    void GLMatrixStack::GetMatrix(M3DMatrix44f mMatrix);
+  #+END_SRC
+
+** 压栈与出栈
+
+#+INDEX: PushMatrix   
+#+INDEX: PopMatrix
+
+   一个矩阵的真正价值在于通过压栈操作存储一个状态，然后通过出栈操作恢复这个状态。我们可以使用 =PushMatrix= 函数将矩阵压入堆栈来存储当前矩阵值。这样做实际上是复制了当前矩阵值，并将新的值放入了堆栈的顶部。
+
+   类似地， =PopMatrix= 将移除顶部矩阵，并恢复它下面的值。以上每种情况都有几次重载。
+
+   #+BEGIN_SRC c
+     void GLMatrixStack::PushMatrix(void);
+     void PushMatrix(const M3DMatrix44f mMatrix);
+     void PushMatrix(GLFrame& frame);
+     
+     void GLMatrixStack::PopMatrix(void);
+   #+END_SRC
+
+** 仿射变换
+
+#+INDEX: Rotate
+#+INDEX: Translate
+#+INDEX: Scale
+   
+   GLMatrixStack 类也内建了对旋转、平移和缩放矩阵的支持。相应的函数列出如下：
+
+   #+BEGIN_SRC c
+     void MatrixStack::Rotate(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
+     void MatrixStack::Translate(GLfloat x, GLfloat y, GLfloat z);
+     void MatrixStack::Scale(Glfloat x, GLfloat y, GLfloat z);
+   #+END_SRC
+
+   这些函数与它们对应的低阶 math3d 函数的运作类似，但有一点不同。 Rotate函数接受角度值而不是弧度值，以更加接近目前已经“不推荐”的OpenGL函数 =glRotate= 。
+
+* 管理管线
+
+

@@ -1,0 +1,6 @@
+INDEX: (sec-1) glBegin
+INDEX: (sec-1) glEnd
+INDEX: (sec-3) glVertex
+INDEX: (sec-3-4) GL_POINTS
+INDEX: (sec-3-5) glPointSize
+INDEX: (sec-3-5) glGetFloatv

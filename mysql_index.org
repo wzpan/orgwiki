@@ -1,0 +1,198 @@
+#+TITLE:     MySQL's Notes
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu
+#+KEYWORDS: Wiki
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./index.html
+
+* 参考
+  1. [[http://wiki.ubuntu.org.cn/UbuntuSkills][UbuntuSkills]]
+
+  
+* 安装MySQL
+
+  要安装 MySQL，可以在终端提示符后运行下列命令：
+
+  #+begin_example
+  sudo apt-get install mysql-server mysql-client #中途会让你输入一次root用户密码
+  #+end_example
+  
+  一旦安装完成，MySQL 服务器应该自动启动。
+
+  #+begin_example
+  sudo start mysql #手动的话这样启动
+  sudo stop mysql #手动停止
+  #+end_example
+
+  当你修改了配置文件後，你需要重启 mysqld 才能使这些修改生效。
+  
+  要想检查 mysqld 进程是否已经开启，可以使用下面的命令：
+
+  #+begin_example
+  pgrep mysqld
+  #+end_example
+
+  如果进程开启，这个命令将会返回该进程的 id。
+
+* 文件结构
+  MySQL配置文件：/etc/mysql/my.cnf ，其中指定了数据文件存放路径
+
+  #+begin_example
+  datadir         = /var/lib/mysql   
+  #+end_example
+
+  如果你创建了一个名为 test 的数据库，那么这个数据库的数据会存放到 /var/lib/mysql/test 目录下。
+
+* 进入MySQL
+  
+  #+begin_example
+  mysql -uroot -p 
+  #+end_example
+
+  (输入mysql的root密码)
+
+  #+begin_example
+  qii@ubuntu:~$ mysql -u root -p
+  Enter password: 
+  Welcome to the MySQL monitor.  Commands end with ; or \g.
+  Your MySQL connection id is 37
+  Server version: 5.1.41-3ubuntu12.3 (Ubuntu)
+
+  Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+  mysql> 
+  #+end_example   
+
+  修改 MySQL 的管理员密码：
+
+  #+begin_example
+  sudo mysqladmin -u root password newpassword；
+  #+end_example
+  
+* 简单的操作
+
+   显示数据库：
+
+   #+begin_example
+   mysql> show databases;
+   +--------------------+
+   | Database           |
+   +--------------------+
+   | information_schema |
+   | mysql              |
+   +--------------------+
+   2 rows in set (0.00 sec)   
+   #+end_example
+
+* mysql的数据库存放路径
+
+  #+begin_example
+  /var/lib/mysql
+  #+end_example
+
+* 导入导出
+
+** 导出整个数据库
+
+   #+begin_example
+   mysqldump -u 用户名 -p 数据库名 > 导出的文件名
+ 　mysqldump -u wcnc -p smgp_apps_wcnc > wcnc.sql
+   #+end_example
+
+** 导出一个表
+
+   #+begin_example
+   mysqldump -u 用户名 -p 数据库名 表名> 导出的文件名
+   mysqldump -u wcnc -p smgp_apps_wcnc users> wcnc_users.sql
+   #+end_example
+
+** 导出一个数据库结构
+
+   #+begin_example
+   mysqldump -u wcnc -p -d --add-drop-table smgp_apps_wcnc >d:\wcnc_db.sql
+   #+end_example
+
+   说明：-d 没有数据 --add-drop-table 在每个create语句之前增加一个drop table
+
+** 导入数据库
+
+   常用source 命令
+
+   #+begin_example
+   mysql>use 数据库
+   #+end_example
+   
+   然后使用source命令，后面参数为脚本文件(如这里用到的.sql)
+
+   #+begin_example
+ 　mysql>source d:\wcnc_db.sql  
+   #+end_example
+  
+* 忘了mysql的root口令怎么办
+
+  #+begin_example
+  sudo /etc/init.d/mysql stop
+  sudo mysqld_safe --skip-grant-tables &
+  sudo mysqladmin -u user password 'newpassword
+  sudo mysqladmin flush-privileges
+  #+end_example
+
+* 如何优化mysql
+
+  #+begin_example
+  wget  http://www.day32.com/MySQL/tuning-primer.sh
+  chmod +x tuning-primer.sh
+  ./tuning-primer.sh
+  #+end_example
+
+* 修改mysql的root口令
+  
+  #+begin_example
+  sudo mysqladmin -u root -p password '你的新密码'
+  #+end_example
+
+* mysql命令行中文显示?号
+  
+  #+begin_example
+  mysql> set names utf8;
+  #+end_example
+
+* 常用mysql管理语句
+
+*** 查询表状态
+    
+   #+begin_example
+   show table status;
+   #+end_example
+
+*** 查询mysql进程
+    #+begin_example
+    show full processlist;  
+    #+end_example
+
+*** 转换表为MyISAM类型，转表锁为行锁
+
+    #+begin_example
+    alter table site_stats engine=MyISAM;   
+    #+end_example
+
+*** 查看 mysql 变量
+
+    #+begin_example
+    show variables; 
+    #+end_example
+
+* mysql的自动备份
+
+   #+begin_example
+#备份 forum myweb 数据库到 /backup/mysql 目录，并删除7天之前的备份记录
+mysqldump --opt --skip-lock-tables -u root forum | gzip -9 > /backup/mysql/forum.`date +%Y%m%d`.sql.gz
+mysqldump --opt --skip-lock-tables -u root myweb | gzip -9 > /backup/mysql/myweb.`date +%Y%m%d`.sql.gz
+find /backup/mysql/ -type f -ctime +7 -exec rm {} \;
+   #+end_example

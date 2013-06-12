@@ -1,0 +1,69 @@
+#+TITLE:     一个简单批次容器
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:nil f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./opengl_index.html
+
+* GBatch
+#+INDEX: GLBatch
+GLTools库中包含一个简单的容器类，叫做GLBatch。这个类可以作为对几种图元简单批次的容器使用，而且它知道在使用GLShaderManager支持的任意存储着色器时如何对图元进行渲染。使用GLBatch类非常简单。首先对批次进行初始化，告诉这个类它代表哪种图元，其中包括的顶点数，以及（可选）一组或两组纹理坐标。
+
+#+BEGIN_SRC c
+  void GLBatch::Begin(GLenum primitive, GLunit nVerts, GLuint nTextureUnits=0);
+#+END_SRC
+
+然后，至少要复制一个由3分量(x,y,z)顶点组成的数组。
+
+#+BEGIN_SRC c
+void GLBatch::CopyVertexData3f(GLfloat *vVerts);
+#+END_SRC
+
+我们还可以选择复制表面法线、颜色和纹理坐标。
+
+#+BEGIN_SRC c
+  void GLBatch::CopyNormalDataf(GLfloat *vNorms);
+  void GLBatch::CopyColorData4f(GLfloat *vColor);
+  void GLBatch::CopyTexCoordData2f(GLfloat *vTexCoords, GLunit uiTextureLayer);
+#+END_SRC
+
+在完成上述工作之后，我们可以调用End来表明已经完成了数据复制工作，并且将设置内部标记，以通知这个类包含哪些属性。
+
+#+BEGIN_SRC c
+void GLBatch::End(void);
+#+END_SRC
+
+实际上，可以在任何我们想要的时候来进行复制，只要不改变类的大小即可。而一旦调用End函数就不能再增加新的属性了（也就是说我们现在也不能确定是否要有表面法线了）。
+
+* 用法示例
+
+现在我们来快速浏览一下如何使用这个类渲染一个单个三角形。我们在源文件开头部分声明了GLBatch类的一个实例。
+
+#+BEGIN_SRC c
+GLBatch triangleBatch;
+#+END_SRC
+
+然后在函数中，我们用3个顶点设定了一个三角形。
+
+#+BEGIN_SRC c
+  // Load up a triangle
+  GLfloat vVerts[] = { -0.5f, 0.0f, 0.0f,
+                       0.5f, 0.0f, 0.0f,
+                       0.0f, 0.5f, 0.0f };
+  
+  triangleBatch.Begin(GL_TRIANGLES, 3);
+  triangleBatch.CopyVertexData3f(vVerts);
+  triangleBatch.End();
+#+END_SRC
+
+最后，在RenderScene函数中，我们选择了适当的存储着色器并调用Draw函数。
+
+#+BEGIN_SRC c
+  GLfloat vRed[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+  shaderManager.UseStockShader(GLT_SHADER_IDENTITY, vRed);
+  triangleBatch.Draw();
+#+END_SRC
+

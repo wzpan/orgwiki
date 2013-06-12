@@ -1,0 +1,83 @@
+#+TITLE:     我的个人知识库
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: 我的个人知识库
+#+KEYWORDS: Wiki
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t author:nil creator:nil
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: index.html
+
+#+begin_html
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+var rndNum2 = parseInt(Math.random() * 10)
+document.write("<div style='margin: 10px auto; width: 500px; text-align: center; font: 14px/20px italic Times, serif;  padding: 8px;  text-indent: 23px;'><p>");
+document.write("<SCRIPT src=\"proverb\/"+rndNum2+".js\" type=\"text\/javascript\"><\/SCRIPT>")
+document.write("</p></div>");
+//-->
+</SCRIPT>
+<p class="author"> Joseph Pan
+<a href="mailto:cs.wzpan@gmail.com">&lt;cs.wzpan@gmail.com&gt;</a>
+</p>
+#+end_html
+
+- 程序设计
+
+  - Shell
+
+  - [[./c_index.html][C/C++]]
+
+  - [[./java_index.html][Java]]
+
+  - Python
+
+  - [[./pascal_index.html][Pascal]]
+
+- 开发工具
+
+  - Emacs
+
+  - [[./opengl_index.html][OpenGL]]
+
+  - [[./git_index.html][Git]]
+
+  - SVN
+
+  - Doxygen
+
+  - [[./mysql_index.html][MySQL]]
+
+- 操作系统
+
+  - [[./ubuntu_index.html][Ubuntu]]
+
+  - [[./software_index.html][常用软件]]
+  
+- 科技排版
+
+  - LaTeX
+
+  - [[./tikz_intro.html][TikZ]]
+  
+- 理论知识
+
+  - 数学
+    
+  - 图形学
+
+  - 算法与数据结构  
+    
+- 品读生活
+  
+  - [[./comics/comics_index.org][漫画]]
+
+- 其他
+
+  - [[./theindex.html][索引]]
+    
+    
+
+

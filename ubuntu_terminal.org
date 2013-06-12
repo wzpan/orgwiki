@@ -1,0 +1,34 @@
+#+TITLE:     控制台
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-04-11 Wed
+#+DESCRIPTION: Ubuntu控制台
+#+KEYWORDS: Ubuntu terminal
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./ubuntu_index.html
+
+
+* 指定控制台切换
+  
+  #+begin_example
+  Ctrl + ALT + Fn(n:1~7)
+  #+end_example
+
+* 控制台下滚屏
+
+  #+begin_example
+  SHIFT + pageUp/pageDown
+  #+end_example
+
+* 控制台抓图
+  #+begin_example
+  setterm -dump n(n:1~7)
+  #+end_example
+
+只支持tty1-7。没中文。没颜色代码序列。
+
+  

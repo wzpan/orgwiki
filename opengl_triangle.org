@@ -1,0 +1,100 @@
+#+TITLE:     在3D空间中绘制三角形
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:nil -:nil f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./opengl_index.html
+
+* 三角形：第一种多边形
+#+INDEX: GL_TRIANGLES
+  
+  =GL_TRIANGLES= 图元通过连接3个顶点绘制三角形。下面这段代码绘制了两个三角形，每个三角形使用了3个顶点：
+
+  #+BEGIN_SRC c
+  glBegin(GL_TRIANGLES);
+	glVertex2f(0.0f, 0.0f);		// V0
+	glVertex2f(25.0f, 25.0f);	// V1
+	glVertex2f(50.0f, 0.0f);	// V2
+
+	glVertex2f(-50.0f, 0.0f);	// V3
+	glVertex2f(-75.0f, 50.0f);	// V4
+	glVertex2f(-25.0f, 0.0f);	// V5
+  glEnd();
+  #+END_SRC
+
+: 两个使用GL_TRIANGLES绘制               
+: 的三角形                              | y
+:                      v4--            |  
+:                         \\--   2     |       v1   
+:                          \  \-       | 1   /--    2
+:                        1  \   \--    | /---   \--- 
+:                         ---\-----\---+------------\- x
+:                            v3  3  v5 |v0    3      v2
+:                                      |
+:                                      |
+:                                      |
+:                                      |
+
+* 正反面：环绕
+
+#+INDEX: glFrontFace
+#+INDEX: GL_CW
+#+INDEX: GL_CCW
+
+  顶点的指定次序以及方向的组合称为环绕（winding）。上图中的两个三角形 =（v0->v1->v2）= , =(v3->v4->v5)= 被认为具有顺时针方向的环绕，因为它们都是按照顺时针方向进行绘制的。这是由顶点的指定顺序决定的。
+
+  在默认情况下，OpenGL认为 *逆时针方向环绕的一面是多边形的正面* 。在一个场景中，使所有的多边形保持环绕方向的一致并使用正面多边形来绘制所有实心物体的外表面是非常重要的。
+
+  如果想改变OpenGL的这个默认行为，可以调用 =glFrontFace= 函数。
+
+  #+BEGIN_SRC c
+  glFrontFace(GL_CW);
+  #+END_SRC
+
+  GL_CW参数告诉OpenGL顺时针环绕的多边形将被认为是正面的。为了把多边形的正面重新恢复为逆时针环绕，可以在这个函数中使用GL_CCW参数。
+
+* 三角形带
+
+#+INDEX: GL_TRIANGLE_STRIP  
+  
+  使用 =GL_TRIANGLE_STRIP= 图元，可以绘制一串相连的三角形，从而节省大量的时间。下图显示了一组5个顶点（标号从V0至V4）所指定的3个三角形的绘制过程。在此，读者可以看到这些顶点并不是按照它们的指定顺序进行遍历的，这是为了保持每个三角形的环绕方向（逆时针）。它的绘制模式是V0、V1、V2，接着是V2、V1、V3,然后是V2、V3、V4,以此类推。
+
+: 
+:                                                            v4
+:                                                           -- 
+:                                                      3  -/  \  2   
+:                                  3                    -/     -\    
+:          v2              v2 ----------- v3       v2  /---------\ v3
+:         /\                 /\       -/              /\   1   -/         
+:   3   /-  \  2           /-  \1    -/ 2           /-  \     -/          
+:     /-     \           /-     \  -/             /-     \  -/            
+:    ----------         ---------\/              ---------\/              
+:   v0   1     v1     v0         v1            v0         v1
+:                                                         
+: (v0->v1->v2->v0)   (v2->v1->v3->v2）           (v2->v3->v4->v2) 
+: 
+
+
+* 三角形扇
+#+INDEX: GL_TRIANGLE_FAN
+
+  除了三角形带之外，还可以使用 =GL_TRIANGLE_FAN= 创建一组围绕一个中心点的相连三角形。
+
+  下图显示了通过指定4个顶点所产生的包括3个三角形的三角形扇。用前3个顶点制定了第1个三角形之后，后续的每个顶点和原点（V0）以及前驱的那个顶点（Vn-1）形成了接下来的那个三角形。
+
+: 
+:      v1             v1                  v1    
+:       +\   2         +\                  +\                   
+:       | ---\         | ---\              | ---\  v2          
+:    1  |     --- v2   |     -\--          |     -\--          
+:       |   /--        |  1 /---\  2       |    /---\          
+:       | /- 3         | /-      --\       | /-   1  --\    
+:       --             ---------------     -------------/-  
+:       v0             v0     3      v3   v0  \---   /--  v3
+:                                             3   \--  2
+:                                                  v4  
+
+  

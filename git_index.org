@@ -1,0 +1,26 @@
+#+TITLE:     Git's Notes
+#+AUTHOR:    Joseph Pan
+#+EMAIL:     cs.wzpan@gmail.com
+#+DATE:      2012-06-08 五
+#+DESCRIPTION: Git
+#+KEYWORDS: Wiki
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   ./index.html
+
+
+- Git入门
+  
+  - [[./git_intro.html][Git入门]]
+
+  - [[./git_basic.html][Git基础]]
+
+- 项目托管
+  
+  - Github
+  
+  - [[./git_googlecode.html][Google Code]]
+  
