@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>OpenGL特殊按键响应和简单动画</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="OpenGL特殊按键响应和简单动画"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:16 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">OpenGL特殊按键响应和简单动画</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 特殊按键</a>
+<ul>
+<li><a href="#sec-1-1">1.1 示例程序</a></li>
+<li><a href="#sec-1-2">1.2 MakeFile</a></li>
+<li><a href="#sec-1-3">1.3 输出</a></li>
+<li><a href="#sec-1-4">1.4 分析</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 简单的动画片</a>
+<ul>
+<li><a href="#sec-2-1">2.1 示例程序</a></li>
+<li><a href="#sec-2-2">2.2 Makefile</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 特殊按键</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+GLUT提供了另一个回调函数，即 <code>glutSpecialFunc</code> 。它注册了一个能够在按一个特殊按键时被调用的函数。在GLUT的语法中，特殊按键是指功能键或者方向键（ <code>↑</code> 、 <code>↓</code> 、 <code>←</code> 、 <code>→</code> 箭头键， <code>PgUp</code> 、 <code>PgDn</code> 键等）中的一个。在主函数中加入下面的代码行，来注册SpecialKeys回调函数。
+</p>
+
+
+
+<pre class="src src-c">glutSpecialFunc(SpecialKeys);
+</pre>
+
+
+<p>
+它在按键时接受一个相应的按键编码，以及在使用鼠标时光标的x和y坐标位置（像素形式）。
+</p>
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 示例程序</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter02/Move/Move.cpp">Move.cpp</a>
+</li>
+</ul>
+
+
+<p>    
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter02/Move/Move.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> MakeFile</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<ul>
+<li><a href="./program/opengl/Linux/Chapter02/Move/Makefile">MakeFile</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 输出</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p>
+  <img src="./images/opengl_fig03.png"  alt="./images/opengl_fig03.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> 分析</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p>
+  在“Move” 示例程序中，我们将顶点存储在一个全局（对于这个模型来说）数组中，这样我们就能够在按键时相应修改正方形的位置了。
+</p>
+<p>
+  这里我们还进行了碰撞检测，这样正方形就不会移出窗口范围了。请注意，我们可以轻松地更新批次位置，只需复制新的顶点数据即可。
+</p>
+<p>
+  <code>SpecialKeys</code> 函数的最后一行代码用来告诉GLUT需要更新窗口内容。
+</p>
+
+
+
+
+<pre class="src src-c">glutPostRedisplay();
+</pre>
+
+
+<p>
+  默认情况下，在窗口创建、改变大小或者需要重绘时，GLUT通过调用RenderScene函数来更新窗口。只要窗口发生最小化、恢复、最大化、覆盖或重新显示等变化，就会发生更新。我们可以 <b>人工</b> 调用 <code>glutPostRedisplay</code> 来告诉GLUT发生了某些改变，应该对场景进行渲染了。不过，用后面将要介绍的方法来完成这项工作尤其方便。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 简单的动画片</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  如果我们将 <code>glutPostRedisplay</code> 函数调用在 <code>RenderScene</code> 函数末尾，我们将得到一个持续自动刷新的程序。利用这个特点我们可以实现一个简单的动画。别担心， <b>这并不是一个无限循环</b> 。重绘消息实际是一条传递到一个内部消息循环中的消息，在屏幕刷新的间隔中，也会发生其他窗口事件。这就是说，我们仍然可以检测按键动作、鼠标移动、改变窗口大小和程序结束等动作。
+</p>
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 示例程序</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter02/Bounce/Bounce.cpp">Bounce.cpp</a>
+</li>
+</ul>
+
+
+<p>
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter02/Bounce/Bounce.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Makefile</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+<ul>
+<li><a href="./program/opengl/Linux/Chapter02/Bounce/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:16 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

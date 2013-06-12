@@ -1,0 +1,888 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>多媒体</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="多媒体"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-04-11 Wed"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content="Ubuntu多媒体"/>
+<meta name="keywords" content="Ubuntu 多媒体 avi png mpg rm rmvb pdf swf"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./ubuntu_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">多媒体</h1>
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 视频播放和转换</a>
+<ul>
+<li><a href="#sec-1-1">1.1 播放swf文件</a></li>
+<li><a href="#sec-1-2">1.2 如何保存串流视频(mms/rtsp)</a></li>
+<li><a href="#sec-1-3">1.3 批量将rmvb转为avi</a></li>
+<li><a href="#sec-1-4">1.4 批量将DVD转为avi</a></li>
+<li><a href="#sec-1-5">1.5 批量将任何格式的电影转为ogv</a></li>
+<li><a href="#sec-1-6">1.6 批量将rmvb格式的电影转为ogv</a></li>
+<li><a href="#sec-1-7">1.7 利用gst来转换任意电影为ogv</a></li>
+<li><a href="#sec-1-8">1.8 批量转换任意文件为ipod touch使用的mp4</a></li>
+<li><a href="#sec-1-9">1.9 转换任意格式的视频到H264</a></li>
+<li><a href="#sec-1-10">1.10 合并多个 rm 文件为一个 avi 文件</a></li>
+<li><a href="#sec-1-11">1.11 合并视频到一个文件</a></li>
+<li><a href="#sec-1-12">1.12 获取视频文件 xxx.avi 的信息</a></li>
+<li><a href="#sec-1-13">1.13 查看MKV视频文件 xxx.mkv 的信息</a></li>
+<li><a href="#sec-1-14">1.14 如何删除Totem电影播放机的播放历史记录</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 音频抓取和转换</a>
+<ul>
+<li><a href="#sec-2-1">2.1 CD 抓轨为 mp3 (有损)</a></li>
+<li><a href="#sec-2-2">2.2 CD 抓轨为 Flac (无损)</a></li>
+<li><a href="#sec-2-3">2.3 ape 转换为 flac</a></li>
+<li><a href="#sec-2-4">2.4 ape/flac 转换为 mp3</a></li>
+<li><a href="#sec-2-5">2.5 批量将 ape 转为 mp3</a></li>
+<li><a href="#sec-2-6">2.6 批量将 ape 转为 m4a</a></li>
+<li><a href="#sec-2-7">2.7 批量将 ape 转为 aac</a></li>
+<li><a href="#sec-2-8">2.8 批量将 flac 转为 mp3</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 图像转换</a>
+<ul>
+<li><a href="#sec-3-1">3.1 批量将svg转为png</a></li>
+<li><a href="#sec-3-2">3.2 批量转换格式到mp3</a></li>
+<li><a href="#sec-3-3">3.3 批量缩小图片到30%</a></li>
+<li><a href="#sec-3-4">3.4 批量转换jpg到png</a></li>
+<li><a href="#sec-3-5">3.5 将文字转为图片</a></li>
+<li><a href="#sec-3-6">3.6 如何压缩png图片</a></li>
+<li><a href="#sec-3-7">3.7 将多张图片合并到一个PDF文件</a></li>
+<li><a href="#sec-3-8">3.8 批量把pdf转换为txt并格式化</a></li>
+<li><a href="#sec-3-9">3.9 转换 pdf 到 png</a></li>
+<li><a href="#sec-3-10">3.10 获取jpg的扩展信息(Exif)</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 其它技巧</a>
+<ul>
+<li><a href="#sec-4-1">4.1 抓取桌面操作的视频</a></li>
+<li><a href="#sec-4-2">4.2 命令行读出文本</a></li>
+<li><a href="#sec-4-3">4.3 命令行截屏</a></li>
+<li><a href="#sec-4-4">4.4 延迟截屏</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 视频播放和转换</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 播放swf文件</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p>
+    安装swf解码器
+</p>
+
+
+<pre class="example">sudo apt-get install swfmill
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 如何保存串流视频(mms/rtsp)</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+
+
+<pre class="example">mplayer -dumpfile dump.rm -dumpstream rstp://....
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 批量将rmvb转为avi</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+
+
+
+<pre class="example">#ipod touch可用
+for i in *.rmvb; do mencoder -vf harddup -oac mp3lame -lameopts vbr=3 -ovc xvid -xvidencopts fixed_quant=4 -of avi $i -o `echo $i | sed -e 's/rmvb$/avi/'`; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> 批量将DVD转为avi</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+
+
+
+<pre class="example">for i in *.VOB; do mencoder -oac mp3lame -lameopts aq=7:vbr=2:q=6 -srate 44100 -ovc xvid -xvidencopts fixed_quant=4 -of avi $i -o `echo $i | sed -e 's/VOB$/avi/'`; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> 批量将任何格式的电影转为ogv</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+
+
+
+<pre class="example">#sudo apt-get install ffmpeg2theora   
+#firefox3.5或chrome直接支持播放，无需安装任何解码器，注意不支持rmvb，rmvb会出现a/v不同步问题
+for i in *; do ffmpeg2theora --optimize --deinterlace $i; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> 批量将rmvb格式的电影转为ogv</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+
+
+
+<pre class="example">    #!/bin/bash
+for i in *; do
+   mkfifo "/tmp/$i"
+   mencoder -quiet -vf harddup -ovc raw -oac pcm -o "/tmp/$i" "$i" &amp;
+   ffmpeg2theora --optimize --deinterlace "/tmp/$i" -o "`echo $i | sed 's/\(.*\)\..*$/\1/'`.ogv"
+   rm "/tmp/$i"
+   done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-7" class="outline-3">
+<h3 id="sec-1-7"><span class="section-number-3">1.7</span> 利用gst来转换任意电影为ogv</h3>
+<div class="outline-text-3" id="text-1-7">
+
+
+
+
+
+<pre class="example">    #!/bin/bash
+for i in *; do
+   gst-launch-0.10 filesrc location="$i" ! decodebin name=demux \
+   { oggmux name=mux ! filesink location="`echo $i | sed 's/\(.*\)\..*$/\1/'`.ogv" } \
+   { demux. ! queue ! audioconvert ! vorbisenc ! queue ! mux. } \
+   { demux. ! queue ! ffmpegcolorspace ! videorate ! theoraenc ! mux. } 
+done   
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-8" class="outline-3">
+<h3 id="sec-1-8"><span class="section-number-3">1.8</span> 批量转换任意文件为ipod touch使用的mp4</h3>
+<div class="outline-text-3" id="text-1-8">
+
+
+
+
+
+<pre class="example">#!/bin/bash
+#ubuntu10.04自带的mencoder由于版权问题，不支持h264编码，需要重新编译；也可以直接参考下面的压缩方法。
+#sudo apt-get install mencoder mplayer
+find . -name '*.avi' -o -name '*.rm' -o -name '*.rmvb' -o -name '*.wmv' -o \
+      -name '*.vob' -o -name '*.asf' -o -name '*.mpg' -o -name '*.ts' -o \
+      -name '*.flv' -o -name '*.mpeg' -o -name '*.ogv' -o -name '*.mov' -o \
+      -name '*.mkv' -o -name '*.dat' | while read i; do
+  basename=`echo $i | sed 's/\(.*\)\..*$/\1/'`
+  font="WenQuanYi Zen Hei"
+
+  if [ -f "${basename}.srt" ] ; then
+     cp "${basename}.srt" $$.srt
+     m0="-vf scale=480:-10,harddup -sub $$.srt -unicode -subcp GB18030 -subfont-text-scale 3"; 
+  else
+     m0="-vf scale=480:-10,harddup"; 
+  fi
+ 
+  x0="-lavfopts format=mp4 -faacopts mpeg=4:object=2:raw:br=160 -oac faac -ovc x264 -sws 9 -x264encopts nocabac:level_idc=30:bframes=0:global_header:threads=auto:subq=5:frameref=6:partitions=all:trellis=1:chroma_me:me=umh:bitrate=500 -of lavf -ofps 24000/1001";
+  mencoder $m0 -fontconfig -font "${font}" $x0 -o "$$.mp4" "$i"
+  mv "$$.mp4" "${basename}.mp4"
+  if [ -f "${basename}.mp4" ] ; then
+     rm "$i"
+  fi
+done    
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-9" class="outline-3">
+<h3 id="sec-1-9"><span class="section-number-3">1.9</span> 转换任意格式的视频到H264</h3>
+<div class="outline-text-3" id="text-1-9">
+
+
+
+
+
+<pre class="example">#!/bin/bash
+#sudo apt-get install faac x264 gpac mplayer mencoder
+basename=`echo $1 | sed 's/\(.*\)\..*$/\1/'`
+#获得视频的长宽和帧数
+mplayer -vo null -ao null -identify -frames 0 "$1" 2&gt;/dev/null &gt; video.info
+FPS=`cat video.info | grep ID_VIDEO_FPS | cut -d = -f 2`
+#FPS=23.976
+W=`cat video.info | grep ID_VIDEO_WIDTH | cut -d = -f 2`
+H=`cat video.info | grep ID_VIDEO_HEIGHT | cut -d = -f 2`
+WIDTH=480
+HEIGHT=`expr $WIDTH \* $H \/ $W`
+echo $1 FPS=$FPS WIDTH=$WIDTH HEIGHT=$HEIGHT
+mkfifo audio.wav video.yuv
+faac -o audio.aac audio.wav &amp;
+mplayer -ao pcm:file=audio.wav:fast -vc null -vo null "$1" 
+x264 --profile baseline --fps $FPS -o video.264 video.yuv ${WIDTH}x${HEIGHT} &amp;
+mencoder -vf scale=$WIDTH:$HEIGHT,harddup,pp=fd,format=i420 -nosound -ovc raw -of rawvideo -ofps $FPS -o video.yuv "$1"
+MP4Box -new -add video.264 -add audio.aac -fps $FPS "$basename.mp4"
+rm video.info audio.aac video.264 audio.wav video.yuv
+#使用方法将上面的脚本保存为 x264.sh , x264.sh xxx.avi 来进行转化。
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-10" class="outline-3">
+<h3 id="sec-1-10"><span class="section-number-3">1.10</span> 合并多个 rm 文件为一个 avi 文件</h3>
+<div class="outline-text-3" id="text-1-10">
+
+
+
+
+
+<pre class="example">mencoder -ovc lavc 1.rm -oac mp3lame -o 1.avi
+mencoder -ovc lavc 2.rm -oac mp3lame -o 2.avi
+mencoder -idx 1.avi -ovc copy -oac copy -o o1.avi
+mencoder -idx 2.avi -ovc copy -oac copy -o o2.avi
+cat o1.avi o2.avi | mencoder -noidx -ovc copy -oac copy -o output.avi -    
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-11" class="outline-3">
+<h3 id="sec-1-11"><span class="section-number-3">1.11</span> 合并视频到一个文件</h3>
+<div class="outline-text-3" id="text-1-11">
+
+
+
+
+
+<pre class="example">mencoder -ovc copy -oac copy -idx  -o 目标文件名 文件名1 文件名2
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-12" class="outline-3">
+<h3 id="sec-1-12"><span class="section-number-3">1.12</span> 获取视频文件 xxx.avi 的信息</h3>
+<div class="outline-text-3" id="text-1-12">
+
+
+
+
+
+<pre class="example">mplayer -vo null -ao null -frames 0 -identify "xxx.avi" 2&gt;/dev/null | sed -ne '/^ID_/ { s/[]()|&amp;;&lt;&gt;`'"'"'\\!$" []/\\&amp;/g;p }'
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-13" class="outline-3">
+<h3 id="sec-1-13"><span class="section-number-3">1.13</span> 查看MKV视频文件 xxx.mkv 的信息</h3>
+<div class="outline-text-3" id="text-1-13">
+
+
+
+
+
+<pre class="example">#sudo apt-get install mkvtoolnix
+mkvinfo -v xxx.mkv
+</pre>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-14" class="outline-3">
+<h3 id="sec-1-14"><span class="section-number-3">1.14</span> 如何删除Totem电影播放机的播放历史记录</h3>
+<div class="outline-text-3" id="text-1-14">
+
+
+
+
+<pre class="example">rm ~/.recently-used
+</pre>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 音频抓取和转换</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> CD 抓轨为 mp3 (有损)</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+
+
+
+<pre class="example">#sudo apt-get install abcde
+abcde -o mp3 -b
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> CD 抓轨为 Flac (无损)</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+
+
+
+<pre class="example">#sudo apt-get install abcde
+abcde -o flac -b
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> ape 转换为 flac</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+
+
+
+<pre class="example">#sudo apt-get install flac shntool iconv mac
+iconv -f GB2312 -t UTF-8 example.cue -o example_UTF-8.cue
+shntool split -t "%n.%p-%t" -f example_UTF-8.cue -o flac example.ape -d flacOutputDir
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> ape/flac 转换为 mp3</h3>
+<div class="outline-text-3" id="text-2-4">
+
+
+
+
+
+<pre class="example">#sudo apt-get install flac shntool lame 
+#ape 需要安装  monkeys 包
+iconv -f GB2312 -t UTF-8 example.cue -o example_UTF-8.cue
+shntool split -t "%n.%p-%t" -f example_UTF-8.cue -o 'cust ext=mp3 lame --r3mix -b 320 --quiet - %f' example.ape -d mp3OutputDir
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="section-number-3">2.5</span> 批量将 ape 转为 mp3</h3>
+<div class="outline-text-3" id="text-2-5">
+
+
+
+
+
+<pre class="example">for f in *.ape; do gst-launch-0.10 filesrc location="$f" ! decodebin ! audioconvert ! lame vbr=0 bitrate=320 ! id3mux ! filesink location="${f%.ape}.mp3"; done
+#需要安装 shntool
+for i in *.ape; do shnconv -i ape -o "cust ext=mp3 lame -b 320 - %f" "$i" -d mp3OutputDir; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-6" class="outline-3">
+<h3 id="sec-2-6"><span class="section-number-3">2.6</span> 批量将 ape 转为 m4a</h3>
+<div class="outline-text-3" id="text-2-6">
+
+
+
+
+
+<pre class="example">for f in *.ape; do ffmpeg -i  "$f" -acodec alac "${f%.ape}.m4a"; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-7" class="outline-3">
+<h3 id="sec-2-7"><span class="section-number-3">2.7</span> 批量将 ape 转为 aac</h3>
+<div class="outline-text-3" id="text-2-7">
+
+
+
+
+
+<pre class="example">for f in *.ape; do ffmpeg -i  "$f" -acodec aac -strict experimental -ab 256k "${f%.ape}.aac"; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-8" class="outline-3">
+<h3 id="sec-2-8"><span class="section-number-3">2.8</span> 批量将 flac 转为 mp3</h3>
+<div class="outline-text-3" id="text-2-8">
+
+
+
+
+
+<pre class="example">for i in *.flac; do shnconv -i flac -o "cust ext=mp3 lame -b 320 - %f" "$i" -d mp3OutputDir; done
+</pre>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 图像转换</h2>
+<div class="outline-text-2" id="text-3">
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 批量将svg转为png</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+
+
+
+<pre class="example">for i in *.svg; do inkscape $i --export-png=`echo $i | sed -e 's/svg$/png/'`; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 批量转换格式到mp3</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+
+
+
+<pre class="example">    #sudo apt-get install lame mplayer
+for i in *; do base=${i%.*}; mplayer -quiet -vo null -vc dummy -af volume=0,resample=44100:0:1 -ao pcm:waveheader:file
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 批量缩小图片到30%</h3>
+<div class="outline-text-3" id="text-3-3">
+
+
+
+
+
+<pre class="example">for i in *.jpg; do convert -resize 30%x30% "$i" "sm-$i"; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> 批量转换jpg到png</h3>
+<div class="outline-text-3" id="text-3-4">
+
+
+
+
+
+<pre class="example">for i in *.jpg; do convert $i `echo $i | sed -e 's/jpg$/png/'`; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> 将文字转为图片</h3>
+<div class="outline-text-3" id="text-3-5">
+
+
+
+
+
+<pre class="example">convert -size 200x30 xc:transparent -font /usr/share/fonts/truetype/wqy/wqy-microhei.ttc -fill red -pointsize 16 -draw "text 5,15 '测试中文转为图片'" test.png
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-6" class="outline-3">
+<h3 id="sec-3-6"><span class="section-number-3">3.6</span> 如何压缩png图片</h3>
+<div class="outline-text-3" id="text-3-6">
+
+
+
+
+
+<pre class="example">#sudo apt-get install optipng
+optipng -o7 old.png new.png
+#或 sudo apt-get install pngcrush
+#pngcrush -brute old.png new.png
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-7" class="outline-3">
+<h3 id="sec-3-7"><span class="section-number-3">3.7</span> 将多张图片合并到一个PDF文件</h3>
+<div class="outline-text-3" id="text-3-7">
+
+
+
+
+
+<pre class="example">convert *.jpg out.pdf
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-8" class="outline-3">
+<h3 id="sec-3-8"><span class="section-number-3">3.8</span> 批量把pdf转换为txt并格式化</h3>
+<div class="outline-text-3" id="text-3-8">
+
+
+
+
+
+<pre class="example">sudo apt-get install poppler-utils poppler-data
+find ./ -name '*.txt' | while read i; do cat $i | awk '{if ($0 ~ "^space:”) {printf “\n”$0} else {printf $0}}’ | sed ‘/^space:*digit:*$/d’ | sed ’s/^space:\+/    /’ | sed ’s/＂/”/g’ &gt; “../txt/$i”; done
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-9" class="outline-3">
+<h3 id="sec-3-9"><span class="section-number-3">3.9</span> 转换 pdf 到 png</h3>
+<div class="outline-text-3" id="text-3-9">
+
+
+
+
+
+<pre class="example">#sudo apt-get install imagemagick
+convert -density 196 FILENAME.pdf  FILENAME.png
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-10" class="outline-3">
+<h3 id="sec-3-10"><span class="section-number-3">3.10</span> 获取jpg的扩展信息(Exif)</h3>
+<div class="outline-text-3" id="text-3-10">
+
+
+
+
+
+<pre class="example">identify -verbose xxx.jpg
+</pre>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 其它技巧</h2>
+<div class="outline-text-2" id="text-4">
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 抓取桌面操作的视频</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+
+
+
+<pre class="example">ffmpeg -f x11grab -s wxga -r 25 -i :0.0 -sameq /tmp/out.mpg
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 命令行读出文本</h3>
+<div class="outline-text-3" id="text-4-2">
+
+<p>   可以使用espeak在控制命令行中朗读一段文本。
+</p>
+
+
+<pre class="example">espeak -vzh "从前有座山"
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> 命令行截屏</h3>
+<div class="outline-text-3" id="text-4-3">
+
+
+
+
+
+<pre class="example">scrot -s screenshot.png
+</pre>
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> 延迟截屏</h3>
+<div class="outline-text-3" id="text-4-4">
+
+
+
+
+<pre class="example">gnome-screenshot -d 10 #延迟10秒抓图
+gnome-screenshot -w -d 5 #延迟5秒抓当前激活窗口
+</pre>
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-04-11 Wed</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

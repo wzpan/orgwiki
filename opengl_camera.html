@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>使用照相机和角色在OpenGL中移动</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="使用照相机和角色在OpenGL中移动"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:18 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">使用照相机和角色在OpenGL中移动</h1>
+
+
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+<ul>
+<li>固定的物体（如地形）通常不进行变换，它们的顶点通常准确的指定了几何图形在空间中应该怎样进行绘制。
+</li>
+<li>在场景中移动的物体通常称为角色（actor），角色具有它们自己的变换，并且角色所进行的变换不仅与全局坐标系统（视觉坐标系统）有关，而且常常和其他角色有关。自己具有变换的角色被认为具有它自己的参考帧（或称本地对象坐标系统）。对于许多非渲染相关的几何图形测试，在本地和全局坐标系统之间进来来回变换也常常是非常有用的。
+</li>
+</ul>
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 角色帧</a></li>
+<li><a href="#sec-2">2 欧拉角</a></li>
+<li><a href="#sec-3">3 四元数</a></li>
+<li><a href="#sec-4">4 照相机管理</a></li>
+<li><a href="#sec-5">5 综合应用</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 角色帧</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+  我们可以用一种简单灵活的方法来表示参考帧，就是使用一个数据结构（或C++中的类）。这个数据结构将包含空间中的：
+</p>
+<ul>
+<li>一个位置
+</li>
+<li>一个指向前面的向量
+</li>
+<li>一个指向上面的向量
+</li>
+</ul>
+
+
+<p>    
+  使用这些量，就可以唯一地标识空间中一个特定的位置和方向。下面这个数据结构例子取自 math3d 函数库，称为GLFrame，它可以存储所有相关的信息。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">class</span> <span style="color: #ffd700; font-style: italic;">GLFrame</span>
+{
+      <span style="color: #b0c4de; font-weight: bold;">protected</span>:
+              <span style="color: #00ffff; font-weight: bold;">M3DVector3f</span> <span style="color: #ffd700; font-style: italic;">vLocation</span>;
+              <span style="color: #00ffff; font-weight: bold;">M3DVector3f</span> <span style="color: #ffd700; font-style: italic;">vUp</span>;
+              <span style="color: #00ffff; font-weight: bold;">M3DVector3f</span> <span style="color: #ffd700; font-style: italic;">vForward</span>;
+
+      public:
+      ...
+};
+</pre>
+
+
+<p>
+  使用像这样的一个参考帧来表示一个物体的位置和方向是一种非常强大的机制。首先，我们可以使用这些数据直接创建一个\(4\times 4\)的变换矩阵。考虑我们之前在<a href="./opengl_gjjzcz.html#sec-1">高级矩阵操作</a>中画出的一个变换矩阵，向上的向量作为矩阵的y列，向前的向量则作为z列向量，位置则作为移动向量。这样就只缺少x向量了。由于我们知道3个轴是相互垂直的（正交），因此我们可以通过把y和z向量相乘来计算x列向量。下面的程序显示了GLFrame类的函数GetMatrix，它就用来完成这个任务。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">///////////////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Derives a 4x4 transformation matrix from a frame of reference</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLFrame</span>::GetMatrix(<span style="color: #00ffff; font-weight: bold;">M3DTMatrix44f</span> <span style="color: #ffd700; font-style: italic;">mMatrix</span>, <span style="color: #00ffff; font-weight: bold;">bool</span> <span style="color: #ffd700; font-style: italic;">bRotationOnly</span> = <span style="color: #b0c4de; font-weight: bold;">false</span>)
+{
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Calculate the right side (x) vector, drop it right into the matrix</span>
+  <span style="color: #00ffff; font-weight: bold;">M3DVector3f</span> <span style="color: #ffd700; font-style: italic;">vXAxis</span>;
+  m3dCrossProduct(vXAxis, vUp, vForward);
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Set matrix column does not fill in the fourth value...</span>
+  m3dSetMatrixColumn44(matrix, vXAxis, 0);
+  matrix[3] = 0.0f;
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Y Column</span>
+  m3dSetMatrixColumn44(matrix, vUp, 1);
+  matrix[7] = 0.0f;
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Z Column</span>
+  m3dSetMatrixColumn44(matrix, vForward, 2);
+  matrix[11] = 0.0f;
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Translation (already done)</span>
+  <span style="color: #00ffff; font-weight: bold;">if</span>(bRotationOnly == <span style="color: #b0c4de; font-weight: bold;">true</span>)
+  {
+    matrix[12] = 0.0f;
+    matrix[13] = 0.0f;
+    matrix[14] = 0.0f;
+  }
+  <span style="color: #00ffff; font-weight: bold;">else</span>
+    m3dSetMatrixColumn44(matrix, vOrigin, 3);
+  matrix[15] = 1.0f;
+}  
+</pre>
+
+
+<p>  
+  为了对一个角色应用变换，我们只需简单地在结果矩阵上调用 <a href="opengl_gjjzcz.html#sec-4">glMultMatrix</a> 。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 欧拉角</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  欧拉角需要的空间更少，因为它实际上只存储一个物体的位置以及3个角度（表示沿x、y和z轴的旋转，有时称为yaw、pitch和roll）。这种结构可以用来表示一架飞机的位置和方向。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">struct</span> <span style="color: #00ffff; font-weight: bold;">EULER</span> {
+  <span style="color: #00ffff; font-weight: bold;">M3DVector3f</span>     <span style="color: #ffd700; font-style: italic;">vPosition</span>;
+  <span style="color: #00ffff; font-weight: bold;">GLfloat</span>         <span style="color: #ffd700; font-style: italic;">fRoll</span>;    
+  <span style="color: #00ffff; font-weight: bold;">GLfloat</span>         <span style="color: #ffd700; font-style: italic;">fPitch</span>;   
+  <span style="color: #00ffff; font-weight: bold;">GLfloat</span>         <span style="color: #ffd700; font-style: italic;">fYaw</span>;     
+};
+</pre>
+
+
+<p>
+  欧拉角的问题是可能会造成“万向节锁”。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 四元数</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 照相机管理</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+  OpenGl中其实并不存在像照相机变换这样的东西。我们只是用照相机作为一种有用的比喻，帮助我们在某种宽广3D环境中管理观察点。如果我们把照相机想象为一种物体，它在空间中具有某个位置和某个特定的方向，就会发现当前的参考帧系统在3D环境中既可以用角色来表示，也可以用照相机来表示。
+</p>
+<p>
+  为了应用照相机变换，我们要使用照相机的角色变换并对它进行反转，这样向后移动照相机就相当于向前移动整个场景。类似地，向左旋转相当于把整个场景向右旋转。为了渲染一个特定的场景，我们通常使用下图所规划的方法。
+</p>
+<pre class="example">
+          
+        +-\保存单位矩阵
+        |        
+        |  应用照相机变换
+        |        
+        |  绘制不会移动的物体
+        |        
+        |  绘制移动的物体（角色）
+ 循环   |        
+        |       +\ 保存照相机变换
+        |       |
+        |       |  应用角色变换
+        |  循环 |
+        |       |  绘制角色几何图形
+        |       |
+        |       +- 恢复照相机变换
+        |  
+        +--恢复单位矩阵
+  
+</pre>
+
+
+<p>
+  OpenGL工具库包含了一个函数，它所使用的数据与我们存储在帧数据结构中的相同，我们可以用它来创建我们的照相机变换。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">gluLookAt</span>(<span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">eyex</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">eyey</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">eyez</span>,
+               <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">centerx</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">centery</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">centerz</span>,
+               <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">upx</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">upy</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">upz</span>);  
+</pre>
+
+
+<p>  
+  这个函数接受观察点的位置、观察点前面直接位置上的一个点以及向上向量的方向。GLFrame类还包含了一个快捷函数，它使用一个内部参考帧完成相同的任务。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLFrame</span>::ApplyCameraTransform(<span style="color: #00ffff; font-weight: bold;">bool</span> <span style="color: #ffd700; font-style: italic;">bRotOnly</span> = <span style="color: #b0c4de; font-weight: bold;">false</span>);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 综合应用</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+  现在，让我们来讨论最后一个例子。这个例子综合了本章目前位置所学习的内容。
+</p>
+<ul>
+<li><a href="./program/opengl/sphereworld.cpp">sphereworld.cpp</a>
+</li>
+</ul>
+
+
+<p>    
+CANNOT INCLUDE FILE ./program/opengl/sphereworld.cpp
+</p>
+
+
+
+
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:18 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

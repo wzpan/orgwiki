@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>绘制线</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="绘制线"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:16 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">绘制线</h1>
+
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 线</a>
+<ul>
+<li><a href="#sec-1-1">1.1 直线（GL_LINES）</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1 画线例子</a></li>
+<li><a href="#sec-1-1-2">1.1.2 输出</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">1.2 线带（GL_LINE_STRIP）</a></li>
+<li><a href="#sec-1-3">1.3 线环（GL_LINE_LOOP）</a></li>
+<li><a href="#sec-1-4">1.4 用直线构成近似曲线</a>
+<ul>
+<li><a href="#sec-1-4-1">1.4.1 代码</a></li>
+<li><a href="#sec-1-4-2">1.4.2 输出</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-5">1.5 设置直线的宽度</a>
+<ul>
+<li><a href="#sec-1-5-1">1.5.1 代码</a></li>
+<li><a href="#sec-1-5-2">1.5.2 输出</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-6">1.6 线型</a>
+<ul>
+<li><a href="#sec-1-6-1">1.6.1 代码</a></li>
+<li><a href="#sec-1-6-2">1.6.2 输出</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 线</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 直线（GL_LINES）</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p>
+  下面这段简单的代码在点(0,0,0)和(50,50,50)之间画了一条直线。
+</p>
+
+
+
+<pre class="src src-c">glBegin(GL_LINES);
+      glVertex3f(0.0f, 0.0f, 0.0f);
+      glVertex3f(50.0f, 50.0f, 50.0f);
+glEnd();
+</pre>
+
+
+<p>
+  注意，这里用两个顶点指定了一个图元。每两个指定的顶点用于绘制一条直线。 <b>如果为 GL_LINES 指定奇数个顶点，那么最后一个顶点会被忽略。</b> 下面程序显示了LINES示例程序的代码，它显示了一个更为复杂的例子，用一系列以扇形排列的直线构成了一个圆。这个程序所指定的每个点在圆的对面都有一个对应的点。
+</p>
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> 画线例子</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+<p>
+    （下面的例子使用了老的管道，仅供参考）    
+</p>
+<ul>
+<li><a href="./program/opengl/lines.cpp">lines.cpp</a>
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23545;&#20110;&#25152;&#26377;&#21097;&#20313;&#30340;&#28857;&#37117;&#21482;&#35843;&#29992;&#19968;&#27425;</span>
+glBegin(GL_LINES);
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#20301;&#20110; xy &#24179;&#38754;&#19978;&#30340;&#25152;&#26377;&#30452;&#32447;</span>
+z = 0.0f;
+<span style="color: #00ffff; font-weight: bold;">for</span>(angle = 0.0f; angle &lt;= GL_PI; angle += (GL_PI / 20.0f))
+{
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#22278;&#30340;&#19978;&#21322;&#37096;&#20998;</span>
+  x = 50.0f*sin(angle);
+  y = 50.0f*cos(angle);
+  glVertex3f(x, y, z);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#22278;&#30340;&#19979;&#21322;&#37096;&#20998;</span>
+  x = 50.0f*sin(angle+GL_PI);
+  y = 50.0f*cos(angle+GL_PI);
+  glVertex3f(x, y, z);
+}
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23436;&#25104;&#32472;&#28857;</span>
+glEnd();
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> 输出</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+
+<p>
+   <img src="./images/fig17.png"  alt="./images/fig17.png" />
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 线带（GL_LINE_STRIP）</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+<p>
+   接下来的两个OpenGL图元都建立在 <code>GL_LINES</code> 的基础之上，它们允许指定一个顶点列表，并根据它们绘制直线。指定 <code>GL_LINE_STRIP</code> 图元时，会绘制一条经过所有这些顶点的连续的线。
+</p>
+
+
+
+<pre class="example">GL_LINE_STRIP的一个例子，
+它由3个顶点所指定
+                                       | y
+                                       |     | v2(50,100,0)
+                                       |     |
+                                       |    -+ v1(50,50,0)
+                                       |  -/
+                                       |-/
+                            -----------/-------------- x
+                                       | V0(0,0,0)
+                                       |
+                                       |
+                                       |
+</pre>
+
+
+
+
+<p>
+   下面这段代码在xy平面上绘制了两条由3个顶点所指定的直线。
+</p>
+
+
+
+<pre class="src src-c">glBegin(GL_LINE_STRIP);
+     glVertex3f(0.0f, 0.0f, 0.0f);   <span style="color: #ffd700;">// </span><span style="color: #ffd700;">V0</span>
+     glVertex3f(50.0f, 50.0f, 0.0f); <span style="color: #ffd700;">// </span><span style="color: #ffd700;">V0</span>
+     glVertex3f(50.0f, 100.0f, 0.0f);<span style="color: #ffd700;">// </span><span style="color: #ffd700;">V0</span>
+glEnd();
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 线环（GL_LINE_LOOP）</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p>
+   最后一种基于直线的图元是 <code>GL_LINE_LOOP</code> ，这种图元的行为与 GL_LINE_STRIP 非常相似，但此时最后一个顶点和第一个顶点之间也会绘制一条直线。这是一种非常简便的绘制闭合线形的方法。
+</p>
+<pre class="example">
+ GL_LINE_LOOP的一个例子        
+                                      | y   +
+                                      |    /| v2(50,100,0)
+                                      |   / |
+                                      |  / -+ v1(50,50,0)
+                                      | /-/
+                                      |//
+                           -----------/-------------- x
+                                      | V0(0,0,0)
+                                      |
+                                      |
+                                      |
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> 用直线构成近似曲线</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+
+</div>
+
+<div id="outline-container-1-4-1" class="outline-4">
+<h4 id="sec-1-4-1"><span class="section-number-4">1.4.1</span> 代码</h4>
+<div class="outline-text-4" id="text-1-4-1">
+
+
+<p>    
+    （下面的例子使用了老的管道，仅供参考）
+</p>
+<ul>
+<li><a href="./program/opengl/lstrips.cpp">lstrips.cpp</a>
+</li>
+</ul>
+
+
+<p>   
+   前面示例了使用 GL_POINTS 来绘制一条螺旋路径。绘制近似曲线的一种更好的方法是使用 <code>GL_LINE_STRIP</code> 连接所有的点。当点之间的距离越来越近时，我们就可以看到一条越来越平滑的曲线，这样就不必进一步指定所有的点。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23545;&#25152;&#26377;&#21097;&#20313;&#30340;&#28857;&#37117;&#21482;&#35843;&#29992;&#19968;&#27425;</span>
+glBegin(GL_LINE_STRIP);
+
+z = -50.0f;
+<span style="color: #00ffff; font-weight: bold;">for</span>(angle = 0.0f; angle &lt;= (2.0f*3.1415f)*3.0f; angle += 0.1f)
+{
+  x = 50.0f*sin(angle);
+  y = 50.0f*cos(angle);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25351;&#23450;&#28857;&#24182;&#31245;&#24494;&#22686;&#22823;z&#30340;&#20540;</span>
+  glVertex3f(x, y, z);
+  z += 0.5f;
+}
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23436;&#25104;&#32472;&#28857;</span>
+glEnd();
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4-2" class="outline-4">
+<h4 id="sec-1-4-2"><span class="section-number-4">1.4.2</span> 输出</h4>
+<div class="outline-text-4" id="text-1-4-2">
+
+
+<p>
+    <img src="./images/fig18.png"  alt="./images/fig18.png" />
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> 设置直线的宽度</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+<p>
+   可以使用 <code>glLineWidth</code> 函数指定各种不同的直线宽度。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glLineWidth</span>(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">width</span>);   
+</pre>
+
+
+<p>
+   glLineWidth函数接受一个参数，用于指定被绘制直线的近似宽度（以像素为单位）。和点大小一样，直线的宽度也是受限制的，所以要确保自己所指定的直线宽度是有效的。使用下面的代码可以获取直线宽度的有效范围以及它们之间的最小间隔值。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">sizes</span>[2];    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23384;&#20648;&#21463;&#25903;&#25345;&#30340;&#30452;&#32447;&#23485;&#24230;&#33539;&#22260;</span>
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">step</span>;        <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23384;&#20648;&#21463;&#25903;&#25345;&#30340;&#30452;&#32447;&#23485;&#24230;&#22686;&#37327;</span>
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#33719;&#21462;&#21463;&#25903;&#25345;&#30340;&#30452;&#32447;&#23485;&#24230;&#33539;&#22260;&#21644;&#22686;&#37327;</span>
+glGetFloatv(GL_LINE_WIDTH_RANGE, sizes);
+glGetFloatv(GL_LINE_WIDTH_GRANULARITY, &amp;step);
+</pre>
+
+
+<p>
+   这里，sizes数组将包含两个元素，分别表示 glLineWidth 的最小有效值和最大有效值。另外，step变量将保存直线宽度之间的最小允许增量。
+</p>
+
+</div>
+
+<div id="outline-container-1-5-1" class="outline-4">
+<h4 id="sec-1-5-1"><span class="section-number-4">1.5.1</span> 代码</h4>
+<div class="outline-text-4" id="text-1-5-1">
+
+
+<p>    
+    （下面的例子使用了老的管道，仅供参考）
+</p>
+<ul>
+<li><a href="./program/opengl/linesw.cpp">linesw.cpp</a>
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#32472;&#21046;&#22330;&#26223;</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">RenderScene</span>(<span style="color: #00ffff; font-weight: bold;">void</span>)
+{
+  <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">y</span>;                            <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23384;&#20648;&#19981;&#21516;&#30340;y&#22352;&#26631;</span>
+  <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">fSizes</span>[2];                    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#32447;&#23485;&#24230;&#33539;&#22260;&#24230;&#37327;</span>
+  <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">fCurrSize</span>;                    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#20445;&#23384;&#24403;&#21069;&#23485;&#24230;</span>
+
+  ...
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#33719;&#21462;&#30452;&#32447;&#23485;&#24230;&#24230;&#37327;&#24182;&#20445;&#23384;&#26368;&#23567;&#20540;</span>
+  glGetFloatv(GL_LINE_WIDTH_RANGE,fSizes);
+  fCurrSize = fSizes[0];
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#22312;y&#36724;&#19978;&#27599;&#27425;&#22686;&#38271;20&#20010;&#21333;&#20301;&#36317;&#31163;</span>
+  <span style="color: #00ffff; font-weight: bold;">for</span>(y = -90.0f; y &lt; 90.0f; y += 20.0f)
+  {
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#35774;&#32622;&#30452;&#32447;&#23485;&#24230;</span>
+    glLineWidth(fCurrSize);
+
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#32472;&#21046;&#30452;&#32447;</span>
+    glBegin(GL_LINES);
+    glVertex2f(-80.0f, y);
+    glVertex2f(80.0f, y);       
+    glEnd();
+
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#22686;&#21152;&#30452;&#32447;&#23485;&#24230;</span>
+    fCurrSize += 1.0f;
+  }
+
+...
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-5-2" class="outline-4">
+<h4 id="sec-1-5-2"><span class="section-number-4">1.5.2</span> 输出</h4>
+<div class="outline-text-4" id="text-1-5-2">
+
+
+<p>
+    <img src="./images/fig19.png"  alt="./images/fig19.png" />
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-6" class="outline-3">
+<h3 id="sec-1-6"><span class="section-number-3">1.6</span> 线型</h3>
+<div class="outline-text-3" id="text-1-6">
+
+
+
+<p>   
+   除了修改直线的宽度之外，还可以用点线或虚线模式来创建直线，这称为点画（stippling）。为了使用直线点画，首先必须用下面这行代码启用点画功能<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>。
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_LINE_STIPPLE);
+</pre>
+
+
+<p>
+   然后，可以用 <code>glLineStipple</code> 函数创建这种模式，以便进行画线。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glLineStipple</span>(<span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">factor</span>, <span style="color: #00ffff; font-weight: bold;">GLushort</span> <span style="color: #ffd700; font-style: italic;">pattern</span>);
+</pre>
+
+
+<p>
+   pattern 参数是一个16位的值，它指定了一个模式，供绘直线所用。它的每个位都表示线段的一部分或者处于打开状态，或者处于关闭状态。在默认情况下，每个位对应一个像素，但factor参数可以作为乘法因子增加模式的宽度。例如，把factor设置为5将导致模式中的每个位代表一行中的连续5个像素，它们同时处于打开或关闭状态。另外， <b>模式的第0位（最低有效位）首先被用于指定直线</b> <sup><a class="footref" name="fnr.2" href="#fn.2">2</a></sup>。
+</p>
+<pre class="example">
+一个用于创建一条线段
+点画模式                                              
+                   ---0---          ---0--          ---1--          ---1--  
+               ---/       \--   ---/      \--   ---/      \--   ---/      \--
+    二进制模式= 0   0   0   0   0   0   0   0   1   1   1   1   1   1   1   1
+                 ---                                                      /--
+                    \-----                                          /-----  
+                          \----                               /-----        
+                               \-----                    /----              
+                                     \----         /-----                   
+                                          \--/-----                         
+                                       /-----   \----                       
+                                  /----              \----                  
+                            /-----                        \-----            
+                      /-----                                    \----       
+                   ---                                               \----- 
+             +--/+---+---+---+---+---+---+---+---+---+---+---+---+---+---+\--+
+     行模式=  | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |                   
+             +---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+            
+                                                                            
+     行 =     --------------------------------    
+</pre>
+
+
+
+</div>
+
+<div id="outline-container-1-6-1" class="outline-4">
+<h4 id="sec-1-6-1"><span class="section-number-4">1.6.1</span> 代码</h4>
+<div class="outline-text-4" id="text-1-6-1">
+
+
+<p>    
+    （下面的例子使用了老的管道，仅供参考）
+</p>
+<ul>
+<li><a href="./program/opengl/lstipple.cpp">lstipple.cpp</a>
+</li>
+</ul>
+
+
+<p>
+CANNOT INCLUDE FILE ./program/opengl/lstipple.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-6-2" class="outline-4">
+<h4 id="sec-1-6-2"><span class="section-number-4">1.6.2</span> 输出</h4>
+<div class="outline-text-4" id="text-1-6-2">
+
+
+<p>
+    <img src="./images/fig20.png"  alt="./images/fig20.png" />
+</p>
+
+
+
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 调用 glEnable 函数所启用的任何特性或功能都可以用一个对应的 glDisable 调用来取消。
+</p>
+
+
+<p class="footnote"><sup><a class="footnum" name="fn.2" href="#fnr.2">2</a></sup> 用于点画的位模式在用于画线时以e相反的顺序使用，这是因为在内部，OpenGL把这个模式向左移动一个位置以获得下一个掩码值是更加快速的。
+</p></div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:16 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

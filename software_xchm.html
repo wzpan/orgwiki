@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>xCHM's Notes</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="xCHM's Notes"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-04-11 Wed"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content="xCHM"/>
+<meta name="keywords" content="xCHM"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./software_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">xCHM's Notes</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 什么是xCHM？</a></li>
+<li><a href="#sec-2">2 安装方法一：直接从源里下载</a></li>
+<li><a href="#sec-3">3 安装方法二：编译安装xCHM</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 什么是xCHM？</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+xCHM是在chmlib的基础上实现的GUI版本的CHM阅读器，官方主页在：<a href="http://xchm.sourceforge.net/">http://xchm.sourceforge.net/</a> 。它是我认为Linux下最好的CHM阅读器，原因有以下几点：
+</p>
+<ol>
+<li>轻量级，无论GNome还是KDE都适用，甚至还可以用在Windows和Mac OSX下。这点优于GnoCHM和KCHMViewer；
+</li>
+<li>可以展示目录树，这点优于Ubuntu等系统自带的CHM阅读器；
+</li>
+<li>更新维护的频率比较快，目前最新的版本是2011年5月份发布的1.80，这点优于GnoCHM等久未更新的阅读器；
+</li>
+<li>在1.80版本之后支持使用类似Vim的键盘操作方式（k、j上下滚动，p、n上下翻页），符合像我这样的喜欢偷懒的用户的使用习惯。
+</li>
+</ol>
+
+
+<p>
+下面以Ubuntu为例，介绍xCHM的两种安装方法。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 安装方法一：直接从源里下载</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+如果你的系统是Ubuntu 11.10或者更高的版本，源里已经带了最新的1.80版本，可以直接从源里下载：
+</p>
+
+
+
+<pre class="example">sudo apt-get install xchm
+</pre>
+
+
+<p>
+如果你的Ubuntu是11.04的话，则源里自带的是1.70，这个版本没有提供键盘操作的支持。如果想要安装更新的版本，请看下一个方法。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 安装方法二：编译安装xCHM</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+如果要安装新版本的xCHM的话，则需要下载源码进行编译安装。
+</p>
+<ol>
+<li>Wxwidget编译环境安装与配置
+</li>
+</ol>
+
+
+
+
+
+<pre class="example"><span class="linenr">1:  </span>sudo apt-get install build-essential  #C++基本环境
+<span class="linenr">2:  </span>sudo apt-get install libwxgtk2.8-dev  #wxgtk2.8开发工具包
+</pre>
+
+
+<ol>
+<li>编译安装CHMLib
+</li>
+</ol>
+
+
+
+
+
+<pre class="example"><span class="linenr">1:  </span>wget http://www.jedrea.com/chmlib/chmlib-0.40.tar.gz
+<span class="linenr">2:  </span>tar -zxvf chmlib-0.40.tar.gz
+<span class="linenr">3:  </span>cd chmlib-0.40
+<span class="linenr">4:  </span>./configure &amp;&amp; sudo make
+<span class="linenr">5:  </span>sudo make install  
+</pre>
+
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-04-11 Wed</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

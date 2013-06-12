@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>OpenGL入门知识</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="OpenGL入门知识"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:20 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">OpenGL入门知识</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 函数名约定</a></li>
+<li><a href="#sec-2">2 数据类型</a></li>
+<li><a href="#sec-3">3 错误</a>
+<ul>
+<li><a href="#sec-3-1">3.1 当良好代码中混入了不好的东西时</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 确认版本</a>
+<ul>
+<li><a href="#sec-4-1">4.1 获得GL函数库的信息</a></li>
+<li><a href="#sec-4-2">4.2 获得GLU函数库的信息</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 使用 glHint 获取线索</a></li>
+<li><a href="#sec-6">6 状态机</a>
+<ul>
+<li><a href="#sec-6-1">6.1 保存和恢复状态</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7 颜色</a>
+<ul>
+<li><a href="#sec-7-1">7.1 OpenGL中的颜色</a></li>
+<li><a href="#sec-7-2">7.2 一些常见的组合颜色</a></li>
+<li><a href="#sec-7-3">7.3 alpha成分</a></li>
+</ul>
+</li>
+<li><a href="#sec-8">8 使用扩展</a>
+<ul>
+<li><a href="#sec-8-1">8.1 检查扩展</a></li>
+<li><a href="#sec-8-2">8.2 这是谁的扩展</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 函数名约定</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+  绝大多数OpenGL函数都遵循一种命名约定，说明了这个函数来自哪个函数库，并且常常提示了这个函数将接受的参数的数量和类型。所有函数名都具有一个根名称，表示这个函数对应的OpenGL点类型的参数。所有的OpenGL函数都采用了下面的格式。
+</p>
+
+
+
+<pre class="example">&lt;函数库前缀&gt;&lt;根命令&gt;&lt;可选的参数数量&gt;&lt;可选的参数类型&gt;
+</pre>
+
+
+<p>
+例如：
+</p>
+
+
+
+<pre class="example">glColor3f(...)
+</pre>
+
+
+<p>
+所有遵循标准的C/C++编译器都假定所有浮点型字面值的类型为double，除非显式地用后缀进行了指定。使用字面值作为浮点型参数时，如果不把这些参数值指定为float类型（而不是double类型），那么编译器在编译时会发出警告信息，因为它检测到了向一个定义为只接受float参数的函数传递了double类型的参数，结果可能导致精度的损失。随着OpenGL程序规模的增长，这类警告信息很可能会迅速增加，达到数百个之多，结果难以找到真正的语法错误。虽然可以通过适当的编译器选项关闭这些警告信息，但我们建议不要这么做。更好的办法是一开始就编写清晰、可移植的代码。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 数据类型</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+<p>
+为了保证移植性，OpenGL定义了自己的数据类型。表2.1列出了OpenGL数据类型、它们在32位
+环境（Win32/OS X等）中对应的C/C++数据类型以及正确的字面值后缀。
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">OpenGL数据类型</th><th scope="col" class="left">内部表示形式</th><th scope="col" class="left">对应的C数据类型</th><th scope="col" class="left">C字面值后缀</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">GLbyte</td><td class="left">8位整数</td><td class="left">signed char</td><td class="left">b</td></tr>
+<tr><td class="left">GLshort</td><td class="left">16位整数</td><td class="left">short</td><td class="left">s</td></tr>
+<tr><td class="left">GLint, GLsizei</td><td class="left">32位整数</td><td class="left">long</td><td class="left">l</td></tr>
+<tr><td class="left">GLfloat, GLclampf</td><td class="left">32位浮点数</td><td class="left">float</td><td class="left">f</td></tr>
+<tr><td class="left">GLdouble, GLclampd</td><td class="left">64位浮点数</td><td class="left">double</td><td class="left">d</td></tr>
+<tr><td class="left">GLubyte, GLboolean</td><td class="left">8位无符号整数</td><td class="left">unsigned char</td><td class="left">ub</td></tr>
+<tr><td class="left">GLushort</td><td class="left">16位无符号整数</td><td class="left">unsigned short</td><td class="left">us</td></tr>
+<tr><td class="left">GLunit, GLenum, GLbitfield</td><td class="left">32位无符号整数</td><td class="left">unsigned long</td><td class="left">ui</td></tr>
+<tr><td class="left">GLchar</td><td class="left">8位的字符</td><td class="left">char</td><td class="left">无</td></tr>
+<tr><td class="left">GLsizeiptr, GLintptr</td><td class="left">本地指针</td><td class="left">ptrdiff_t</td><td class="left">无</td></tr>
+</tbody>
+</table>
+
+
+<p>
+    所有的数据类型都以GL开头，表示OpenGL。随后是它们对应的C数据类型（如byte、short、int、float等），有些前面还有个u，表示这是一种无符号数据类型。在有些用法中，OpenGL使用了更具描述性的名字，比如在类型中增加一个size表示这种类型的长度或深度。例如，GLsizei是一个OpenGL变量，它用一个整数来表示一个size参数；clamp则是一种提示，表示这个值的范围将“截取”在0.0～1.0的范围内；GLboolean变量表示真假条件；GLenum表示枚举变量；GLbitfield表示那些包含二进制位段的变量。
+</p>
+<p>
+    OpenGL并没有对指针和数组做特殊的考虑。我们可以像下面这样声明一个包含10个GLshort变量的数组：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLshort</span> <span style="color: #ffd700; font-style: italic;">shorts</span>[10];
+</pre>
+
+
+<p>
+    下面这行代码则声明了一个长度为10的GLdouble类型的指针数组：
+</p>
+
+
+
+<pre class="src src-c">GLdouble *doubles[10];
+</pre>
+
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 错误</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+    OpenGL提供了一种有用的机制，可在代码中执行一种场合性的完整性检查。
+</p>
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 当良好代码中混入了不好的东西时</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+<p>
+   OpenGL在内部维护了一组标志（共6个）。每个标志代表一种不同类型的错误。当一个错误发生时，与这个错误相对应的标志就会被设置。为了观察哪些标志被设置，可以调用 <code>glGetError</code> 函数。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-weight: bold;">glGetError</span>(<span style="color: #00ffff; font-weight: bold;">void</span>);
+</pre>
+
+
+<p>
+   <code>glGetError</code> 函数返回下表所列的其中一个值。GLU函数库自己定义了3个错误，但这些错误正好与其中已经存在的2个标志匹配。如果被设置的标志不止一个， <code>glGetError</code> 仍然只返回一个唯一的值。当 <code>glGetError</code> 函数被调用时，这个值随后被清除，然后 <code>glGetError</code> 将再次返回一个错误标志或 <code>GL_NO_ERROR</code> 。通常，需要在一个循环中调用 <code>glGetError</code> 函数，持续检查错误标志，直到返回值是 <code>GL_NO_ERROR</code> 。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption>OpenGL错误代码</caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">错误代码</th><th scope="col" class="left">描述</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">GL_INVALID_ENUM</td><td class="left">枚举参数超出范围</td></tr>
+<tr><td class="left">GL_INVALID_VALUE</td><td class="left">数值参数超出范围</td></tr>
+<tr><td class="left">GL_INVALID_OPERATION</td><td class="left">在当前的状态中操作非法</td></tr>
+<tr><td class="left">GL_STACK_OVERFLOW</td><td class="left">这条命令将导致堆栈上溢</td></tr>
+<tr><td class="left">GL_STACK_UNDERFLOW</td><td class="left">这条命令将导致堆栈下溢</td></tr>
+<tr><td class="left">GL_OUT_OF_MEMORY</td><td class="left">没有足够的内存来执行这条命令</td></tr>
+<tr><td class="left">GL_TABLE_TOO_LARGE</td><td class="left">指定的表太大</td></tr>
+<tr><td class="left">GL_NO_ERROR</td><td class="left">没有错误出现</td></tr>
+</tbody>
+</table>
+
+
+<p>   
+   我们可以使用GLU函数库的另一个函数 <code>gluErrorString</code> 来获得一个描述错误标志的字符串。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">GLubyte</span>* <span style="color: #ffd700; font-weight: bold;">gluErrorString</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">errorcode</span>);
+</pre>
+
+
+<p>
+   这个函数将错误标志（由 <code>glGetError</code> 函数返回）作为它的唯一参数，并返回一个描述这个错误的静态字符串。例如，错误标志 <code>GL_INVALID_ENUM</code> 将返回下面这个字符串。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">invalid</span> <span style="color: #ffd700; font-style: italic;">enumerant</span>&#65288;&#26080;&#25928;&#30340;&#26522;&#20030;&#65289;
+</pre>
+
+
+<p>
+   如果一个错误是由于对OpenGL的非法调用所致，那么这条命令或函数调用将会被忽略。对此，我们可能会稍微感到安心。此时，唯一可能造成麻烦的是那些接受指向内存的指针作为参数的函数（如果指针无效，可能导致程序崩溃）。   
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 确认版本</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+  有时候我们希望利用一个特定环境所提供的一些特定功能。如果知道自己的程序将运行于一个特定生产商所生产的图形卡之上，就可能想依赖这个生产商特有的一些性能特征来改进程序。我们还可能希望限制这个特定厂商所提供的驱动程序的最低版本号。为此，需要查询OpenGL的渲染引擎（OpenGL驱动程序）的生产商和版本号。GL函数库和GLU函数库都可以返回与它们的版本号和生产商有关的特定信息。
+</p>
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 获得GL函数库的信息</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+
+<p>
+为了确定GL函数库的信息，可以调用 <code>glGetString</code> 。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">GLubyte</span> *<span style="color: #ffd700; font-weight: bold;">glGetString</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">name</span>);
+</pre>
+
+
+<p>
+这个函数返回一个静态的字符串，描述了GL函数库的相关信息。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 获得GLU函数库的信息</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+
+<p>  
+GLU函数库提供了另一个对应的函数 <code>gluGetString</code> 。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">GLubyte</span> *<span style="color: #ffd700; font-weight: bold;">gluGetString</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">name</span>);
+</pre>
+
+
+<p>
+这个函数返回一个字符串，描述它所请求的GLU函数的相关信息。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 使用 glHint 获取线索</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+  glHint函数允许我们指定偏重于视觉质量还是速度，以适应各种不同类型的操作需求。这个函数定义如下所示。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glHint</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">target</span>, <span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">mode</span>);  
+</pre>
+
+
+<p>
+  我们可以在target参数中指定希望进行修改的行为类型。mode参数告诉OpenGL我们最为关心的是什么，例如更快的渲染质量还是最好的输出质量。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> 状态机</h2>
+<div class="outline-text-2" id="text-6">
+
+
+<p>
+  状态机是一个抽象的模型，表示一组状态变量的集合。每个状态变量可以有各种不同的值，例如可以打开或关闭等。当我们在OpenGL中进行绘图时，如果每次都要指定所有这些变量显然有点不切实际。反之，OpenGL使用了一种状态模型（或称状态机）来追踪所有的OpenGL状态变量。当一个状态值被设置之后，它就一直保持这个状态，直到其他函数对它进行了修改。许多状态只是简单的打开或关闭。
+</p>
+<p>
+  例如，光照要么打开，要么关闭。如果几何图形不使用光照，那么在绘制这个几何图形的颜色集合时就不必进行任何光照计算。如果启用了光照效率，那么此后所绘制的几何图形都将进行光照计算。
+</p>
+<p>
+  为了打开这些类型的状态变量，可以使用下面这个OpenGL函数。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glEnable</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">capability</span>);
+</pre>
+
+
+<p>
+  我们可以使用下面这个对应的函数，将这些变量的状态设置为关闭。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glDisable</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">capability</span>);
+</pre>
+
+
+<p>
+  以光照为例，可以使用下面这个函数调用打开光照效果。
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_LIGHTING);
+</pre>
+
+
+<p>
+  也可以使用下面这个函数调用关闭光照效果。
+</p>
+
+
+
+<pre class="src src-c">glDisable(GL_LIGHTING);
+</pre>
+
+
+<p>
+  如果希望对一个状态变量进行测试，判断它是否被打开，OpenGL还提供了一种方便的机制。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLboolean</span> <span style="color: #ffd700; font-weight: bold;">glIsEnabled</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">capability</span>);
+</pre>
+
+
+<p>
+  但是，并不是所有的状态变量都是简单的打开或关闭。许多OpenGL函数专门用于设置变量的值，此后这些变量将一直保持被设置时的值，直到再次被修改。在任何时候，都可以查询这些变量的值，OpenGL提供了一组查询函数，可以查询布尔型、整型、单精度浮点型和双精度浮点型变量的值。这4个函数的原型如下所示。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glGetBooleanv</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">pname</span>, <span style="color: #00ffff; font-weight: bold;">GLboolean</span> *<span style="color: #ffd700; font-style: italic;">params</span>);
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glGetDoublev</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">pname</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> *<span style="color: #ffd700; font-style: italic;">params</span>); 
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glGetFloatv</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">pname</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> *<span style="color: #ffd700; font-style: italic;">params</span>);  
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glGetIntegerv</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">pname</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> *<span style="color: #ffd700; font-style: italic;">params</span>);
+</pre>
+
+
+<p>
+  每个函数返回单个值，或者返回一个数组，把一些值存储到参数所指定的地址中。
+</p>
+
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> 保存和恢复状态</h3>
+<div class="outline-text-3" id="text-6-1">
+
+
+<p>
+  OpenGL还提供堆栈来保存一组范围内的所有状态值，并在将来恢复它们。
+</p>
+<p>
+  可以使用下面这个命令，把一个OpenGL状态值或一组范围的相关状态值压入到属性堆栈中。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glPushAttrib</span>(<span style="color: #00ffff; font-weight: bold;">GLbitfield</span> <span style="color: #ffd700; font-style: italic;">mask</span>);
+</pre>
+
+
+<p>
+  以后，可以使用下面这个命令提取对应的值。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glPopAttrib</span>(<span style="color: #00ffff; font-weight: bold;">GLbitfield</span> <span style="color: #ffd700; font-style: italic;">mask</span>);
+</pre>
+
+
+<p>
+  注意，这两个函数的参数是个位段，也就是一个 <b>位掩码</b> ，这意味着可以在单个函数调用中用位OR（在C中使用"|"操作符）操作来表示多个状态。例如，可以用下面这个调用保存光照和纹理状态。
+</p>
+
+
+
+<pre class="src src-c">glPushAttrib(GL_TEXTURE_BIT | GL_LIGHTING_BIT);
+</pre>
+
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> 颜色</h2>
+<div class="outline-text-2" id="text-7">
+
+
+</div>
+
+<div id="outline-container-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> OpenGL中的颜色</h3>
+<div class="outline-text-3" id="text-7-1">
+
+
+<p>
+   在绝大多数OpenGL实现中，GLclampf被定义为float类型。在OpenGL中，一种颜色是由红、绿、蓝成分混合而成。每种成分的值范围可以是从0.0至1.0之间的任何有效的浮点值，因此理论上可以产生的颜色数量是无限的。但从现实的角度讲，在绝大多数设备中，颜色值的输出限制在24位（1600万种颜色）。
+</p>
+<p>   
+   很自然的，OpenGL接受这个颜色值，并在内部把它转换为能够与可用的视频硬件准确匹配的最接近颜色。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-7-2" class="outline-3">
+<h3 id="sec-7-2"><span class="section-number-3">7.2</span> 一些常见的组合颜色</h3>
+<div class="outline-text-3" id="text-7-2">
+
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption>一些常见的组合颜色</caption>
+<colgroup><col class="left" /><col class="right" /><col class="right" /><col class="right" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">组合颜色</th><th scope="col" class="right">红色成分</th><th scope="col" class="right">绿色成分</th><th scope="col" class="right">蓝色成分</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">Black（黑）</td><td class="right">0.0</td><td class="right">0.0</td><td class="right">0.0</td></tr>
+<tr><td class="left">Red（红）</td><td class="right">1.0</td><td class="right">0.0</td><td class="right">0.0</td></tr>
+<tr><td class="left">Green（绿）</td><td class="right">0.0</td><td class="right">1.0</td><td class="right">0.0</td></tr>
+<tr><td class="left">Yellow（黄）</td><td class="right">1.0</td><td class="right">1.0</td><td class="right">0.0</td></tr>
+<tr><td class="left">Blue（蓝）</td><td class="right">0.0</td><td class="right">0.0</td><td class="right">1.0</td></tr>
+<tr><td class="left">Magenta（洋红）</td><td class="right">1.0</td><td class="right">0.0</td><td class="right">1.0</td></tr>
+<tr><td class="left">Cyan（青）</td><td class="right">0.0</td><td class="right">1.0</td><td class="right">1.0</td></tr>
+<tr><td class="left">Dark gray（深灰）</td><td class="right">0.25</td><td class="right">0.25</td><td class="right">0.25</td></tr>
+<tr><td class="left">Light gray（浅灰）</td><td class="right">0.75</td><td class="right">0.75</td><td class="right">0.75</td></tr>
+<tr><td class="left">Brown（褐）</td><td class="right">0.60</td><td class="right">0.40</td><td class="right">0.12</td></tr>
+<tr><td class="left">Pumpkin orange(南瓜橙)</td><td class="right">0.98</td><td class="right">0.625</td><td class="right">0.12</td></tr>
+<tr><td class="left">Pastel pink（粉红）</td><td class="right">0.98</td><td class="right">0.04</td><td class="right">0.7</td></tr>
+<tr><td class="left">Barney purple（巴尼紫）</td><td class="right">0.60</td><td class="right">0.40</td><td class="right">0.70</td></tr>
+<tr><td class="left">White（白）</td><td class="right">1.0</td><td class="right">1.0</td><td class="right">1.0</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-7-3" class="outline-3">
+<h3 id="sec-7-3"><span class="section-number-3">7.3</span> alpha成分</h3>
+<div class="outline-text-3" id="text-7-3">
+
+
+<p>
+   alpha成分用于混合，并可以产生一种特殊的效果，例如透明度。透明是指一个物体允许光线穿透它。假定我们希望创建一块染成红色的玻璃，并且它的后面正好有一束蓝色的光。这道蓝光就会影响这块玻璃上的红色（蓝+红=紫）。我们可以用alpha成分值生成一种半透明的红色，使它看上去像是一块玻璃——它后面的物体也能够显示。这种类型的效果涉及很多复杂的地方，并不仅仅使alpha值就行了。
+</p>
+
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> 使用扩展</h2>
+<div class="outline-text-2" id="text-8">
+
+<p>OpenGL允许硬件生产商通过扩展机制提供创新。这种机制以两种方式发挥作用。首先，生产商可以向OpenGL API添加新的函数，供开发人员使用。其次，只要能够为原有OpenGL函数（如glEnable）所认识，生产商就可以添加新的标记或枚举定义。
+</p>
+<p>
+使用新的枚举或标记是件非常简单的事，只要在项目中增加生产商所提供的头文件就可以了。生产商必须向OpenGL Working Group（Khronos Group的一个子集）注册它们的扩展，这样就可以防止一个生产商使用其他生产商已经使用的值。为了方便起见，标准头文件glext.h包含了一些最常见的扩展。
+</p>
+
+</div>
+
+<div id="outline-container-8-1" class="outline-3">
+<h3 id="sec-8-1"><span class="section-number-3">8.1</span> 检查扩展</h3>
+<div class="outline-text-3" id="text-8-1">
+
+
+<p>
+   我们可以检查一个字符串，确认OpenGL驱动程序的生产商和版本号。我们还可以获取一个包含了由驱动程序所支持的所有OpenGL扩展的标志符的字符串。下面这行代码返回一个字符数组，表示了扩展的名称。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">char</span> *<span style="color: #ffd700; font-style: italic;">szExtensions</span> = glGetString(GL_EXTENSIONS);
+</pre>
+
+
+<p>
+   这个字符串包含了由驱动程序所支持的所有扩展的名称（用空格分隔）。然后，我们就可以在这个字符串中查找，查找希望使用的扩展标志符。例如，我们可以像下面这样快速查找一种Windows特定的扩展。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">if</span>(strstr(extensions, <span style="color: #f0e68c;">"WGL_EXT_swap_control"</span> != <span style="color: #b0c4de; font-weight: bold;">NULL</span>))
+      {
+      wglSwapIntervalEXT =
+              (<span style="color: #00ffff; font-weight: bold;">PFNWGLSWAPINTERVALEXTPROC</span>)wglGetProcAddress(<span style="color: #f0e68c;">"wglSwapIntervalEXT"</span>);
+
+      <span style="color: #00ffff; font-weight: bold;">if</span>(wqlSwapIntervalEXT != <span style="color: #b0c4de; font-weight: bold;">NULL</span>)
+              wglSwapIntervalEXT(1);
+      }
+</pre>
+
+
+<p>
+   如果使用这种方法，还应该确保扩展名后面的那个字符是空格或NULL。否则，如果这个扩展被WGL_EXT_swap_control2所取代，那会发生什么情况呢？此时，C运行时函数strstr仍然找到第一个字符串，但是我们无法确定第二个扩展的行为是不是完全和第一个相同。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-8-2" class="outline-3">
+<h3 id="sec-8-2"><span class="section-number-3">8.2</span> 这是谁的扩展</h3>
+<div class="outline-text-3" id="text-8-2">
+
+
+<p>
+   使用OpenGL扩展，我们可以在代码中提供代码路径，以改进a渲染性能和视觉质量，甚至添加只由一个特定生产商的硬件所支持的特殊效果。但是，是谁拥有这个扩展呢？也就是说，是哪个生产商创建并支持一个特定的扩展呢？通常我们只需观察扩展名就可以作出判断。每个扩展标识符的前面都有一个3字母的前缀，标明了扩展的来源。
+</p>
+<p>
+   下表提供了扩展标识符的一些例子。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption>OpenGL扩展前缀的一些例子</caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">前缀</th><th scope="col" class="left">厂商</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">SGI_</td><td class="left">Silicon Graphics</td></tr>
+<tr><td class="left">ATI_</td><td class="left">ATI Technologies</td></tr>
+<tr><td class="left">NV_</td><td class="left">NVIDIA</td></tr>
+<tr><td class="left">IBM_</td><td class="left">IBM</td></tr>
+<tr><td class="left">WGL_</td><td class="left">Microsoft</td></tr>
+<tr><td class="left">EXT_</td><td class="left">跨厂商</td></tr>
+<tr><td class="left">ARB_</td><td class="left">ARB 批准</td></tr>
+</tbody>
+</table>
+
+
+<p>
+   一个生产商支持另一生产商的扩展的情况并非罕见。例如，有些NVidia扩展得到了广泛应用，并受到ATI硬件的支持。此时，进行竞争的生产商必须遵循原生产商的规范（扩展如何实现的细节）。有时候，所有生产商都认为某个扩展非常好并予以支持，此时这个扩展就将具有EXT_前缀，表示它不偏向于任何生产商并且受到了跨平台的广泛支持。
+</p>
+<p>
+   最后，还有一种ARB扩展的扩展。这种类型的扩展已经通过了OpenGL ARB的审查（并进行了辩论）。这些扩展所提供的新技巧或新函数很快就将融入到核心OpenGL规范。
+</p>
+
+
+
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:20 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

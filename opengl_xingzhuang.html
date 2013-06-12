@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>用OpenGL绘制形状</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="用OpenGL绘制形状"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-02 Tue"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">用OpenGL绘制形状</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 代码</a></li>
+<li><a href="#sec-2">2 编译命令：</a></li>
+<li><a href="#sec-3">3 输出</a></li>
+<li><a href="#sec-4">4 分析</a>
+<ul>
+<li><a href="#sec-4-1">4.1 绘制矩形</a></li>
+<li><a href="#sec-4-2">4.2 窗口的缩放</a></li>
+<li><a href="#sec-4-3">4.3 设置视口和裁剪区域</a></li>
+<li><a href="#sec-4-4">4.4 定义视口</a></li>
+<li><a href="#sec-4-5">4.5 定义裁剪区域</a></li>
+<li><a href="#sec-4-6">4.6 使正方形保持正方</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 代码</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<ul>
+<li><a href="./program/opengl/glrect.cpp">glrect.cpp</a>
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">GLRect.cpp</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Just draw a single rectangle in the middle of the screen</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">OpenGL SuperBible, 3rd Edition</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Richard S. Wright Jr.</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">rwright@starstonesoftware.com</span>
+
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GL/glut.h&gt;</span>    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">OpenGL &#24037;&#20855;&#31665;</span>
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#32472;&#21046;&#22330;&#26223;</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">RenderScene</span>(<span style="color: #00ffff; font-weight: bold;">void</span>)
+{
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#29992;&#24403;&#21069;&#30340;&#28165;&#38500;&#39068;&#33394;&#28165;&#38500;&#31383;&#21475;</span>
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25226;&#32472;&#22270;&#39068;&#33394;&#35774;&#32622;&#20026;&#32418;&#33394;</span>
+  <span style="color: #ffd700;">//               </span><span style="color: #ffd700;">R     G         B</span>
+  glColor3f(1.0f, 0.0f, 0.0f);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#29992;&#24403;&#21069;&#39068;&#33394;&#32472;&#21046;&#19968;&#20010;&#22635;&#20805;&#30697;&#24418;</span>
+  glRectf(-25.0f, 25.0f, 25.0f, -25.0f);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#21047;&#26032;&#32472;&#22270;&#21629;&#20196;</span>
+  glFlush();
+}
+
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#35774;&#32622;&#28210;&#26579;&#29366;&#24577;</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">SetupRC</span>(<span style="color: #00ffff; font-weight: bold;">void</span>)
+{
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25226;&#28165;&#38500;&#39068;&#33394;&#35774;&#32622;&#20026;&#34013;&#33394;</span>
+  glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+}
+
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#24403;&#31383;&#21475;&#25913;&#21464;&#22823;&#23567;&#26102;&#30001;GLUT&#20989;&#25968;&#24211;&#35843;&#29992;</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">ChangeSize</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">w</span>, <span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">h</span>)
+{
+  <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">aspectRatio</span>;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#38450;&#27490;&#34987; 0 &#25152;&#38500;</span>
+  <span style="color: #00ffff; font-weight: bold;">if</span>(h == 0)
+    h = 1;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25226;&#35270;&#21475;&#35774;&#32622;&#20026;&#31383;&#21475;&#30340;&#22823;&#23567;</span>
+  glViewport(0, 0, w, h);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#37325;&#32622;&#22352;&#26631;&#31995;&#32479;</span>
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#24314;&#31435;&#35009;&#21098;&#21306;&#22495;&#65288;&#24038;&#12289;&#21491;&#12289;&#24213;&#12289;&#39030;&#12289;&#36817;&#12289;&#36828;&#65289;</span>
+  aspectRatio = (<span style="color: #00ffff; font-weight: bold;">GLfloat</span>)w / (<span style="color: #00ffff; font-weight: bold;">GLfloat</span>)h;
+  <span style="color: #00ffff; font-weight: bold;">if</span> (w &lt;= h)
+    glOrtho (-100.0, 100.0, -100 / aspectRatio, 100.0 / aspectRatio, 1.0, -1.0);
+  <span style="color: #00ffff; font-weight: bold;">else</span>
+    glOrtho (-100.0 * aspectRatio, 100.0 * aspectRatio, -100.0, 100.0, 1.0, -1.0);
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+}
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#20027;&#31243;&#24207;&#20837;&#21475;</span>
+<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-weight: bold;">main</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">argc</span>, <span style="color: #00ffff; font-weight: bold;">char</span>* <span style="color: #ffd700; font-style: italic;">argv</span>[])
+{
+  glutInit(&amp;argc, argv);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+  <span style="color: #ffd700;">//    </span><span style="color: #ffd700;">glutInitWindowSize(800, 600);</span>
+  glutCreateWindow(<span style="color: #f0e68c;">"GLRect"</span>);
+  glutDisplayFunc(RenderScene);
+  glutReshapeFunc(ChangeSize);
+  SetupRC();
+  glutMainLoop();
+
+  <span style="color: #00ffff; font-weight: bold;">return</span> 0;
+}
+
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 编译命令：</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+
+
+<pre class="src src-sh">gcc GLRect.cpp -o a -lGL -lglut
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 输出</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+  <img src="./images/fig03.png"  alt="./images/fig03.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 分析</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 绘制矩形</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+<p>
+  在前面，这个程序所完成的任务就是消除屏幕。现在，我们将增加下面这几行绘图代码：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">Set current drawing color to red</span>
+<span style="color: #ffd700;">//               </span><span style="color: #ffd700;">R     G         B</span>
+glColor3f(1.0f, 0.0f, 0.0f);
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Draw a filled rectangle with current color</span>
+glRectf(-25.0f, 25.0f, 25.0f, -25.0f);
+</pre>
+
+
+<p>
+  在这几行代码中，我们调用 <code>glColor3f</code> 函数设置了一种颜色，供以后的绘图（画线和填充）所用。然后，调用 <code>glRect</code> 函数绘制了一个填充矩形。
+</p>
+<p>
+  glColor3f函数选择了一种颜色，其方式类似于 <code>glClearColor</code> 函数。但是，我们不需要指定alpha成分（默认值1.0表示完全不透明）。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glColor3f</span>(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">red</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">green</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">blue</span>);
+</pre>
+
+
+<p>
+  <code>glRectf</code> 函数接受浮点类型的参数（由后缀f表示）。这个函数名并没有提示参数的数量，因为所有的glRect变量都接受4个参数。glRectf函数的4个参数（如下所示）表示了两个坐标对：(x1,y1)和(x2,y2)。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glRectf</span>(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">x1</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">y1</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">x2</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">y2</span>);
+</pre>
+
+
+<p>
+  第一对坐标表示这个矩形的左上角，第二对坐标表示这个矩形的右下角。
+</p>
+<p>
+  OpenGL如何把这些坐标映射到实际的窗口坐标呢？这个任务就是由回调函数 <code>ChangeSize</code> 完成的。这个函数被设置为回调函数，每当窗口的大小改变（当它被拉伸、最大化等）时，它就会被调用。它是通过 <code>glutReshapeFunc</code> 函数设置的，与显示回调函数的设置方式相同。
+</p>
+
+
+
+<pre class="src src-c">glutReshapeFunc(ChangeSize);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 窗口的缩放</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+<p>
+  一个非常小的窗口可能具有一个完整但非常小的绘图区域，而一个更大的窗口可能具有一个更大的类似绘图区域。在大多数绘图程序中，可以通过缩放窗口的大小来观察这个效果。对窗口进行拉伸通常并不会改变绘图区域的大小，但是会放大图像。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> 设置视口和裁剪区域</h3>
+<div class="outline-text-3" id="text-4-3">
+
+
+<p>
+  <b>任何时候，当窗口的大小改变时，就需要重新设置坐标系统</b> 。每当窗口的大小改变时，视口和裁剪区域必须重新定义，以适应新的窗口大小。
+</p>
+<p>
+  由于在各种不同的环境中，对窗口大小改变的检测和处理方式是不同的，因此GLUT函数库提供了一个 <code>glutReshapeFunc</code> 函数。这个函数注册了一个回调函数，当窗口的大小发生变化时，GLUT函数库就会调用这个回调函数。传递给glutReshapeFunc的回调函数的原型如下所示。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">ChangeSize</span>(<span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">w</span>, <span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">h</span>);
+</pre>
+
+
+<p>
+  我们选择ChangeSize作为这个函数的名称，在以后的例子里，我们将沿用这个名称。当窗口大小发生改变时，ChangeSize函数将接收到新的宽度和高度信息。我们使用x这个信息来修改我们的目标坐标系统，使之映射到真实的屏幕坐标。这个任务是在两个OpenGL函数的帮助下完成的： <code>glViewport</code> 和 <code>glOrtho</code> 。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> 定义视口</h3>
+<div class="outline-text-3" id="text-4-4">
+
+
+<p>
+    为了理解视口定义是如何实现的，让我们仔细观察ChangeSize函数。它首先调用 <code>glViewport</code> 函数，而窗口的宽度和高度则作为它的参数。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glViewport</span>(<span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">y</span>, <span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">width</span>, <span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">height</span>);
+</pre>
+
+
+<p>
+    x和y参数指定了窗口内部视口的左下角，width和height参数指定了视口的大小（以像素为单位）。通常，x和y都是0,但我们可以使用视口，在一个窗口的不同区域中渲染多个图形。视口 <b>以实际屏幕坐标定义了窗口中的区域</b> ，OpenGL可以在这个区域中进行绘图。随后，当前的裁剪区域被映射到新的视口。如果指定了一个比窗口坐标更小的视口，则渲染区域就会缩小。
+</p>
+
+
+
+<pre class="example">
+ +  +-------------------------+          +  +-------------------------+
+ |  |                         |          |  |                         |
+ |  |                         |          |  |                         |
+ |  | glViewport(0,0,250,250) |          |  | glViewport(0,0,250,250) |
+ +  |                         |          +  |                         |
+250 |                         |         250 +-----125----+            |
+ +  |                         |          +  |            |            |
+ |  |                         |          |  |            |            |
+ |  |                         |          |  |          125            |
+ |  |                         |          |  |            |            |
+ |  |                         |          |  |            |            |
+ +  +-------------------------+          +  +-----------+-------------+
+    --------- 250 -------------             --------- 250 -------------
+
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> 定义裁剪区域</h3>
+<div class="outline-text-3" id="text-4-5">
+
+
+
+<p>
+   ChangeSize函数的最后一个要求是对裁剪区域进行重新定义，使纵横比保持不变，窗口仍然维持在原来的正方形形状。纵横比就是垂直方向上有i个单位长度内的像素数量与水平方向上一个单位长度的像素数量之比。如果纵横比为1.0，那么它就表示一个正方形的纵横比。如果纵横比是0.5,那么水平方向上每个单位长度的两个像素对应于垂直方向每个单位长度上的一个像素。如果指定了一个非正方形的视口，并且映射到一个正方形的裁剪区域，图像就会发生扭曲。
+</p>
+<p>
+   在这个例子中，我们在裁剪区域中使用了正投影。用于创建这种投影模式的命令是 <code>glOrtho</code> 。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glOrtho</span>(<span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">left</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">right</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">bottom</span>,
+                     <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">top</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">near</span>, <span style="color: #00ffff; font-weight: bold;">GLdouble</span> <span style="color: #ffd700; font-style: italic;">far</span> );
+</pre>
+
+
+<p>
+   在3D笛卡儿空间中，left和right值指定了沿x轴的最小坐标值和最大坐标值；bottom和top值指定了沿y轴的相应值；near和far参数指定了沿z轴的相应值，负数表示朝着观察者的负方向远去。许多绘图和图形函数库使用窗口坐标（像素）来执行绘图命令，使用真实的浮点坐标系统用于渲染。
+</p>
+
+
+
+<pre class="example">
+笛卡儿空间
+                          | +y
+                          |
+                          |     -- +z
+                          |   -/
+                          |--/
+            -x -----------/------------ +x
+                      --/ |
+                    -/    |
+                  -/      |
+                 -z       |
+                          | -y
+</pre>
+
+
+<p>
+   在使用 <code>glOrtho</code> 之前，注意下面这两个函数调用。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">Reset coordinate system</span>
+glMatrixMode(GL_PROJECTION);
+glLoadIdentity();
+</pre>
+
+
+<p>
+   <b>投影矩阵就是实际定义可视区域的地方</b> 。我们需要调用一次 <code>glLoadIdentity</code> 函数，因为 <code>glOrtho</code> 函数实际上并不建立裁剪区域，而只是修改原有的裁剪区域。它把描述当前裁剪区域的矩阵与参数所提供的裁剪区域矩阵相乘。现在，读者只需要知道调用 <code>glLoadIdentity</code> 函数的目的是在执行任何矩阵乘法操作之前对当前的坐标系统进行“重置”。如果没有这种“重置”，在 <code>glOrtho</code> 被调用之后，每次调用 <code>glOrtho</code> 时，都会导致目标裁剪区域被破坏，甚至导致矩阵无法显示。
+</p>
+<p>
+   下面这两行代码告诉OpenGL，以后所有的变换都将影响这个模型（即我们所绘制的图形）。
+</p>
+
+
+
+<pre class="src src-c">glMatrixMode(GL_MODELVIEW);
+glLoadIdentity();
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-6" class="outline-3">
+<h3 id="sec-4-6"><span class="section-number-3">4.6</span> 使正方形保持正方</h3>
+<div class="outline-text-3" id="text-4-6">
+
+
+<p>
+   下面这些代码执行使“正方形”保持正方形状的实际工作。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">Establish clipping volume (left, right, bottom, top, near, far)</span>
+aspectRatio = (<span style="color: #00ffff; font-weight: bold;">GLfloat</span>)w / (<span style="color: #00ffff; font-weight: bold;">GLfloat</span>)h;
+<span style="color: #00ffff; font-weight: bold;">if</span> (w &lt;= h)
+  glOrtho (-100.0, 100.0, -100 / aspectRatio, 100.0 / aspectRatio, 1.0, -1.0);
+<span style="color: #00ffff; font-weight: bold;">else</span>
+  glOrtho (-100.0 * aspectRatio, 100.0 * aspectRatio, -100.0, 100.0, 1.0, -1.0);
+</pre>
+
+
+<p>
+   裁剪区域（可视的坐标空间）进行了修改，使左边总是位于 x=-100，右边则扩展到 100，除非窗口的宽度大于高度。此时，水平范围就会根据窗口的纵横比进行缩放。类似地，底部总是从 y=-100 开始，向上扩展至 100,除非窗口的高度大于窗口的宽度。此时，垂直范围也会根据纵横比进行缩放。这样就可以保持一个200x200的正方形坐标区域（中心为(0,0)）与窗口的形状无关。
+</p></div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-02 Tue</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

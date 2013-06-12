@@ -1,0 +1,303 @@
+body {
+    font-family: serif;
+    margin: 70px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.title {
+    font-size: 1.8em;
+    margin: 0em;
+}
+
+.author {
+    color: #777;
+    font-size: 10pt;
+    text-align:right;    
+    margin: 2em 0em 0em 0em;
+}
+
+.date {
+    border-top: 1px #ccc solid;    
+    color: #777;
+    font-size: 10pt;
+    text-align:center;        
+    margin: 0em 0em 0em 0em;
+}
+
+
+h2 {
+    border-left: 5px #ccc solid;
+    border-bottom: 1px #ccc solid;
+    padding: 0px 0px 0px 10px;
+}
+
+
+a { text-decoration: none; color: blue; }
+a:visited { text-decoration: none; }  
+a:hover { text-decoration: underline; }
+
+.menu a { text-decoration: none; color: #556677; font-size: 20px;}
+
+#table-of-contents {
+    font-size: 14px;
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    background: #eee;
+    text-align: right;
+    max-height: 90%;
+    overflow: auto; 
+    -webkit-box-shadow: 0 0 5px #555;
+    -moz-box-shadow: 0 0 5px #555;
+    -webkit-border-bottom-left-radius: 10px;
+    -moz-border-radius-bottomleft: 10px;
+    padding: 0em 1em 0em 0em;
+}
+#table-of-contents h2 {
+    font-size: 10pt;
+    max-width: 150px;
+    border: none;
+    color: green;
+}
+#table-of-contents ul {
+    padding: 0em 0.5em 0.5em 2em;
+}
+
+#table-of-contents #text-table-of-contents {
+    display: none;
+    text-align: left; 
+}
+
+#table-of-contents:hover #text-table-of-contents {
+    display: block;
+    padding: 5px;
+    margin-top: -5px; 
+}
+
+/*computer.css*/
+#nav
+{
+        height:26px;
+        border-bottom:2px solid #ccc;
+        list-style:none;
+        border: 0.1em solid #dcdce9;
+}
+
+#nav li
+{
+        float:left;
+        font-size:80%;
+}
+
+#nav li a
+{
+        color:#03b;
+        text-decoration:none;
+        display:block;
+        width:88px;
+        height:19px;
+        text-align:center;
+        background:url(bg.gif) no-repeat;
+        margin-left:8px;
+        padding-top:6px;
+}
+
+#nav li a:hover
+{
+        font-weight:bold;
+}
+
+h1, h2{
+/*	text-transform: uppercase;*/
+        color: #4088b8;
+/*color: #6F7A9F;*/
+}
+
+h3{
+    color: green;
+    border-left: 0.1em solid #dcdce9;
+    border-left-width: 2px;
+    border-bottom: 0.1em solid #dcdce9;
+}
+
+h4{
+    color: #9C4C17
+}
+
+a {
+    border-bottom: 1px solid #8A8E99;
+    text-decoration: none;
+    color: #4369D1;
+}
+
+a:hover {
+    border: none;
+}
+
+#header {
+/*	width: 260px;*/
+/*	height: 60px; */
+    padding: 10px 10px 0 10px;
+/*	background: url(images/img2.jpg) no-repeat;*/
+}
+
+#header h1 {
+/*    margin : 10px 10px 0px 10px ;*/
+    text-align : center ;
+    padding : 10px 10px 0 0 ;
+    font-size : 1.5em ;
+}
+
+#header h2 {
+/*	margin: 0 0 0 100px;*/
+/*    float : right; */
+    text-align : center ;
+    padding: 0;
+    font-size: 0.9em;
+    color : green ;
+}
+
+#header a {
+	border: none;
+	color: #6F7A9F;
+}
+
+#main {
+    margin: 10px;
+    padding-left: 10px;
+}
+
+p {
+    padding-left: 10px;
+}
+
+code {
+  padding: 2px 4px;
+  color: #d14;
+  background-color: #f7f7f9;
+  border: 1px solid #e1e1e8;
+}
+
+
+/* example 标签 - pre */
+pre {
+/*    border: green 0.5px solid;*/
+    padding: 0.5em;
+    margin-left: 1em;
+    margin-right: 1em;
+    border: dashed #666 1px;
+    /*border: 0.1em solid #dcdce9;*/
+    white-space: pre;
+    font-family : Monospace, sans-serif;
+/*    font-size: 95%;*/
+    overflow:auto;
+    max-height: 3in;
+    color: black;
+/*    background-color: #5E6B5D;*/
+/*    background: url(images/0002.gif) ;*/
+}
+
+
+/* 表格 */
+
+table {
+    border-collapse:collapse; /* 关键属性：合并表格内外边框(其实表格边框有2px，外面1px，里面还有1px) */
+    border:solid #AAA; /* 设置边框属性；样式(solid=实线)、颜色(#999=灰) */
+    border-width:1px 0  0  0; /* 设置边框状粗细：上 右 下 左 = 对应：1px 0 0 1px */
+    margin : 15px;
+}
+
+/*  
+table caption {
+    font-size:14px;
+    font-weight:bolder;
+}
+*/
+
+table th{
+    background: #F3F5F7;
+}
+
+table th,table td {
+    border:solid #CCC;
+    border-width:0 1px 0px 1px;
+    padding:2px 5px 2px 5px;
+    font-family: sans,"Bitstream Vera Sans Mono","Courier New",  Courier;
+}
+
+
+tfoot td {
+    text-align:center;
+}
+
+/* muse-html-footer 定义的 footer 样式 */
+#footer {
+/*    float: right;*/
+/*    clear: both;*/
+/*    margin : 10px 60px 10px 60px ;*/
+/*    border-top: 1px dashed #294E56;*/
+    text-align : center ;
+    background: #FFFFFF url(images/0011.gif) ;
+    color : green ;
+}
+#footer a {
+    color : blue ;
+    border : none ;
+}
+
+#footer img {
+    border : none ;
+}
+
+#footdate {
+    margin-left : 20px;
+    padding-left: 5%;
+    font-style: italic;
+/*    font-size: 0.9em;*/
+    display: inline;
+}
+
+#copyright {
+    display: inline ;
+    padding-left: 5% ;
+}
+
+#visitcounter {
+    display: inline;
+/*    font-size: 0.9em;*/
+    padding-left: 5%;
+}
+
+#nav
+{
+        height:26px;
+        border-bottom:2px solid #ccc;
+        list-style:none;
+        border: 0.1em solid #dcdce9;
+}
+
+#nav li
+{
+        float:left;
+        font-size:80%;
+}
+
+#nav li a
+{
+        color:#03b;
+        text-decoration:none;
+        display:block;
+        width:88px;
+        height:19px;
+        text-align:center;
+        background:url(bg.gif) no-repeat;
+        margin-left:8px;
+        padding-top:6px;
+}
+
+#nav li a:hover
+{
+        font-weight:bold;
+}
+

@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>混合</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="混合"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:19 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">混合</h1>
+
+
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+
+<p>
+  我们已经了解，通常情况下OpenGL渲染时会把颜色值放在颜色缓冲区中，把每个片段的深度值放在深度缓冲区中。
+</p>
+<ol>
+<li>当深度缓冲区关闭时，新的颜色值简单地覆盖颜色缓冲区中的已经存在的其他值。
+</li>
+<li>当深度缓冲区打开时，新的颜色片段只有当它们比原来的值更接近临近的裁剪平面时才会替换原来的颜色片段。
+</li>
+</ol>
+
+
+<p>     
+  因此，在正常情况下，任何绘制操作不是被完全丢弃，就是完全覆盖原来的颜色值，这取决于深度测试的结果。
+</p>
+<p>  
+  而如果打开了OpenGL的混合功能，那么下层的颜色值就不会被清除。
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_BLEND);
+</pre>
+
+
+<p>
+  在打开混合功能的情况下，新的颜色会与已经存在的颜色值在颜色缓冲区中进行组合。这些颜色的组合方式不同会导致很多不同的特殊效果。
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 组合颜色</a></li>
+<li><a href="#sec-2">2 示例程序</a>
+<ul>
+<li><a href="#sec-2-1">2.1 代码</a></li>
+<li><a href="#sec-2-2">2.2 Makefile</a></li>
+<li><a href="#sec-2-3">2.3 输出</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 改变混合方程式</a></li>
+<li><a href="#sec-4">4 抗锯齿</a>
+<ul>
+<li><a href="#sec-4-1">4.1 抗锯齿的本质</a></li>
+<li><a href="#sec-4-2">4.2 开启抗锯齿</a></li>
+<li><a href="#sec-4-3">4.3 代码</a></li>
+<li><a href="#sec-4-4">4.4 Makefile</a></li>
+<li><a href="#sec-4-5">4.5 输出</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 多重采样</a>
+<ul>
+<li><a href="#sec-5-1">5.1 请求多重采样缓冲区</a></li>
+<li><a href="#sec-5-2">5.2 打开/关闭多重采样</a></li>
+<li><a href="#sec-5-3">5.3 注意</a></li>
+<li><a href="#sec-5-4">5.4 优化多重采样操作</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 组合颜色</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+   首先介绍一下新输入颜色值和已经存在颜色值的正式术语：
+</p>
+<ol>
+<li>目标颜色：已经存储在颜色缓冲区中的颜色值。这个颜色值包含了单独的红、绿、蓝成分以及一个可选的alpha值；
+</li>
+<li>源颜色：作为当前渲染命令的结果进入颜色缓冲区的颜色值称为源颜色，它可能与目标颜色进行交互，也可能不与之进行交互。源颜色也可以包含3种或4种颜色成分（红、绿、蓝和可选的alpha成分）。请注意，任意情况下只要我们忽略一个alpha值，OpenGL都会将它设为1.0。
+
+<p>      
+      当混合功能被启用时，源颜色和目标颜色的组合方式是由混合方程式控制的。在默认情况下，混合方程式如下所示。
+</p>
+<p>      
+      \[ Cf = (Cs * S) + (Cd * D) \]
+</p>
+<p>      
+      其中，\(Cf\)是最终计算产生的颜色，\(Cs\)是源颜色，\(Cd\)则是目标颜色，\(S\)和\(D\)分别是源和目标混合因子。这些混合因子是用下面这个函数进行设置的。
+</p></li>
+</ol>
+
+
+
+
+
+
+<pre class="src src-c">glBlendFunc(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">S</span>, <span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">D</span>);
+</pre>
+
+
+<p>      
+      正如我们所看到的那样，\(S\)和\(D\)都是枚举值，而不是可以直接指定的实际值。
+</p>
+<p>      
+      下表列出了混合函数可以使用的值。其中下标表示源、目标和颜色（对于混合颜色后面再讨论）。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption>OpenGL混合因子</caption>
+<colgroup><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">函数</th><th scope="col" class="left">RGB混合因子</th><th scope="col" class="left">Alpha混合因子</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">GL_ZERO</td><td class="left">(0,0,0)</td><td class="left">0</td></tr>
+<tr><td class="left">GL_ONE</td><td class="left">(1,1,1)</td><td class="left">1</td></tr>
+<tr><td class="left">GL_SRC_COLOR</td><td class="left">(Rs,Gs,Bs)</td><td class="left">As</td></tr>
+<tr><td class="left">GL_ONE_MINUS_SRC_COLOR</td><td class="left">(1,1,1)-(Rs,Gs,Bs)</td><td class="left">1-As</td></tr>
+<tr><td class="left">GL_DST_COLOR</td><td class="left">(Rd,Gd,Bd)</td><td class="left">Ad</td></tr>
+<tr><td class="left">GL_ONE_MINUS_DST_COLOR</td><td class="left">(1,1,1)-(Rd,Gd,Bd)</td><td class="left">1-Ad</td></tr>
+<tr><td class="left">GL_SRC_ALPHA</td><td class="left">(As,As,As)</td><td class="left">As</td></tr>
+<tr><td class="left">GL_ONE_MINUS_SRC_ALPHA</td><td class="left">(1,1,1)-(As,As,As)</td><td class="left">1-As</td></tr>
+<tr><td class="left">GL_DST_ALPHA</td><td class="left">(Ad,Ad,Ad)</td><td class="left">Ad</td></tr>
+<tr><td class="left">GL_ONE_MINUS_DST_ALPHA</td><td class="left">(1,1,1)-(Ad,Ad,Ad)</td><td class="left">1-Ad</td></tr>
+<tr><td class="left">GL_CONSTANT_COLOR</td><td class="left">(Rc,Gc,Bc)</td><td class="left">Ac</td></tr>
+<tr><td class="left">GL_ONE_MINUS_CONSTANT_COLOR</td><td class="left">(1,1,1)</td><td class="left">1-Ac</td></tr>
+<tr><td class="left">GL_CONSTANT_ALPHA</td><td class="left">(Ac,Ac,Ac)</td><td class="left">Ac</td></tr>
+<tr><td class="left">GL_ONE_MINUS_CONSTANT_ALPHA</td><td class="left">(1,1,1)-(Ac,Ac,Ac)</td><td class="left">1-Ac</td></tr>
+<tr><td class="left">GL_SRC_ALPHA_SATURATE</td><td class="left">(f,f,f)<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup></td><td class="left">1</td></tr>
+</tbody>
+</table>
+
+
+<p>      
+      请记住，颜色是用浮点数表示的。因此，对它们进行加减甚至乘法都是完全合法的。上表看上去有点令人困惑，因此让我们通过一个常见的混合函数组合来举例和说明。
+</p>
+
+
+
+<pre class="src src-c">glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+</pre>
+
+
+<p>      
+      这个函数告诉OpenGL接受源颜色并将这个颜色（RGB值）与alpha值相乘，然后把这个结果加上目标颜色乘以“1减去源颜色的alpha值”的结果。
+</p>
+<p>      
+      例如，如果颜色缓冲区中已经有一种红色（1.0f,0.0f,0.0f,0.0f），这是目标颜色（Cd）。如果在这上面用一种alpha值为0.6的蓝色(0.0f,0.0f,1.0f,0.6f)画了一些什么东西，就可以像下面这样计算最终颜色。
+</p>
+<p>      
+      \[ \begin{array} Cd &amp; = &amp; \mbox{目标颜色} &amp; = &amp; (1,0f, 0.0f, 0.0f, 0.0f) \\ Cs &amp; = &amp; \mbox{源颜色} &amp; = &amp; (0.0f, 0.0f, 1.0f, 0.6f)\\ S &amp; = &amp; \mbox{源alpha值} &amp; = &amp; 0.6 \\  D &amp; = &amp; 1 - \mbox{源alpha值} &amp; = &amp; 1.0 - 0.6 = 0.4 \end{array} \]
+</p>
+<p>
+      现在，下面这个方程式 
+</p>
+<p>      
+      \[ Cf = (Cs * S) + (Cd * D) \]
+</p>
+<p>      
+      等价于
+</p>
+<p>      
+      \[ Cf = (Blue * 0.5) + (Red * 0.4) \]
+</p>
+<p>      
+      最终的颜色就是原先的红色（目标颜色）与后来的蓝色（源颜色）进行缩放后的组合。
+</p>
+<p>      
+      这个混合函数经常用于实现在其他一些不透明的物体前面绘制一些透明物体的效果。但是，这种技巧需要首先绘制一个或多个背景物体，然后再在上面绘制经过混合的透明物体。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 示例程序</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 代码</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter03/Blending/Blending.cpp">Blending.cpp</a>
+</li>
+</ul>
+
+
+<p>     
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter03/Blending/Blending.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Makefile</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+<ul>
+<li><a href="./program/opengl/Linux/Chapter03/Blending/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> 输出</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig10.png"  alt="./images/opengl_fig10.png" /></p>
+<p>可移动的红色矩形与背景颜色进行混合</p>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 改变混合方程式</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+   我们前面已经介绍的混合方程式
+</p>
+<p>
+   \[ Cf = (Cs * S) + (Cd * D) \]
+</p>
+<p>
+   是默认方程式。实际上，我们可以从5个不同的混合方程式中进行选择。下表列出了这些方程式，我们可以通过下面的函数进行选择。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glBlendEquation</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">mode</span>);
+</pre>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption>可用的混合方程式</caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">模式</th><th scope="col" class="left">函数</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">GL_FUNC_ADD</td><td class="left">Cf = (Cs*S) + (Cd*D)</td></tr>
+<tr><td class="left">GL_FUNC_SUBTRACT</td><td class="left">Cf = (Cs*S) - (Cd*D)</td></tr>
+<tr><td class="left">GL_FUNC_RESERVE_SUBTRACT</td><td class="left">Cf = (Cd*D) - (Cs*S)</td></tr>
+<tr><td class="left">GL_MIN</td><td class="left">Cf = min(Cs, Cd)</td></tr>
+<tr><td class="left">GL_MAX</td><td class="left">Cf = max(Cs, Cd)</td></tr>
+</tbody>
+</table>
+
+
+<p>
+   除了 <code>glBlendFunc</code> 之外，还可以利用下面的函数更加灵活的进行选择。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glBlendFuncSeparate</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">srcRGB</span>, <span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">dstRGB</span>, <span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">srcAlpha</span>, <span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">dstAlpha</span>);   
+</pre>
+
+
+<p>
+   <code>glBlendFunc</code> 函数指定了源和目标RGBA值的混合函数，而 <code>glBlendFuncSeparate</code> 函数则允许为RGB和alpha成分单独指定混合函数。
+</p>
+<p>
+   最后，如上表所示， <code>GL_CONSTANT_COLOR</code> 、 <code>GL_ONE_MINUS_CONSTANT_COLOR</code> 、 <code>GL_CONSTANT_ALPHA</code> 和 <code>GL_ONE_MINUS_CONSTANT_ALPHA</code> 值都允许在混合方程式中引入一个常量混合颜色。这个常量混合颜色初始为黑色(0.0f,0.0f,0.0f,0.0f)，但可以用下面这个函数对它进行修改。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glBlendColor</span>(<span style="color: #00ffff; font-weight: bold;">GLclampf</span> <span style="color: #ffd700; font-style: italic;">red</span>, <span style="color: #00ffff; font-weight: bold;">GLclampf</span> <span style="color: #ffd700; font-style: italic;">green</span>, <span style="color: #00ffff; font-weight: bold;">GLclampf</span> <span style="color: #ffd700; font-style: italic;">blue</span>, <span style="color: #00ffff; font-weight: bold;">GLclampf</span> <span style="color: #ffd700; font-style: italic;">alpha</span>);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 抗锯齿</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 抗锯齿的本质</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+<p>  
+  为了消除图元之间的锯齿状边缘，OpenGL使用混合功能来混合片段的颜色，也就是把像素的目标颜色与周围像素的颜色进行混合。从本质上来说，在任何图元的边缘上，像素颜色会稍微延伸到相邻的像素。 <b>抗锯齿通常用于点和线的平滑处理</b> ，而多边形的平滑处理通常使用 <a href="./opengl_shixinwuti.html#sec-6-5">多重采样</a> 技术。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 开启抗锯齿</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+<p>  
+  开启抗锯齿功能非常简单。首先，我们必须启用混合功能，并像前一节实现透明一样设置混合函数。
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_BLEND);
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+</pre>
+
+
+<p>
+  我们还需要确保把混合方程式设置为 <code>GL_ADD</code> ，不过由于这是默认的设置，也是最为常见的混合方程式，因此我们就不在这里显示这个步骤了。在启用混合功能并选择正确的混合函数以及混合方程式之后，可以选择调用 <code>glEnable</code> 函数对点、直线和（或）多边形（任何实心图元）进行抗锯齿处理。
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_POINT_SMOOTH);
+glEnable(GL_LINE_SMOOTH);
+glEnable(GL_POLYGON_SMOOTH);
+</pre>
+
+
+<p>
+  在使用 <code>GL_POLYGON_SMOOTH</code> 时候应该注意。读者可能想用它使实心几何图元的边缘变得平滑。但是要实现这个目的，还需要其他乏味的规则。例如，重叠的几何图形需要一种不同的混合模式，并可能在很大程度上从前到后排序。我们对此不必钻研过深，因为对实心物体进行抗锯齿处理并不常用，我们在使用重叠的抗锯齿直线时仍然可能遇到这种重叠的几何图形问题。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> 代码</h3>
+<div class="outline-text-3" id="text-4-3">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter03/Smoother/Smoother.cpp">Smoother.cpp</a>
+</li>
+</ul>
+
+
+<p>     
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter03/Smoother/Smoother.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> Makefile</h3>
+<div class="outline-text-3" id="text-4-4">
+
+
+<ul>
+<li><a href="./program/opengl/Linux/Chapter03/Smoother/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> 输出</h3>
+<div class="outline-text-3" id="text-4-5">
+
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig11.png"  alt="./images/opengl_fig11.png" /></p>
+<p>锯齿消失了</p>
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 多重采样</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+  多重采样时OpenGL在1.3之后实现的特性，它可以更好地实现多边形的平滑处理。如果读者所使用的OpenGL实现支持这个特性，已经包含了颜色、深度和模板值的帧缓冲区就会添加一个额外的缓冲区。所有的图元在每个像素上都进行了多次采样，其结果就存储在这个缓冲区中。每次当这个像素进行更新时，这些采样值进行解析，以产生一个单独的值。因此，从程序员的角度而言，它就像是自动的，属于“幕后发生的事情”。很自然，这种处理会带来额外的内存和处理器开销，有可能对性能造成影响。因此，有些OpenGL实现可能并不支持多渲染环境中的多重采样。
+</p>
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> 请求多重采样缓冲区</h3>
+<div class="outline-text-3" id="text-5-1">
+
+
+
+
+
+
+<pre class="src src-c">glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> 打开/关闭多重采样</h3>
+<div class="outline-text-3" id="text-5-2">
+
+
+<p>   
+   可以使用glEnable/glDisable组合（使用 <code>GLUT_MULTISAMPLE</code> 标记）打开或关闭多重采样。
+</p>
+
+
+
+<pre class="src src-c">glEnable(GLUT_MULTISAMPLE);
+</pre>
+
+
+<p>
+   或
+</p>
+
+
+
+<pre class="src src-c">glDisable(GLUT_MULTISAMPLE);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-5-3" class="outline-3">
+<h3 id="sec-5-3"><span class="section-number-3">5.3</span> 注意</h3>
+<div class="outline-text-3" id="text-5-3">
+
+
+<p>
+   关于多重采样还需要注意的一个地方是当它被启用时，点、直线和多边形的平滑特定都将被忽略。这意味着在使用多重采样时，就不能同时使用电和直线的平滑处理。在一种特定的OpenGL实现中，点和直线的平滑处理效果可能比多重采样好。因此，当绘制点和直线时，可以关闭多重采样，在绘制其他实心几何图形时再打开多重采样。下面这段伪代码大致展示了这种做法。
+</p>
+
+
+
+<pre class="src src-c">glDisable(GL_MULTISAMPLE);
+glEnable(GL_POINT_SMOOTH);
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Draw some smooth points</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">...</span>
+
+glDisable(GL_POINT_SMOOTH);
+glEnable(GL_MULTISAMPLE);
+</pre>
+
+
+<p>
+   当然，如果没有多重采样缓冲区，OpenGL就当做 <code>GL_MULTISAMPLE</code> 是被禁用的。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5-4" class="outline-3">
+<h3 id="sec-5-4"><span class="section-number-3">5.4</span> 优化多重采样操作</h3>
+<div class="outline-text-3" id="text-5-4">
+
+
+<p>
+    多重采样缓冲区在默认情况下使用片段的RGB值，并不包括颜色的alpha成分。我们可以通过调用 <code>glEnable</code> （使用下面3个值之一）来修改这个行为。
+</p>
+<ul>
+<li><code>GL_SAMPLE_ALPHA_TO_CONVERAGE</code> —— 使用 alpha 值；
+</li>
+<li><code>GL_SAMPLE_ALPHA_TO_ON</code> —— 将 alpha 值设为1并使用它；
+</li>
+<li><code>GL_SAMPLE_COVERAGGE</code> —— 使用 glSampleCoverage 所设置的值
+</li>
+</ul>
+
+
+<p>      
+    当启用 <code>GL_SAMPLE_COVERAGE</code> 时， <code>glSampleCoverage</code> 函数允许指定一个特定的值，它是与片段覆盖值进行 <b>按位与操作</b> 的结果。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glSampleCoverage</span>(<span style="color: #00ffff; font-weight: bold;">GLclampf</span> <span style="color: #ffd700; font-style: italic;">value</span>, <span style="color: #00ffff; font-weight: bold;">GLboolean</span> <span style="color: #ffd700; font-style: italic;">invert</span>);     
+</pre>
+
+
+<p>
+    这种对多重采样操作的优化并不是严格由 OpenGL 规范所规定的，其确切的结果可能因不同的OpenGL实现而异。
+</p>
+
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 其中\(f=min(As, 1-Ad)\)
+</p></div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:19 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

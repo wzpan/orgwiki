@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>变换管线</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="变换管线"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:10 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">变换管线</h1>
+
+
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+<p> 
+\[ \begin{bmatrix} x_0 \\ y_0 \\ z_0 \\ w_0 \end{bmatrix} \rightarrow \begin{bmatrix} \mbox{模型视} \\ \mbox{图矩阵} \end{bmatrix} \rightarrow \begin{bmatrix} x_e \\ y_e \\ z_e \\ w_e \end{bmatrix} \rightarrow \begin{bmatrix} \mbox{投影矩阵} \end{bmatrix} \rightarrow \begin{bmatrix} x_c \\ y_c \\ z_c \\ w_c \end{bmatrix} \rightarrow \boxed{\mbox{透视除法}} \rightarrow \begin{bmatrix} x_{c}/w_{c} \\ y_{c}/w_{c} \\ z_{c}/w_{c} \end{bmatrix} \rightarrow \begin{bmatrix} \mbox{视口变换} \end{bmatrix} \rightarrow \begin{bmatrix} \mbox{窗口坐标} \end{bmatrix} \]
+</p>
+<div style="text-align: center">
+<p>顶点变换管线
+</p>
+</div>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 矩阵堆栈</a>
+<ul>
+<li><a href="#sec-1-1">1.1 压栈与出栈</a></li>
+<li><a href="#sec-1-2">1.2 仿射变换</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 管理管线</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 矩阵堆栈</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+<p>
+  我们常常需要保存当前的变换状态，然后在放置了一些物体之后再恢复到这个状态。当一开始就把模型视图矩阵变换为自己经常使用的视图矩阵时（因此不再位于原点），这种方法是非常方便的。
+</p>
+<p>
+  习惯上，我们会使用一个矩阵堆栈来帮助完成这些工作，而GLTools库则会在math3d矩阵函数顶部建立实用类。这个类称为 <code>GLMatrixStack</code> 。
+</p>
+<p>
+  这个类的构造函数允许指定堆栈的最大深度，默认的堆栈深度为64。这个矩阵堆栈在初始化时已经在堆栈中包含了单位矩阵。
+</p>
+
+
+
+<pre class="src src-c">GLMatrixStack::GLMatrixStack(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">iStackDepth</span> = 64);
+</pre>
+
+
+<p>
+  我们可以通过调用在顶部载入这个单位矩阵。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLMatrixStack</span>::LoadIdentity(<span style="color: #00ffff; font-weight: bold;">void</span>);
+</pre>
+
+
+<p>
+  或者可以在堆栈的顶部载入任何矩阵。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLMatrixStack</span>::LoadMatrix(<span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">m</span>);
+</pre>
+
+
+<p>
+  此外，我们可以用一个矩阵乘以矩阵堆栈的顶部矩阵，相乘得到的结果随后将存储在堆栈的顶部。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLMatrixStack</span>::MultMatrix(<span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span>);
+</pre>
+
+
+<p>
+  最后，只要用 <code>GetMatrix</code> 函数就可以获得矩阵堆栈顶部的值，这个函数可以进行两次重载，以适应 <code>GLShaderManager</code> 的使用，或者仅仅是获得顶部矩阵的副本。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span>&amp; GLMatrixStack::GetMatrix(<span style="color: #00ffff; font-weight: bold;">void</span>);
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLMatrixStack</span>::GetMatrix(<span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">mMatrix</span>);
+</pre>
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 压栈与出栈</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+<p>
+   一个矩阵的真正价值在于通过压栈操作存储一个状态，然后通过出栈操作恢复这个状态。我们可以使用 <code>PushMatrix</code> 函数将矩阵压入堆栈来存储当前矩阵值。这样做实际上是复制了当前矩阵值，并将新的值放入了堆栈的顶部。
+</p>
+<p>
+   类似地， <code>PopMatrix</code> 将移除顶部矩阵，并恢复它下面的值。以上每种情况都有几次重载。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLMatrixStack</span>::PushMatrix(<span style="color: #00ffff; font-weight: bold;">void</span>);
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">PushMatrix</span>(<span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">mMatrix</span>);
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">PushMatrix</span>(GLFrame&amp; frame);
+
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLMatrixStack</span>::PopMatrix(<span style="color: #00ffff; font-weight: bold;">void</span>);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 仿射变换</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+<p>   
+   GLMatrixStack 类也内建了对旋转、平移和缩放矩阵的支持。相应的函数列出如下：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">MatrixStack</span>::Rotate(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">angle</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">y</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">z</span>);
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">MatrixStack</span>::Translate(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">y</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">z</span>);
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">MatrixStack</span>::Scale(<span style="color: #00ffff; font-weight: bold;">Glfloat</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">y</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">z</span>);
+</pre>
+
+
+<p>
+   这些函数与它们对应的低阶 math3d 函数的运作类似，但有一点不同。 Rotate函数接受角度值而不是弧度值，以更加接近目前已经“不推荐”的OpenGL函数 <code>glRotate</code> 。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 管理管线</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:10 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

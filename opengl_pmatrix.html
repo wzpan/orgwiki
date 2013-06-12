@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>投影矩阵</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="投影矩阵"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:14 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">投影矩阵</h1>
+
+<p>模型视图矩阵实际上是 <b>在视觉坐标中移动几何图形</b> 。到目前为止，我们已经在屏幕或窗口上使用了范围为-1到+1（实际上沿z轴方向的范围也是-1到+1）的默认坐标系。
+</p>
+<p>
+如果要使用不同的坐标系，方法是将我们想要的坐标系变换到这个单位立方体中。我们使用一个新的矩阵来完成这项工作，就是投影矩阵。
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 正投影</a>
+<ul>
+<li><a href="#sec-1-1">1.1 示例程序</a></li>
+<li><a href="#sec-1-2">1.2 输出</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 透视投影</a>
+<ul>
+<li><a href="#sec-2-1">2.1 示例程序</a></li>
+<li><a href="#sec-2-2">2.2 输出</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 模型视图投影矩阵</a>
+<ul>
+<li><a href="#sec-3-1">3.1 示例程序</a></li>
+<li><a href="#sec-3-2">3.2 输出</a></li>
+<li><a href="#sec-3-3">3.3 分析</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 正投影</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+  我们通常在2D绘图中使用正投影，并在我们的几何图形中将z坐标设为0.0。但是，z轴可以延伸到任何我们想要的长度。我们可以定义一个视景体，这个视景体将包括所有的几何图形。如果我们指定了视景体之外的几何图形，那么它就会被裁剪掉，也就是说，它将被沿着视景体的边界进行剪切。
+</p>
+<p>  
+  在正投影中，所有在这个空间范围内的所有东西都会被显示在屏幕上，而不存在照相机或视点坐标系的概念。我们通过GLFrustum方法来完成上述工作。
+</p>
+
+
+
+
+<pre class="src src-c">GLFrustum::SetOrthographic(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">xMin</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">xMax</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">yMin</span>,
+                           <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">yMax</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">zMin</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">zMax</span>);
+</pre>
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 示例程序</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter04/OrthoGraphic/OrthoGraphic.cpp">OrthoGraphic.cpp</a>
+</li>
+</ul>
+
+
+<p>
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter04/OrthoGraphic/OrthoGraphic.cpp
+</p>
+<ul>
+<li><a href="./program/opengl/Linux/Chapter04/OrthoGraphic/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 输出</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+<p>
+   <img src="./images/opengl_fig17.png"  alt="./images/opengl_fig17.png" />
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 透视投影</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+<p>
+  GLFrustum类通过调用一个SetPerspective方法为我们构建一个平截头体。
+</p>
+
+
+
+<pre class="src src-c">GLFrustum::SetPerspective(<span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">fFov</span>, <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">fAspect</span>, <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">fNear</span>, <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">fFar</span>);
+</pre>
+
+
+<p>
+  其中的参数分别在垂直方向向上的视场角度，窗口的宽度与高度的纵横比，以及到近裁剪面和远裁剪面之间的距离。我们用宽度除以高度就能得到窗口或视口的纵横比。
+</p>
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 示例程序</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter04/Perspective/Perspective.cpp">Perspective.cpp</a>
+</li>
+</ul>
+
+
+<p>
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter04/Perspective/Perspective.cpp
+</p>
+<ul>
+<li><a href="./program/opengl/Linux/Chapter04/OrthoGraphic/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 输出</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+<p>
+   <img src="./images/opengl_fig18.png"  alt="./images/opengl_fig18.png" />
+</p>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 模型视图投影矩阵</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p> 
+  下面给出一个综合例子。ModelviewProjection（模型视图投影矩阵）示例程序绘制了一个在屏幕中间旋转的线框花托。
+</p>
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 示例程序</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+<ul>
+<li><a href="./program/opengl/Src/Chapter04/ModelViewProjection/ModelViewProjection.cpp">ModelViewProjection.cpp</a>
+</li>
+</ul>
+
+
+<p>
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter04/ModelViewProjection/ModelViewProjection.cpp
+</p>
+<ul>
+<li><a href="./program/opengl/Linux/Chapter04/ModelViewProjection/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 输出</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+<p>
+   <img src="./images/opengl_fig19.png"  alt="./images/opengl_fig19.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 分析</h3>
+<div class="outline-text-3" id="text-3-3">
+
+
+<ol>
+<li>使用CStopWatch类（GLTools库的一个组成部分）来基于经过的时间长短设置旋转速度。一开始将旋转速度设在了每秒60°。
+</li>
+<li>再次强调，矩阵相乘操作的顺序非常重要！
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:14 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

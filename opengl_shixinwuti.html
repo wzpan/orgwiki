@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="gbk"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>创建实心物体</title>
+<meta http-equiv="Content-Type" content="text/html;charset=gbk"/>
+<meta name="title" content="创建实心物体"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:11 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">创建实心物体</h1>
+
+
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 创建实心物体</a>
+<ul>
+<li><a href="#sec-1-1">1.1 代码</a></li>
+<li><a href="#sec-1-2">1.2 输出</a></li>
+<li><a href="#sec-1-3">1.3 分析</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 正面和背面剔除</a></li>
+<li><a href="#sec-3">3 深度测试</a></li>
+<li><a href="#sec-4">4 多边形模式</a></li>
+<li><a href="#sec-5">5 多边形偏移</a></li>
+<li><a href="#sec-6">6 用剪刀进行裁剪</a>
+<ul>
+<li><a href="#sec-6-1">6.1 示例代码</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 创建实心物体</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 代码</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter03/GeoTest/GeoTest.cpp">GeoTest.cpp</a>
+</li>
+</ul>
+
+
+<p>     
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter03/GeoTest/GeoTest.cpp
+</p>
+<ul>
+<li><a href="program/opengl/Linux/Chapter03/GeoTest/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 输出</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig05.png"  alt="./images/opengl_fig05.png" /></p>
+<p>一些某些远端三角形绘制在近端三角形之上的对象</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 分析</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p>
+   这个程序说明了组成3D物体的一些概念。在窗口中右键单击，将会出现一个 Effects 菜单，可用于启用或禁用一些3D绘图功能。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 正面和背面剔除</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+<ul>
+<li>作用：消除已经知道肯定不会被绘制的几何图形，以获得显著的性能提高。 
+
+<p>    
+    一般表面剔除按如下方式开启。
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_CULL_FACE);
+</pre>
+
+
+<p>    
+    相应的，按照如下方式关闭。
+</p>
+
+
+
+<pre class="src src-c">glDisable(GL_CULL_FACE);
+</pre>
+
+
+<p>    
+    请注意，我们并没有指明剔除的是正面还是背面。这是由另外一个函数 <code>glCullFace</code> 控制的。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glCullFace</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">mode</span>);
+</pre>
+
+
+<p>    
+    mode的参数的可用值为 <code>GL_FRONT</code> 、 <code>GL_Back</code> 或 <code>GL_FRONT_AND_BACK</code> 。这样，要消除不透明物体的物体的内部几何图形就需要两行代码。
+</p>
+
+
+
+<pre class="src src-c">glCullFace(GL_BACK);
+glEnable(GL_CULL_FACE);    
+</pre>
+
+</li>
+</ul>
+
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig06.png"  alt="./images/opengl_fig06.png" /></p>
+<p>消除了背面三角形，但自身重叠的对象在不使用深度测试的情况下可能出问题</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 深度测试</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+<ul>
+<li>作用：使z值较大的像素点靠近观察者，覆盖z值较小的像素点
+</li>
+</ul>
+
+
+<p>  
+  最后一个绘制的物体会出现在以前绘制的所有物体的前面（有点类似图层）。为了把这些物体放到后面，我们可以使用一种称为 <b>深度测试</b> 的特性来消除这种现象。
+</p>
+<p>
+  深度测试是一种有效的用于隐藏表面消除的技巧，OpenGL提供了一些函数，允许在幕后完成这个任务。它的概念非常简单：当一个像素被绘制时，它将被设置一个值（称为z值），以表示它和观察者之间的距离。以后，当这个屏幕为只需要绘制另一个像素时，新像素的z值就会与原先已经存储的那个像素进行比较。如果新像素的z值更高，它就更靠近观察者，因此位于以前那个像素的前面。否则它必须位于原先那个像素的后面，且不能遮住前面的那个像素。在内部，这个任务是通过深度缓冲区实现的，它存储了屏幕上每个像素的深度值。
+</p>
+<p>
+  我们在使用GLUT设置OpenGL窗口的时候，应该请求一个深度缓冲区。例如，我们可以按照如下方式申请一个颜色缓冲区和一个深度缓冲区。
+</p>
+
+
+
+<pre class="src src-c">glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+</pre>
+
+
+<p>
+  为了启动深度测试，只要简单的调用
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_DEPTH_TEST);
+</pre>
+
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig07.png"  alt="./images/opengl_fig07.png" /></p>
+<p>使用深度测试</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 多边形模式</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glPolygonMode</span>(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">face</span>, <span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">mode</span>);
+</pre>
+
+
+<ul>
+<li>face 的取值：我们可以对多边形的两面（ <code>GL_FRONT_AND_BACK</code> ）都应用这个渲染模式，也可以只对多边形的正面（ <code>GL_FRONT</code> ）或背面（ <code>GL_BACK</code> ）应用这个模式。
+</li>
+<li>mode 的取值：在默认情况下，多边形被绘制成实心（ <code>GL_FILL</code> ）的。但是，也可以改变这个行为，指定只绘制多边形的外框（ <code>GL_LINE</code> ），甚至只绘制点（ <code>GL_POINT</code> ）。 <code>glPolygonMode</code> 函数允许多边形作为实心图形、外框或者点进行渲染。
+</li>
+</ul>
+
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig08.png"  alt="./images/opengl_fig08.png" /></p>
+<p>使用 glPolygonMode 把多边形的正面和背面设为线框模式</p>
+</div>
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig09.png"  alt="./images/opengl_fig09.png" /></p>
+<p>使用 glPolygonMode 把多边形的正面和背面设为点云模式</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 多边形偏移</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+  虽然深度测试能够实现真实视觉并提高性能，但有时候我们需要稍微“蒙骗”一下。这种情况发生在有意要将几个几何图形绘制到同一深度时，用来避免产生 z-fighting （z冲突）问题。
+</p>
+<p>  
+  <code>glPolygonOffset</code> 函数使我们可以调节片段的深度值，这样就能 <b>使深度值产生偏移</b> 而并不实际改变3D空间中的物理位置。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glPolygonOffset</span>(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">factor</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">units</span>);
+</pre>
+
+
+<p>
+  应用到片段上的总偏移可以用下面的方程式来表示。
+</p>
+<p>
+  \[ \mbox{Depth Offset} = (\mbox{DZ} \times \mbox{factor}) + (r \times \mbox{units}) \]
+</p>
+<p>
+  其中 \(\mbox{DZ}\) 是深度值（z值）相对于多边形屏幕区域的变化量，而r则是使深度缓冲区值产生变化的最小值。并没有一个硬性规定能够找到一个万无一失的值，我们具体运用的时候还可能需要试验一下。
+</p>
+<p>
+  负值将使z值距离我们更近，而正值则会将它们移动得更远。对于<a href="./opengl_vertex.html#sec-2">Primitives示例程序</a>来说，我们将factor和units参数的值都设置为-1.0。
+</p>
+<p>
+  除了使用 <code>glPolygonOffset</code> 设置偏移值之外，还必须启用多边形单独偏移来填充几何图形（ <code>GL_POLYGON_OFFSET_FILL</code> ）、线（ <code>GL_POLYGON_OFFSET_LINE</code> ）和点（ <code>GL_POLYGON_OFFSET_POINT</code> ）。下面的代码显示了<a href="./opengl_vertex.html#sec-2">Primitives示例程序</a>中的一个函数，这个函数绘制了一批绿色的几何图形，并在上面绘制了它们的黑色线框。请注意，我们为了使显示效果更好，在轮廓上使用了更粗的抗锯齿线。在接下来关于<a href="./opengl_shixinwuti.html#sec-6">混合</a>的内容中，我们将进一步讨论抗锯齿。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">/////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">DrawWireFramedBatch</span>(<span style="color: #00ffff; font-weight: bold;">GLBatch</span>* <span style="color: #ffd700; font-style: italic;">pBatch</span>)
+{
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Draw the batch solid green</span>
+  shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(), vGreen);
+  pBatch-&gt;Draw();
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Draw black outline</span>
+  glPolygonOffset(-1.0f, -1.0f);      <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Shift depth values</span>
+  glEnable(GL_POLYGON_OFFSET_LINE);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Draw lines antialiased</span>
+  glEnable(GL_LINE_SMOOTH);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Draw black wireframe version of geometry</span>
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glLineWidth(2.5f);
+  shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(), vBlack);
+  pBatch-&gt;Draw();
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Put everything back the way we found it</span>
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glDisable(GL_POLYGON_OFFSET_LINE);
+  glLineWidth(1.0f);
+  glDisable(GL_BLEND);
+  glDisable(GL_LINE_SMOOTH);
+}
+
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> 用剪刀进行裁剪</h2>
+<div class="outline-text-2" id="text-6">
+
+
+<p>
+  有一种提高渲染技能的方法是只对屏幕上进行了修改的部分进行更新。我们还可能需要让OpenGL <b>把渲染区域限制在窗口内部一块更小的矩形区域中</b> 。OpenGL允许在窗口中指定一个裁剪矩形，让渲染只在这个区域内进行。在默认情况下，裁剪矩形就是窗口的大小，不会进行裁剪测试。我们可以使用下面这个glEnable调用来打开裁剪测试。
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_SCISSOR_TEST);
+</pre>
+
+
+<p>
+  窗口内部执行渲染的那个区域称为裁剪框（scissor box） ，它是用下面这个函数以窗口坐标（像素）的形式指定的。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glScissor</span>(<span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">y</span>, <span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">width</span>, <span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">height</span>);
+</pre>
+
+
+<p>
+  x和y参数指定了裁剪框的左下角，width和height参数则分别指定了裁剪框的宽度和高度。下面的程序显示了示例程序SCISSOR的渲染代码。这个程序清除了3次颜色缓冲区，每次在清楚之前都指定一个更小的裁剪框，其结果是一组重叠的着色模型。
+</p>
+
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> 示例代码</h3>
+<div class="outline-text-3" id="text-6-1">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter03/Scissor/Scissor.cpp">Scissor.cpp</a>
+</li>
+</ul>
+
+
+<p>     
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter03/Scissor/Scissor.cpp
+</p>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:11 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

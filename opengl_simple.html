@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>第一个OpenGL程序</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="第一个OpenGL程序"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-09-27 Thu"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">第一个OpenGL程序</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 代码</a></li>
+<li><a href="#sec-2">2 Makefile</a></li>
+<li><a href="#sec-3">3 输出</a></li>
+<li><a href="#sec-4">4 分析</a>
+<ul>
+<li><a href="#sec-4-1">4.1 头文件</a></li>
+<li><a href="#sec-4-2">4.2 启动GLUT</a></li>
+<li><a href="#sec-4-3">4.3 定义视口</a></li>
+<li><a href="#sec-4-4">4.4 完成设置</a>
+<ul>
+<li><a href="#sec-4-4-1">4.4.1 RGB颜色空间</a></li>
+<li><a href="#sec-4-4-2">4.4.2 存储着色器</a></li>
+<li><a href="#sec-4-4-3">4.4.3 指定顶点</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-5">4.5 言归正传</a>
+<ul>
+<li><a href="#sec-4-5-1">4.5.1 清除颜色缓冲区</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 代码</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter02/Triangle/Triangle.cpp">Triangle.cpp</a>
+</li>
+</ul>
+
+
+<p>  
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter02/Triangle/Triangle.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Makefile</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<ul>
+<li><a href="program/opengl/Linux/Chapter02/Triangle/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+<p>
+CANNOT INCLUDE FILE ./program/opengl/Linux/Chapter02/Triangle/Makefile
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 输出</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+  <img src="./images/opengl_fig02.png"  alt="./images/opengl_fig02.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 分析</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 头文件</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+<p>  
+  在开始编写任何C++（或者只是C）程序之前，都要先将要用到的函数和类定义的头文件包含进来。为了达到目的，最低限度也要包含如下头文件。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GLTools.h&gt;</span>            <span style="color: #ffd700;">// </span><span style="color: #ffd700;">OpenGL toolkit</span>
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GLShaderManager.h&gt;</span>    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Shader Manager Class</span>
+
+<span style="color: #00ffff; font-weight: bold;">#ifdef</span> __APPLE__
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;glut/glut.h&gt;</span>          <span style="color: #ffd700;">// </span><span style="color: #ffd700;">OS X version of GLUT</span>
+<span style="color: #00ffff; font-weight: bold;">#else</span>
+<span style="color: #00ffff; font-weight: bold;">#define</span> <span style="color: #ffd700; font-style: italic;">FREEGLUT_STATIC</span>
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GL/glut.h&gt;</span>            <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Windows FreeGlut equivalent</span>
+<span style="color: #00ffff; font-weight: bold;">#endif</span>
+</pre>
+
+
+<p>
+  <code>GLTools.h</code> 头文件中包含了大部分GLTools中类似C语言的独立函数，而每个GLTools的C++类则有自己的头文件。 <code>GLShaderManager.h</code> 移入了GLTools着色器管理器（Shader Manager）类。没有着色器，我们就不能在OpenGL（核心框架）中进行着色。着色管理器不仅允许我们创建并管理着色器，还提供一组“存储着色器”（Stock Shader），他们能够进行一些初步和基本的渲染操作。
+</p>
+<p>
+  根据应用程序是否是在Mac上创建的，GLUT将采取不同的处理方式。在Windows和Linux上，我们使用freeglut的静态库版本，这就需要在它前面添加FREEGLUT_STATIC处理器宏。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 启动GLUT</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+<p>   
+   我们从main函数开始：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">///////////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Main entry point for GLUT based programs</span>
+<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-weight: bold;">main</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">argc</span>, <span style="color: #00ffff; font-weight: bold;">char</span>* <span style="color: #ffd700; font-style: italic;">argv</span>[])
+        {
+        gltSetWorkingDirectory(argv[0]);
+</pre>
+
+
+<p>
+   GLTools函数 <code>gltSetWorkingDirectory</code> 用来设置当前工作目录。实际上在Windows中是不必要的，因为工作目录默认就是与程序的可执行程序相同的目录。但是在Mac OS X中，这个程序将当前工作文件夹改为应用程序捆绑包（Application Bundle）中的/Resource 文件夹，以方便以后想要载入纹理文件或模型数据。
+</p>
+
+<p>   
+   接下来，我们将进行一些基于GLUT的标准设置。首先要调用 <code>glutInit</code> 函数，这个函数只是传输命令行参数并初始化GLUT库。
+</p>
+
+
+
+<pre class="src src-c">glutInit(&amp;argc, argv);
+</pre>
+
+
+<p>
+   然后我们必须告诉GLUT库，在创建窗口时要使用哪种类型的显示模式。
+</p>
+
+
+
+
+<pre class="src src-c">glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
+</pre>
+
+
+<p>
+   这里的标志告诉它要使用双缓冲窗口（GLUT_DOUBLE）和RGBA颜色模式（GLUT_RGBA）。
+</p>
+<p>
+   单缓冲窗口和双缓冲窗口的区别：
+</p>
+<ul>
+<li>单缓冲窗口 所有的绘图命令都是在显示窗口上执行的；
+</li>
+<li>双缓冲窗口 绘图命令实际上是在一个屏幕之外的缓冲区中执行的，然后快速执行交换，在窗口上显示。这种方法常常用于产生动画效果。详见<a href="./opengl_animation.html#sec-4-1">双缓冲</a>；
+</li>
+</ul>
+
+
+<p>    
+  两种颜色模式：
+</p>
+<ul>
+<li>RGBA颜色模式 表示指定的颜色是通过单独的红、绿、蓝和alpha成分的强度所确定。
+</li>
+<li>颜色索引模式 通过在调色板中使用一个索引值来制定颜色（已过时）。
+</li>
+</ul>
+
+
+<p>    
+  GLUT_DEPTH位标志将一个深度缓冲区分配为显示的一部分，因此我们能够执行深度测试。同样，GLUT_STENCIL确保我们也会有一个可用的模板缓冲区。
+</p>
+<p>    
+  接下来，我们要告诉GLUT窗口的大小，并继续创建以“Triangle”为标题窗口。
+</p>
+
+
+
+<pre class="src src-c">glutInitWindowSize(800, 600);
+glutCreateWindow(<span style="color: #f0e68c;">"Triangle"</span>);
+</pre>
+
+
+<p>
+  GLUT内部运行一个本地消息循环，拦截适当的消息，然后调用我们为不同时间注册的回调函数。与使用真正的系统特定框架相比有一定的局限性，但是大大简化了组织并运行一个程序的过程，并且支持一个演示框架的最低限度的事件。在这里，我们必须为窗口改变大小而设置一个回调函数，以便能够设置视点，还要注册一个函数以包含OpenGL渲染代码。
+</p>
+
+
+
+<pre class="src src-c">glutReshapeFunc(ChangeSize);
+glutDisplayFunc(RenderScene);
+</pre>
+
+
+
+<p>  
+  <code>ChangeSize</code> 和 <code>RenderScene</code> 函数很快就会讲到，但是在开始运行主消息循环之前，还要解决两件事情。第一件事情就是初始化GLEW库。重新调用GLEW库初始化OpenGL驱动程序中所有丢失的入口点，以确保OpenGL API对我们来说完全可用。调用 <code>glewInit</code> 一次就能完成这一步，在试图做任何渲染之前，还要检查确定驱动程序的初始化过程中没有出现任何问题。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">err</span> = glewInit();
+<span style="color: #00ffff; font-weight: bold;">if</span> (GLEW_OK != err) {
+  fprintf(stderr, <span style="color: #f0e68c;">"GLEW Error: %s\n"</span>, glewGetErrorString(err));
+  <span style="color: #00ffff; font-weight: bold;">return</span> 1;
+ }
+</pre>
+
+
+
+<p>
+  最后一项准备工作就是调用 SetupRC。
+</p>
+
+
+
+<pre class="src src-c">SetupRC();
+</pre>
+
+
+<p>
+  在这个函数中，我们将执行渲染之前应该完成的所有OpenGL初始化工作。许多OpenGL状态只需要设置一次。当我们每次对一个帧（一个充满图形的屏幕）进行渲染时，这些状态并不需要进行重新设置。
+</p>
+<p>  
+  最后一个GLUT函数调用出现在程序的最后。
+</p>
+
+
+
+
+<pre class="src src-c">glutMainLoop();
+</pre>
+
+
+<p>
+  这个函数启动了GLUT框架的运行，定义了用于屏幕显示的回调函数和其他函数之后，就可以放下GLUT了。 <code>glutMainLoop</code> 函数一经调用便不再返回，直到程序终止。因此，它在应用程序中只能调用一次。这个函数处理所有操作系统特定的消息、击键等事件，直到程序终止。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> 定义视口</h3>
+<div class="outline-text-3" id="text-4-3">
+
+
+
+<p>
+   由于在不同环境下窗口的大小变化的检测和处理方式也不同，GLUT库为此专门提供了 <code>glutReshapeFunc</code> 函数，这个函数注册了一个回调，供GLUT库在窗口维度改变时调用。我们传递到 <code>glutReshapeFunc</code> 的函数原型如下：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">ChangeSize</span>(<span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">w</span>, <span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">h</span>);
+</pre>
+
+
+<p>
+   我们选择ChangeSize作为这个函数的名称，在以后的例子里，我们将沿用这个名称。当窗口大小发生改变时，ChangeSize函数将接收到新的宽度和高度信息。我们使用x这个信息来修改我们的目标坐标系统，使之映射到真实的屏幕坐标。这个任务是在两个OpenGL函数的帮助下完成的： <code>glViewport</code> 和 <code>glOrtho</code> 。
+</p>
+<p>
+   为了理解视口定义是如何实现的，让我们仔细观察ChangeSize函数。它首先调用 <code>glViewport</code> 函数，而窗口的宽度和高度则作为它的参数。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glViewport</span>(<span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">y</span>, <span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">width</span>, <span style="color: #00ffff; font-weight: bold;">GLsizei</span> <span style="color: #ffd700; font-style: italic;">height</span>);
+</pre>
+
+
+<p>   
+   x和y参数指定了窗口内部视口的左下角，width和height参数指定了视口的大小（以像素为单位）。通常，x和y都是0,但我们可以使用视口，在一个窗口的不同区域中渲染多个图形。视口 以实际屏幕坐标定义了窗口中的区域 ，OpenGL可以在这个区域中进行绘图。随后，当前的裁剪区域被映射到新的视口。如果指定了一个比窗口坐标更小的视口，则渲染区域就会缩小。
+</p>
+
+
+
+<pre class="example">
+ +  +-------------------------+          +  +-------------------------+
+ |  |                         |          |  |                         |
+ |  |                         |          |  |                         |
+ |  | glViewport(0,0,250,250) |          |  | glViewport(0,0,250,250) |
+ +  |                         |          +  |                         |
+250 |                         |         250 +-----125----+            |
+ +  |                         |          +  |            |            |
+ |  |                         |          |  |            |            |
+ |  |                         |          |  |          125            |
+ |  |                         |          |  |            |            |
+ |  |                         |          |  |            |            |
+ +  +-------------------------+          +  +-----------+-------------+
+    --------- 250 -------------             --------- 250 -------------
+
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> 完成设置</h3>
+<div class="outline-text-3" id="text-4-4">
+
+
+<p>
+   在开始main函数中的GLUT主循环之前，我们先调用SetupRC函数。这时我们要为程序做一些一次性的设置。首先要做的就是通过以下调用来设置背景颜色。
+</p>
+
+
+
+
+<pre class="src src-c">glClearColor(0.0f, 0.0f, 1.0f, 1.0f );
+</pre>
+
+
+<p>
+   这个函数设置用来进行窗口清除的颜色，它的函数原型如下所示。
+</p>
+
+
+
+<pre class="src src-c">glClearColor(<span style="color: #00ffff; font-weight: bold;">GLclampf</span> <span style="color: #ffd700; font-style: italic;">red</span>, <span style="color: #00ffff; font-weight: bold;">GLclampf</span> <span style="color: #ffd700; font-style: italic;">green</span>, <span style="color: #00ffff; font-weight: bold;">GLclampf</span> <span style="color: #ffd700; font-style: italic;">blue</span>, <span style="color: #00ffff; font-weight: bold;">GLclampf</span> <span style="color: #ffd700; font-style: italic;">alpha</span>);   
+</pre>
+
+
+<p>
+   在大多数OpenGL实现下，GLclampf都被定义为一个浮点值。每个参数都包含最终颜色所要求的这种颜色分量的权值。这个函数不会立即清除背景，而是设置在以后颜色缓冲区被清除（可能是重复的）时使用的颜色。
+</p>
+
+</div>
+
+<div id="outline-container-4-4-1" class="outline-4">
+<h4 id="sec-4-4-1"><span class="section-number-4">4.4.1</span> RGB颜色空间</h4>
+<div class="outline-text-4" id="text-4-4-1">
+
+
+<p>
+    详见 <a href="./opengl_color.html">OpenGL中的颜色</a> 一节。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-4-2" class="outline-4">
+<h4 id="sec-4-4-2"><span class="section-number-4">4.4.2</span> 存储着色器</h4>
+<div class="outline-text-4" id="text-4-4-2">
+
+<p>    没有着色器，在 OpenGL 核心框架中就无法进行任何渲染。我偶们要在源文件的开头部分声明一个着色器管理器的实例，如下所示：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLShaderManager</span> <span style="color: #ffd700; font-style: italic;">shaderManager</span>;
+</pre>
+
+
+<p>
+    着色器管理器需要编译和链接它自己的着色器，所以我们必须在OpenGL初始化时调用InitializeStockShaders方法。
+</p>
+
+
+<pre class="src src-c">shaderManager.InitializeStockShaders();    
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-4-3" class="outline-4">
+<h4 id="sec-4-4-3"><span class="section-number-4">4.4.3</span> 指定顶点</h4>
+<div class="outline-text-4" id="text-4-4-3">
+
+
+<p>
+    接下来我们要做的是设置三角形。在OpenGL中，三角形是一种“图元”模型，是一种基本的3D绘图元素。在 <b>基础渲染</b> 一章，我们会非常详细的讨论OpenGL将会用到的7种图元。但在这里，我们只要了解一个三角形图元就iu是空间中的一系列组成一个三角形的顶点或点就可以了。我们通过将这些顶点放进一个单个浮点数组来指定它们。这个数组命名为vVerts，其中包含所有3个顶点的x、y、z笛卡尔坐标对。请注意我们将所有3个点的z坐标都设为0。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">Load up a triangle</span>
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vVerts</span>[] = { -0.5f, 0.0f, 0.0f, 
+                     0.5f, 0.0f, 0.0f,
+                     0.0f, 0.5f, 0.0f };
+</pre>
+
+
+<p>
+    一个简单的GLTool封装类（Wrapper Class） <code>GLBatch</code> 会将三角形顶点批次进行封装，而我们则在源文件顶部附近声明一个这个GLBatch类的实例。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLBatch</span> <span style="color: #ffd700; font-style: italic;">triangleBatch</span>;    
+</pre>
+
+
+<p>
+    下面代码建立了一个三角形的批次，仅包含3个顶点。
+</p>
+
+
+
+<pre class="src src-c">triangleBatch.Begin(GL_TRIANGLES, 3);
+triangleBatch.CopyVertexData3f(vVerts);
+triangleBatch.End();
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> 言归正传</h3>
+<div class="outline-text-3" id="text-4-5">
+
+
+<p>
+   最后，我们终于可以真正开始渲染了！
+</p>
+
+</div>
+
+<div id="outline-container-4-5-1" class="outline-4">
+<h4 id="sec-4-5-1"><span class="section-number-4">4.5.1</span> 清除颜色缓冲区</h4>
+<div class="outline-text-4" id="text-4-5-1">
+
+
+<p>   
+   前面我们将清除颜色设为蓝色，现在我们需要执行一个函数真正进行清除。
+</p>
+
+
+
+
+<pre class="src src-c">glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+</pre>
+
+
+<p>
+   glClear函数清除一个或一组特定的缓冲区。缓冲区是一块存储图像信息的存储空间。红色、绿色、蓝色和alpha分量通常一起作为颜色缓冲区或像素缓冲区引用。
+</p>
+<p>
+   OpenGL具有多种缓冲区（颜色、深度、模板和累积）。关于缓冲区的详细内容请参考 <a href="./opengl_qthcqjq.html">其他缓冲区的技巧</a> 。在前面的示例中，我们用按位或操作来同时清除所有这3种缓冲区。有时会看到帧缓冲区（Framebuffer）这个术语，它指的是所有这些缓冲区一起串联工作。
+</p>
+
+<p>   
+   下面的3行代码将真正执行操作，这也是整个下一章的主要课题！我们设置一组浮点数来表示红色（其alpha值设为1.0）,并将它传递到存储着色器，即 <code>GLT_SHADER_INDENTITY</code> 着色器。这个着色器是使用指定颜色以默认笛卡尔坐标系在屏幕上渲染几何图形。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vRed</span>[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+shaderManager.UseStockShader(GLT_SHADER_IDENTITY, vRed);
+triangleBatch.Draw();
+</pre>
+
+
+<p>
+   GLBatch的Draw方法指示将几何图形提交到着色器，然后……啊哈！——红色三角形……哦，差不多是。还有一个细节。当设置OpenGL窗口时，我们指定要一个双缓冲区渲染环境。这就意味着在后台缓冲区进行渲染，然后在结束时交换到前台。这种形式能够防止观察者看到可能伴随着动画帧与动画帧之间闪烁的渲染过程。缓冲区交换将以平台特定的方式进行，但是GLUT有一个单独的函数调用以完成这项工作。
+</p>
+
+
+
+<pre class="src src-c">glutSwapBuffers();
+</pre>
+
+
+<p>
+   现在我们可以鞠躬谢幕了。我们已经用OpenGL渲染了第一个三角形。
+</p>
+
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-09-27 Thu</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

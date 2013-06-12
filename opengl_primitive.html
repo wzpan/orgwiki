@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>其他图元</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="其他图元"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:14 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">其他图元</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 四条边的多边形：四边形</a>
+<ul>
+<li><a href="#sec-1-1">1.1 四边形带</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 通过多边形</a></li>
+<li><a href="#sec-3">3 填充多边形</a>
+<ul>
+<li><a href="#sec-3-1">3.1 示例代码</a></li>
+<li><a href="#sec-3-2">3.2 输出</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 多边形的创建规则</a></li>
+<li><a href="#sec-5">5 细分和边界</a>
+<ul>
+<li><a href="#sec-5-1">5.1 代码示例</a></li>
+<li><a href="#sec-5-2">5.2 分析</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 四条边的多边形：四边形</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+<p>
+  OpenGL的 <code>GL_QUADS</code> 图元用于绘制四边形。我们根据4个顶点绘制了一个四边形。注意这些多边形具有 <b>顺时针方向的环绕</b> 。使用四边形，必须记住一个重要规则：一个四边形的4个角 <b>必须位于同一个平面中</b> （不存在弯曲的四边形）。
+</p>
+<pre class="example">
+
+                         v1
+                         /\ 
+                   1   /-  \-  2
+                     /-      \- 
+                   /-          \-
+              v0 \-              X v2
+                  -\           -/    
+                    -\       -/      
+                   4  -\   -/  3     
+                        --/       
+                        v3        
+
+</pre>
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 四边形带</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<p>   就像创建三角形带一样，可以使用 <code>GL_QUAD_STRIP</code> 图元指定一个连接的四边形带。下图显示了一个由6个顶点所组成的四边形带。注意这些四边形都保持了顺时针方向的环绕。
+</p>
+<pre class="example">
+
+            v1    2     v3      v1          v3    2    v5
+             +----------+        +----------+----------+ 
+             |          |        |          |          | 
+           1 |          | 3      |        1 |          | 3
+             |          |        |          |          |  
+             |          |        |          |          |  
+             +----------+        +----------+----------+  
+            v0    4     v2      V0          v2    4    v4    
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 通过多边形</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>  最后一种 OpenGL 图元是 <code>GL_POLYGON</code> ，我们可以用它绘制任意数量边的多边形。下图显示了一个由5个顶点组成的四边形。和四边形一样，多边形的所有顶点也必须位于同一个平面中。如果想越过这个规则，可以采用一种变通的方法，用 <code>GL_TRIANGLE_FAN</code> 代替 <code>GL_POLYGON</code> 。
+</p>
+<pre class="example">
+   
+              v0      v1
+                +-----\ 
+                |      \    
+                |       |  v2
+                |       |    
+                +-------+    
+              v4           v3  
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 填充多边形</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>  
+  我们可以使用两种机制把一个模式应用到实心多边形：
+</p>
+<ol>
+<li>纹理贴图，也就是把一幅图像贴到一个多边形的表面，这个将在后续讨论。
+</li>
+<li>指定<a href="./opengl_line.html#sec-1-6">点画模式</a>，就像我们在直线中所做的那样。
+
+<p>  
+     为了启用多边形点画，我们可以调用
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_POLYGON_STIPPLE);
+</pre>
+
+
+<p>     
+     然后调用
+</p>
+
+
+
+<pre class="src src-c">glPolygonStipple(pBitmap);
+</pre>
+
+
+<p>     
+     pBitmap是一个指定了一块数据区域的指针，这块数据区域包含了点画模式。随后，所有的多边形就使用 pBitmap(GLubyte*) 所指定的模式进行填充。这种模式类似于直线点画，只不过现在的缓冲区需要足够大，能够容纳一个32x32的位模式。同样，在这些位中，首先读入的是最高有效位（MSB），这与直线点画正好相反。
+</p>
+<p>     
+     为了创建一个掩码来表示这个模式，我们自底向上一次存储一行。幸运的是，和直线点画模式不同， <b>数据在默认情况下的解释顺序和存储顺序相同</b> ，首先读取的是最高有效位。然后每个字节从左向右读取并存储在一个GLubyte数组中。这个数组必须足够大，能够容纳32行每行4个字节的数据。
+</p></li>
+</ol>
+
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 示例代码</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+<ul>
+<li><a href="./program/opengl/pstipple.cpp">pstipple.cpp</a>
+</li>
+</ul>
+
+
+<p>  
+CANNOT INCLUDE FILE ./program/opengl/pstipple.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 输出</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+
+<div class="figure">
+<p><img src="./images/fig24.png"  alt="./images/fig24.png" /></p>
+<p>PSTIPPLE程序的输出</p>
+</div>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 多边形的创建规则</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+  在使用多边形来创建一个复杂的表面时，需要记住两个重要的规则<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>：
+</p>
+<ol>
+<li>所有的多边形 <b>必须是平面</b> 的，也就是说，多边形的所有顶点必须位于同一个平面中。在空间中，多边形不能扭曲或弯曲。
+</li>
+<li>多边形的边 <b>必须不相交</b> ，并且多边形 <b>必须是凸的</b> 。一个多边形如果它的任何两条边相交，那么这个多边形就是相交的。凸意味着多边形不能出现内陷。
+</li>
+</ol>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 细分和边界</h2>
+<div class="outline-text-2" id="text-5">
+
+
+
+<p>  
+  尽管OpenGL只能绘制凸多边形，但我们仍然能够采用一种方法创建非凸多边形，那就是把两个或更多个图多边形排列到一起。但这样会产生不希望的边界。
+</p>
+<p>
+  OpenGL提供了一个特殊的标志，称为edge标志，用于处理这些边的问题。当指定一个顶点列表时，通过设置和清除edge标志，可以通知 OpenGL 哪些线段属于边界线（围绕形状边缘的直线），哪些线段不属于边界线（形状内部的直线应该不可见）。 <code>glEdgeFlag</code> 函数接受一个参数，来把edge标志设置为True或False。当这个函数设置为True时，接下来的所有顶点都将作为多边形边界线的起点。
+</p>
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> 代码示例</h3>
+<div class="outline-text-3" id="text-5-1">
+
+
+<ul>
+<li><a href="./program/opengl/star.cpp">star.cpp</a>
+</li>
+</ul>
+
+
+<p>     
+CANNOT INCLUDE FILE ./program/opengl/star.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> 分析</h3>
+<div class="outline-text-3" id="text-5-2">
+
+
+<p>
+   布尔型变量 bEdgeFlag可以通过一个菜单项予以打开或关闭，使三角形的边出现或消失。
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 加入这样的限制，使得OpenGL可以用一些非常快速的算法对多边形进行渲染。
+</p>
+
+
+
+
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:14 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

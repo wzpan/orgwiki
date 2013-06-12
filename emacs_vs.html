@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="gbk"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>Emacs 编译 Visual Studio (C++) </title>
+<meta http-equiv="Content-Type" content="text/html;charset=gbk"/>
+<meta name="title" content="Emacs 编译 Visual Studio (C++) "/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-12-31T01:36+0800"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./emacs_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">Emacs 编译 Visual Studio (C++) </h1>
+
+<p>在 Windows 开发比较大型的 C/C++ 项目，往往还是得借助微软的 Visual Studio (C++)，但对于重度 Emacs 使用者，离开了用起 VC 来总是各种蹩脚。关于如何在 Emacs 中搭建 VC 的开发环境，<a href="http://emacser.com/author/fangzhzh/">fangzhzh</a> 的一篇博文 《<a href="http://emacser.com/dev-vc.htm">Emacs 中开发 VC 程序</a>》 已经做了比较好的讨论。唯一不足的地方是对 Emacs 调用 VC 编译缺乏更深入的探讨。编译 VC 基本上还是要靠微软自家的工具，经过我的摸索，一共有三种不同的方案，针对不同的需要，用户可以自行选择。
+</p>
+<p>
+总体说来，这三种方案各自的特点比较如下：
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup><col class="right" /><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="right">序号</th><th scope="col" class="left">调用工具</th><th scope="col" class="left">读取文件格式</th><th scope="col" class="left">特点</th></tr>
+</thead>
+<tbody>
+<tr><td class="right">1</td><td class="left">envdev</td><td class="left">*.sln</td><td class="left">可以编译整个VS的解决方案。缺点在于编译后没有给出错误提示。</td></tr>
+<tr><td class="right">2</td><td class="left">nmake</td><td class="left">*.mak</td><td class="left">使用微软自家的 make 工具来编译单个工程。缺点在于生成 *.mak 文件比较麻烦。</td></tr>
+<tr><td class="right">3</td><td class="left">msdev</td><td class="left">*.dsw</td><td class="left">VC 6.0 提供的单个工程编译工具。在VS 2005之后就被 envdev 取代了。</td></tr>
+</tbody>
+</table>
+
+
+<p>
+现在就让我们来深入探讨一下如何在 Emacs 中编译 Visual Studio (C++) 的项目。
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 方案一：envdev + .sln</a></li>
+<li><a href="#sec-2">2 方案二：nmake + .mak</a></li>
+<li><a href="#sec-3">3 方案三：msdev + .dsw</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 方案一：envdev + .sln</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>  
+  在Visual Studio中，可以把所有的项目看作一个解决方案，这个解决方案就用 *.sln 文件来记录，并通过 devenv 工具来读取、分析和编译。它位于VS目录下的 <code>Common7\IDE</code> 目录中。
+</p>
+<p>  
+  为了方便直接在Emacs下调用envdev，可以先把devenv所在的目录加进系统环境变量。例如，我的devenv所在的目录为“D:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE”，则可以将该路径添加到PATH环境变量中。
+</p>
+<p>  
+  完成后，打开cmd，执行
+</p>
+
+
+
+<pre class="src src-sh">devenv -h
+</pre>
+
+
+<p>  
+  将可以看到如下的提示：
+</p>
+
+
+
+<pre class="example">e:\joseph\codes\CV_01\CV_01&gt;devenv -h
+devenv -h
+
+Microsoft (R) Visual Studio Version 9.0.30729.1.
+Copyright (C) Microsoft Corp. All rights reserved.
+
+Invalid Command Line. Unknown Switch : h.
+
+Use:
+devenv  [solutionfile | projectfile | anyfile.ext]  [switches]
+
+The first argument for devenv is usually a solution file or project file.
+You can also use any other file as the first argument if you want to have the
+file open automatically in an editor. When you enter a project file, the IDE
+looks for an .sln file with the same base name as the project file in the
+parent directory for the project file. If no such .sln file exists, then the
+IDE looks for a single .sln file that references the project. If no such single
+.sln file exists, then the IDE creates an unsaved solution with a default .sln
+file name that has the same base name as the project file.
+
+Command line builds:
+devenv solutionfile.sln /build [ solutionconfig ] [ /project projectnameorfile [ /projectconfig name ] ]
+Available command line switches:
+
+/Build          Builds the solution or project with the specified solution
+                configuration. For example "Debug". If multiple platforms
+                are possible, the configuration name must be enclosed in quotes
+                and contain platform name. For example: "Debug|Win32".
+/Clean          Deletes build outputs.
+/Command        Starts the IDE and executes the command.
+/Deploy         Builds and then deploys the specified build configuration.
+/Edit           Opens the specified files in a running instance of this
+                application. If there are no running instances, it will
+                start a new instance with a simplified window layout.
+/LCID           Sets the default language in the IDE for the UI.
+/Log            Logs IDE activity to the specified file for troubleshooting.
+/NoVSIP         Disables the VSIP developer's license key for VSIP testing.
+/Out            Appends the build log to a specified file.
+/Project        Specifies the project to build, clean, or deploy.
+                Must be used with /Build, /Rebuild, /Clean, or /Deploy.
+/ProjectConfig  Overrides the project configuration specified in the solution
+                configuration. For example "Debug". If multiple platforms are
+                possible, the configuration name must be enclosed in quotes
+                and contain platform name. For example: "Debug|Win32".
+                Must be used with /Project.
+/Rebuild        Cleans and then builds the solution or project with the
+                specified configuration.
+/ResetAddin     Removes commands and command UI associated with the specified Add-in.
+/ResetSettings  Restores the IDE's default settings, optionally resets to
+                the specified VSSettings file.
+/ResetSkipPkgs  Clears all SkipLoading tags added to VSPackages.
+/Run            Compiles and runs the specified solution.
+/RunExit        Compiles and runs the specified solution then closes the IDE.
+/SafeMode       Launches the IDE in safe mode loading minimal windows.
+/Upgrade        Upgrades the project or the solution and all projects in it.
+                A backup of these files will be created as appropriate.  Please
+                see Help on 'Visual Studio Conversion Wizard' for more
+                information on the backup process.
+
+Product-specific switches:
+
+/debugexe       Open the specified executable to be debugged. The
+                remainder of the command line is passed to this
+                executable as its arguments.
+/useenv         Use PATH, INCLUDE, LIBPATH, and LIB environment variables
+                instead of IDE paths for VC++ builds.
+
+To attach the debugger from the command line, use:
+        VsJITDebugger.exe -p &lt;pid&gt;
+</pre>
+
+
+<p>  
+  按照提示，在VS中创建一个sln工程文件后，使用devenv编译的命令为：
+</p>
+
+
+
+<pre class="src src-sh">devenv solutionfile.sln /build [ solutionconfig ] [ /project projectnameorfile [ /projectconfig name ] ]
+</pre>
+
+
+<p>  
+  其中的 <code>/build</code> 等选项可以替换成 <code>/run</code> 等其他选项。
+</p>
+<p>  
+  之后可以配置 Emacs，让我们在按下 <code>F7</code> 键后选择各种编译选项。在.emacs文件中加入以下内容：
+</p>
+
+
+
+<pre class="src src-lisp">(<span style="color: #7ab847;">defun</span> <span style="color: #ff8080;">is-devstudio-solution</span> (filename)
+  (or 
+   (null (file-name-extension filename))
+   (string= (file-name-extension filename) <span style="color: #e08d00;">"sln"</span>)))
+
+(read-file-name <span style="color: #e08d00;">"Solution: "</span> nil nil t nil 'is-devstudio-solution) 
+
+(<span style="color: #7ab847;">defun</span> <span style="color: #ff8080;">extract-projects</span> (sln-file)
+  (<span style="color: #7ab847;">save-excursion</span>
+    (<span style="color: #7ab847;">with-temp-buffer</span>
+      (insert-file sln-file)
+      (goto-char (point-min))
+      (<span style="color: #7ab847;">let</span> ((result nil)
+            (index 0))
+        (<span style="color: #7ab847;">while</span>
+            (re-search-forward
+             <span style="color: #e08d00;">"Project(\"{[-A-Z0-9]+}\")[        ]+=[    ]+\"</span><span style="color: #e08d00; font-weight: bold;">\\</span><span style="color: #e08d00; font-weight: bold;">(</span><span style="color: #e08d00;">[A-Za-z0-9_]+</span><span style="color: #e08d00; font-weight: bold;">\\</span><span style="color: #e08d00; font-weight: bold;">)</span><span style="color: #e08d00;">\"[      ]*,[    ]+\"</span><span style="color: #e08d00; font-weight: bold;">\\</span><span style="color: #e08d00; font-weight: bold;">(</span><span style="color: #e08d00;">[\\A-Za-z0-9_.]+</span><span style="color: #e08d00; font-weight: bold;">\\</span><span style="color: #e08d00; font-weight: bold;">)</span><span style="color: #e08d00;">\""</span>
+             (point-max)
+         t) 
+    (add-to-list 'result (cons (match-string-no-properties 1) (match-string-no-properties 2))))
+    result))))
+
+(<span style="color: #7ab847;">defun</span> <span style="color: #ff8080;">dev-studio-build</span> ()
+  (interactive)
+  (<span style="color: #7ab847;">let*</span>
+      ((solution-name
+        (read-file-name <span style="color: #e08d00;">"Solution: "</span> nil nil t))
+       (projects
+        (extract-projects solution-name))
+       (action
+        (completing-read <span style="color: #e08d00;">"Action: "</span> '((<span style="color: #e08d00;">"Build"</span> . 0) (<span style="color: #e08d00;">"Clean"</span> . 1) (<span style="color: #e08d00;">"Run"</span> . 2) (<span style="color: #e08d00;">"RunExit"</span> . 3))
+                         nil t <span style="color: #e08d00;">"Build"</span>))
+       (configuration
+        (completing-read <span style="color: #e08d00;">"Configuration: "</span> '((<span style="color: #e08d00;">"Debug"</span> . 0) (<span style="color: #e08d00;">"Release"</span> . 1) (<span style="color: #e08d00;">"Hybrid"</span> . 2))
+                         nil t <span style="color: #e08d00;">"Debug"</span>))
+       (platform
+        (completing-read <span style="color: #e08d00;">"Platform: "</span> '((<span style="color: #e08d00;">"Win32"</span> .0) (<span style="color: #e08d00;">"x86"</span> . 1))
+                         nil t <span style="color: #e08d00;">"Win32"</span>))
+       (project
+        (completing-read <span style="color: #e08d00;">"Project "</span> projects
+                         nil t (caar projects))))
+    (compile
+     (concat <span style="color: #e08d00;">"Devenv \""</span> solution-name <span style="color: #e08d00;">"\" /"</span> action <span style="color: #e08d00;">" \""</span>  (concat configuration <span style="color: #e08d00;">"|"</span> platform) <span style="color: #e08d00;">"\" /project \""</span> (cdr (assoc project projects)) <span style="color: #e08d00;">"\""</span>))))
+</pre>
+
+
+<p>  
+  然后将 <code>dev-studio-build</code> 绑定到  <code>F7</code> 键上，例如：
+</p>
+
+
+
+<pre class="src src-sh">(defun my-c-mode-common-hook()
+    (define-key c-mode-base-map [(f7)] <span style="color: #e08d00;">'dev-studio-build)</span>
+
+<span style="color: #e08d00;">(add-hook '</span>c-mode-common-hook <span style="color: #e08d00;">'my-c-mode-common-hook)</span>
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 方案二：nmake + .mak</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>  
+  直接编译*.sln文件的缺点在于编译后只会给出结果，而没有错误提示，这样不利于调试。除了直接编译*.sln文件之外，另外的选择是使用微软自家的 make 工具 —— nmake 来编译 Makefile <sup><a class="footref" name="fnr-.1" href="#fn-.1">1</a></sup> 或者 .mak 文件。但 VS 使用 *.sln 和 *.vcproj 来管理工程项目，并不提供 .mak 文件。为了得到这个文件，可以使用一个 python 脚本 <a href="http://inet-lab.googlecode.com/svn/trunk/utils/Misc/vcproj2mak.py">vcproj2mak.py</a> 。使用命令为：
+</p>
+
+
+
+<pre class="example">python vcproj2mak.py 工程文件.vcproj -O makefile文件.mak
+</pre>
+
+
+<p>  
+  执行这个脚本需要满足两个条件：
+</p>
+<ol>
+<li><a href="http://www.python.org/">Python</a> 2.x 或 3.x，安装的时候注意选择注册环境变量，省得自己添加；
+</li>
+<li>生成的 .mak 文件需要调用 mkdir 指令来创建文件夹，而这个指令是 Unix 下的工具。所以建议装一个 <a href="https://sourceforge.net/projects/gnuwin32/">GnuWin</a> 套件，这个套件提供了大量有用的 Unix 工具。
+</li>
+</ol>
+
+
+<p>     
+  在脚本执行过程中可能会报“unknown encoding”错误，这个原因是 vcproj 文件在 Windows 下的默认编码是 gb2312 的，而 python 似乎不支持 gb2312 。解决的方法是使用 Emacs 打开那个 vcproj 文件，然后 <code>C-x Ret r</code> ，选择 <code>UTF-8</code> 将文件编码改为 UTF-8 格式，并将第一行
+</p>
+
+
+
+<pre class="src src-xml">&lt;?<span style="color: #7ab847;">xml</span> <span style="color: #F5DA81;">version</span>=<span style="color: #e08d00;">"</span><span style="color: #e08d00;">1.0</span><span style="color: #e08d00;">"</span> <span style="color: #F5DA81;">encoding</span>=<span style="color: #e08d00;">"</span><span style="color: #e08d00;">gb2312</span><span style="color: #e08d00;">"</span>?&gt;
+</pre>
+
+
+<p>  
+  中的 "gb2312" 改为 "utf-8" 即可。完成后可以调用 nmake 来执行编译，调用格式为：
+</p>
+
+
+
+<pre class="example">nmake -f mak文件名 编译选项
+</pre>
+
+
+<p>  
+  其中 <code>编译选项</code> 是你的编译方案，一般可以选择 <code>Debug</code> 或者 <code>Release</code> 。
+</p>
+<p>  
+  另外一个问题是当调用过一次 nmake 后，nmake 就会在当前目录下创建 Debug 或者 Release 目录，此时再调用一次 nmake 会提示文件夹创建错误。例如：
+</p>
+
+
+
+<pre class="src src-sh">mkdir Debug
+<span style="color: #e08d00;">"d:/Program Files/Git/bin/mkdir.EXE"</span>: cannot create directory <span style="color: #fa8072;">`Debug': File exists</span>
+</pre>
+
+
+<p>  
+  解决这个问题的方法是修改生成的 .mak 文件，在其中的 "mkdir Debug" 和 "mkdir Release" 两行语句的前面加一个减号 "-" ，表示无论 mkdir 过程中出现什么错误，都不要报错继续执行。更一劳永逸的做法是修改那个 python 脚本，将第207行
+</p>
+
+
+
+<pre class="src src-lisp">mkwrite ( fh, <span style="color: #e08d00;">"\tmkdir %s"</span> % cfname )
+</pre>
+
+
+<p>  
+  改为
+</p>
+
+
+
+<pre class="src src-lisp">mkwrite ( fh, <span style="color: #e08d00;">"\t-mkdir %s"</span> % cfname )
+</pre>
+
+
+<p>  
+  即可。
+</p>
+<p>  
+  到这里还没结束，为了让 Emacs 更方便的调用 nmake，可以将 nmake 作为主要的编译工具。在 .emacs 文件中加入这一行：
+</p>
+
+
+
+<pre class="src src-lisp"><span style="color: #66747B;">;; </span><span style="color: #66747B;">Set up for Visual C++ compiling</span>
+(setq compile-command <span style="color: #e08d00;">"nmake -f "</span>)
+</pre>
+
+
+<p>  
+  还有一个更好的做法是再写一个总的 Makefile ，以便于选择编译选项：
+</p>
+
+
+
+<pre class="src src-makefile"><span style="color: #F5DA81;">PROJECT</span>=MyProject
+<span style="color: #ff8080;">all</span>: debug
+<span style="color: #ff8080;">debug</span>: FORCE
+nmake /f $(<span style="color: #F5DA81;">PROJECT</span>).mak CFG=<span style="color: #e08d00;">"$(</span><span style="color: #e08d00;">PROJECT</span><span style="color: #e08d00;">) - Win32 Debug"</span>
+<span style="color: #ff8080;">release</span>: FORCE
+nmake /f $(<span style="color: #F5DA81;">PROJECT</span>).mak CFG=<span style="color: #e08d00;">"$(</span><span style="color: #e08d00;">PROJECT</span><span style="color: #e08d00;">) - Win32 Release"</span>
+<span style="color: #ff8080;">FORCE</span>:
+</pre>
+
+
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 方案三：msdev + .dsw</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>  
+  VC 6.0 使用一个更古老的工具 msdev.exe 来编译VC的工程文件。直接调用msdev.exe，即启动Visual studio的UI界面，同时msdev.exe也接受命令行调用。我们看其帮助。
+</p>
+
+
+
+<pre class="example">msdev /?
+msdev /?
+Usage:
+MSDEV [myprj.dsp|mywksp.dsw]    - load project/workspace
+[]        - load source file
+/?            - display usage information
+/EX         - execute a VBScript macro
+/OUT         - redirect command line output to a file
+/USEENV            - ignore tools.options.directories settings
+/MAKE [] [...]    - build specified target(s)
+[
+-
+]
+[[
+|ALL] - [DEBUG|RELEASE|ALL]]
+/CLEAN        - delete intermediate files but don't build
+/REBUILD        - clean and build
+/NORECURSE    - don't build dependent projects
+</pre>
+
+
+<p>  
+  示例语句：
+</p>
+
+
+
+<pre class="src src-sh">C:\Program Files\Microsoft Visual Studio\VC98\bin\msdev.exe test2.dsw /Make  /NORECURSE    
+</pre>
+
+
+<p>  
+  同样，使用clean，rebuild可以清除、重编译该工程。将test2 改为test21，test23，即改变编译对象。 总这样写也很麻烦，而且为了在Emacs中调用 ，我们将其写成一个批处理。
+</p>
+
+
+
+<pre class="src src-sh">d:
+<span style="color: #8C8CB4;">cd</span> d:\Mydocuments\workbench<span style="color: #e08d00;">\</span>
+<span style="color: #8C8CB4;">set</span> <span style="color: #F5DA81;">project</span>=%1
+<span style="color: #8C8CB4;">set</span> <span style="color: #F5DA81;">target</span>=%2
+<span style="color: #7ab847;">if</span> project == set <span style="color: #F5DA81;">project</span>=test2
+    <span style="color: #7ab847;">if</span> target == set <span style="color: #F5DA81;">target</span>=/NORECURSE
+        msdev test2.dsw /Make %target%  
+</pre>
+
+
+<p>  
+  保存为makTest2.bat。调用方式为：
+</p>
+
+
+
+<pre class="example">makeTest2 [工程 [目标]]
+</pre>
+
+
+<p>  
+  默认为编译test2 的 /NORECURSE。如果要编译test23的rebuild，调用方式为：
+</p>
+
+
+
+<pre class="example">makeTest2 test23 /REBUILD
+</pre>
+
+
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn-.1" href="#fnr-.1">1</a></sup> 这里指的 Makefile 是指适用于微软的 nmake 的 Makefile 文件。微软的 nmake 使用了自己的一套标准（原因你懂的）。如果需要得到适用于 GNU Linux 的 Makefile，可以试试 <a href="http://www.codeproject.com/Articles/28908/Tool-for-Converting-VC-2005-Project-to-Linux-Makef">sln2mak</a> 工具。
+</p>
+
+
+
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-12-31T01:36+0800</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

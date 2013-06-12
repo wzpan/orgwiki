@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Google Code安装配置Git</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="Google Code安装配置Git"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-06-01 五"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./git_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">Google Code安装配置Git</h1>
+
+<p>Google Code 在2011年开始支持使用 Git 来做版本控制，与 Github 不同，Google Code 在 push 的时候是使用 https 协议而非 SSH 来进行加密，因此 Google Code 在我们创建帐号之后会给我们提供一个密钥，你可以在这里看到 <a href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a> 。你也许会抱怨这个密钥很不好记。通过设置，你可以直接使用帐号的密码作为密钥，但出于安全考虑，强烈建议不要这么做。
+</p>
+<p>
+  要在 Google Code 上使用 Git 来做版本控制并不复杂，下面将分几个步骤介绍Google Code上配置Git的过程。
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 创建项目并使用Git协议 #create</a></li>
+<li><a href="#sec-2">2 查看自己的密钥</a></li>
+<li><a href="#sec-3">3 创建 .netrc 文件</a></li>
+<li><a href="#sec-4">4 初始化本地Git</a></li>
+<li><a href="#sec-5">5 连接Google Code并提交</a></li>
+<li><a href="#sec-6">6 我的 wiki 去了哪里？</a></li>
+<li><a href="#sec-7">7 本文参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 创建项目并使用Git协议 #<span class="target">create</span></h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+   访问 <a href="http://code.google.com/hosting/createProject">http://code.google.com/hosting/createProject</a> ，填好项目信息，在其中的 Version control system 一项勾选 Git。
+</p>
+<p>
+   完成后，进入主面板【Administer】 -&gt; 【Source】，查看版本控制信息，其中的 Repositories 选项下的 default 和 wiki 将是你的项目的版本库和 wiki 页面存放的地址。
+</p>
+<p>
+   <a href="http://i41.servimg.com/u/f41/16/31/59/00/eao_0111.png"><img src="http://i41.servimg.com/u/f41/16/31/59/00/eao\_0111.png" alt="eao\_0111.png"/></a>
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 查看自己的密钥</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+   访问 <a href="https://code.google.com/hosting/settings">https://code.google.com/hosting/settings</a> ，在 GoogleCode.com Password 栏目下可以看到如下图所示的内容：
+</p>
+<p>
+   <img src="http://i41.servimg.com/u/f41/16/31/59/00/eao_0110.png"  alt="http://i41.servimg.com/u/f41/16/31/59/00/eao_0110.png" />，
+</p>
+<p>
+   图中加粗的文本就是 Google Code 分配的密钥，如果密钥泄露了，还可以点击下面的 Regenerate 按钮重新生成一个。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 创建 .netrc 文件</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+   这一步不是必需的。如果不想每次提交代码都要输入密钥，可以在你的用户目录下创建一个.netrc文件。
+</p>
+
+
+
+<pre class="src src-sh"><span style="color: #00ffff; font-weight: bold;">echo</span> machine code.google.com login cs.wzpan@gmail.com password eV5rc5Bs9AR2 &gt;&gt; ~/.netrc
+chmod <span style="color: #ffd700; font-style: italic;">go</span>= ~/.netrc
+</pre>
+
+
+<p>
+   记住把 cs.wzpan@gmail.com 和 eV5rc5Bs9AR2 改成你自己的账户名和密码。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 初始化本地Git</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+   接下来为在本地的某个工程文件夹初始化Git。
+</p>
+
+
+
+<pre class="src src-sh">git init
+git add .
+git commit -m <span style="color: #f0e68c;">"My first backup"</span>
+</pre>
+
+
+<p>
+   此时可以看到目录中已经有一个 .git 文件夹，使用下面的命令可以看到刚刚提交的信息。
+</p>
+
+
+
+<pre class="src src-sh">git log
+</pre>
+
+
+<p>
+   关于 Git 的用法这里不赘述，用兴趣的可以看看 <a href="http://gitref.org/index.html">Git 的文档</a>。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 连接Google Code并提交</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+   接下来到了关键的一步，我们要把本地的代码库连接到Google Code上。
+</p>
+
+
+
+<pre class="src src-sh">git remote add googlecode https://code.google.com/p/scnuthesis/
+</pre>
+
+
+<p>
+   其中， googlecode 是你为这个版本库起的别名，你也可以取其它的名字。注意把上面的地址改成你在Google Code上实际的项目版本库地址，即 <a href="#target">上面</a> 提到的 default 的地址。
+</p>
+<p>
+   然后可以 push 你的项目，如果设置了.netrc文件，可以不需要使用密码：
+</p>
+
+
+
+<pre class="src src-sh">git push googlecode master:master
+</pre>
+
+
+<p>
+   也可以不启用这个别名直接使用版本库的地址来提交：
+</p>
+
+
+
+<pre class="src src-sh">git push https://code.google.com/p/scnuthesis/ master
+</pre>
+
+
+<p>
+   如果没有设置.netrc文件，则需要在提交的时候加上账户名和密码：
+</p>
+
+
+
+<pre class="src src-sh">git push https://cs.wzpan@gmail.com:eV5rc5Bs9AR2@code.google.com/p/scnuthesis master
+</pre>
+
+
+<p>
+   记住把 cs.wzpan@gmail.com 和 eV5rc5Bs9AR2 改成你自己的账户名和密码。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> 我的 wiki 去了哪里？</h2>
+<div class="outline-text-2" id="text-6">
+
+
+<p>
+   如果你之前用的是 SVN 来做管理，后来切换到 Git ，你会发现 wiki 下的内容不见了。不要紧张，这是因为更换了版本库后，原先的 SVN 版本库内的内容都被隐藏起来了。我们可以把原先的 SVN 版本库里的 wiki 页面克隆到 Git 版本库里。
+</p>
+
+
+
+<pre class="src src-sh">git clone https://code.google.com/p/scnuthesis.wiki/ projectWiki <span style="color: #ffd700;">#</span><span style="color: #ffd700;">&#22791;&#20221;&#24403;&#21069;&#30340;Git&#29256;&#26412;&#24211;&#30340;wiki&#39029;&#38754;</span>
+svn checkout https://code.google.com/p/scnuthesis.wiki/ wiki <span style="color: #ffd700;">#</span><span style="color: #ffd700;">&#25235;&#21462;&#32769;&#30340;SVN&#29256;&#26412;&#24211;&#30340;wiki&#39029;&#38754;</span>
+cp wiki/*.wiki projectWiki <span style="color: #ffd700;">#</span><span style="color: #ffd700;">&#23558;&#32769;&#30340;SVN&#29256;&#26412;&#24211;&#19979;&#30340;*.wiki&#25991;&#20214;&#22797;&#21046;&#21040;projectWiki&#30446;&#24405;&#19979;</span>
+<span style="color: #00ffff; font-weight: bold;">cd</span> projectWiki
+git add .
+git commit -a -m <span style="color: #f0e68c;">"Imported from old SVN wiki"</span>
+git push
+</pre>
+
+
+<p>
+   注意把上面的地址改为你的 Git 版本库的 wiki 页面存放地址。使用同样的方法还可以抓取以前SVN仓库中的其他内容。如果想恢复你的维护历史，可以使用这条命令：
+</p>
+
+
+
+<pre class="src src-sh">git svn clone
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> 本文参考资料</h2>
+<div class="outline-text-2" id="text-7">
+
+
+<ol>
+<li><a href="http://alblue.bandlem.com/2011/07/setting-up-google-code-with-git.html">http://alblue.bandlem.com/2011/07/setting-up-google-code-with-git.html</a>
+</li>
+</ol>
+
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-06-01 五</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

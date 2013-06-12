@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>分区挂载</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="分区挂载"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-04-11 Wed"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content="Ubuntu分区挂载"/>
+<meta name="keywords" content="分区 mount umount"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./ubuntu_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">分区挂载</h1>
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 分区挂载</a>
+<ul>
+<li><a href="#sec-1-1">1.1 查看硬盘的分区</a></li>
+<li><a href="#sec-1-2">1.2 分区挂载</a></li>
+<li><a href="#sec-1-3">1.3 挂载ISO文件</a></li>
+<li><a href="#sec-1-4">1.4 优盘没法卸载</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 分区卸载</a>
+<ul>
+<li><a href="#sec-2-1">2.1 分区卸载</a></li>
+<li><a href="#sec-2-2">2.2 优盘没法卸载</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 其他技巧</a>
+<ul>
+<li><a href="#sec-3-1">3.1 查看硬盘剩余空间</a></li>
+<li><a href="#sec-3-2">3.2 使用文件来增加交换空间</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 分区挂载</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 查看硬盘的分区</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+
+
+<pre class="example">sudo fdisk -l
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 分区挂载</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+
+
+<pre class="example">sudo mount -t 文件系统类型 设备路经 访问路经 
+#常用文件类型如下： iso9660 光驱文件系统, vfat fat/fat32分区, ntfs ntfs分区, smbfs windows网络共享目录, reiserfs、ext3、xfs Linux分区
+#如果中文名无法显示尝试在最後增加 -o nls=utf8 或 -o iocharset=utf8 
+#如果需要挂载後，普通用户也可以使用，在 -o 的参数後面增加 ,umask=022 如：-o nls=utf8,umask=022
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 挂载ISO文件</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+
+
+
+<pre class="example">sudo mount -t iso9660 -o loop,utf8 xxx.iso /mnt/iso
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> 优盘没法卸载</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+
+
+
+<pre class="example">fync
+fuser -km /media/usbdisk
+</pre>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 分区卸载</h2>
+<div class="outline-text-2" id="text-2">
+
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 分区卸载</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+
+
+
+<pre class="example">sudo umount 目录名或设备名
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 优盘没法卸载</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+
+
+
+<pre class="example">fync
+fuser -km /media/usbdisk
+</pre>
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 其他技巧</h2>
+<div class="outline-text-2" id="text-3">
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 查看硬盘剩余空间</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+
+
+
+<pre class="example">df
+</pre>
+
+
+<p>
+    用法：df [选项]&hellip; [文件]&hellip;显示每个&lt;文件&gt;所在的文件系统的信息，默认是显示所有文件系统。
+</p>
+
+
+
+<pre class="example">  长选项必须用的参数在使用短选项时也是必需的。
+-a, --all             包括大小为 0 个块的文件系统
+-B, --block-size=大小 块以指定&lt;大小&gt;的字节为单位
+-h, --human-readable  以容易理解的格式印出文件系统大小 (例如 1K 234M 2G)
+-H, --si              类似 -h，但取 1000 的次方而不是 1024
+-i, --inodes          显示 inode 信息而非块使用量
+-k                    即 --block-size=1K
+-l, --local           只显示本机的文件系统
+    --no-sync         取得使用量数据前不进行同步动作 (默认)
+-P, --portability     使用 POSIX 兼容的输出格式
+    --sync            取得使用量数据前先进行同步动作
+-t, --type=类型       只印出指定文件系统为指定&lt;类型&gt;的信息
+-T, --print-type      印出文件系统类型
+-x, --exclude-type=类型   只印出文件系统不是指定&lt;类型&gt;信息
+-v                    (忽略)
+    --help     显示此帮助信息并离开
+    --version  显示版本信息并离开
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 使用文件来增加交换空间</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+
+
+
+<pre class="example">#创建一个512M的交换文件 /swapfile
+sudo dd if=/dev/zero of=/swapfile bs=1M count=512 
+sudo mkswap /swapfile
+sudo swapon /swapfile
+#sudo vim /etc/fstab #加到fstab文件中让系统引导时自动启动
+/swapfile swap swap defaults 0 0
+</pre>
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-04-11 Wed</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>
