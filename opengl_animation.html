@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>使用OpenGL和GLUT生成动画</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="使用OpenGL和GLUT生成动画"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:20 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">使用OpenGL和GLUT生成动画</h1>
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 原理</a></li>
+<li><a href="#sec-2">2 代码</a></li>
+<li><a href="#sec-3">3 输出</a></li>
+<li><a href="#sec-4">4 分析</a>
+<ul>
+<li><a href="#sec-4-1">4.1 双缓冲</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 原理</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+<p>
+  GLUT函数库允许我们注册一个回调函数，使我们可以方便的设置一个简单的动画序列。这个函数就是 <code>glutTimerFunc</code> ，它的参数包括需要调用的函数名以及这个函数被调用之前的等待时间。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glutTimerFunc</span>(<span style="color: #00ffff; font-weight: bold;">unsigned</span> <span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">msecs</span>, <span style="color: #00ffff; font-weight: bold;">void</span> (*<span style="color: #ffd700; font-style: italic;">func</span>)(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">value</span>), <span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">value</span>);
+</pre>
+
+
+<p>
+  这个函数使GLUT等待msecs毫秒，然后再调用func函数。可以通过value参数向这个函数传递一个用户定义的值。这个由计时器所调用的函数具有下面的原型。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">TimerFunction</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">value</span>);
+</pre>
+
+
+<p>
+  当指定的时间到期时，这个函数 <b>只会触发一次</b> 。为了产生连续的动画，必须在计时器函数中重新设置计时器。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 代码</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  注意：这个例子用的是老的管道。仅供参考。
+</p>
+<ul>
+<li><a href="./program/opengl/bounce.cpp">bounce.cpp</a>
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">Bounce.cpp</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Demonstrates a simple animated rectangle program with GLUT</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">OpenGL SuperBible, 3rd Edition</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Richard S. Wright Jr.</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">rwright@starstonesoftware.com</span>
+
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GL/glut.h&gt;</span>    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">OpenGL toolkit</span>
+
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#26041;&#22359;&#30340;&#21021;&#22987;&#20301;&#32622;&#21644;&#22823;&#23567;</span>
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">x</span> = 0.0f;
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">y</span> = 0.0f;
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">rsize</span> = 25;
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#22312;x&#21644;y&#26041;&#21521;&#30340;&#27493;&#36827;&#22823;&#23567;</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#65288;&#27599;&#27425;&#31227;&#21160;&#30340;&#20687;&#32032;&#65289;</span>
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">xstep</span> = 1.0f;
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">ystep</span> = 1.0f;
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#36319;&#36394;&#31383;&#21475;&#23485;&#24230;&#21644;&#39640;&#24230;&#30340;&#21464;&#21270;</span>
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">windowWidth</span>;
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">windowHeight</span>;
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#32472;&#21046;&#22330;&#26223;</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">RenderScene</span>(<span style="color: #00ffff; font-weight: bold;">void</span>)
+{
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#29992;&#24403;&#21069;&#30340;&#28165;&#26970;&#39068;&#33394;&#28165;&#38500;&#31383;&#21475;</span>
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25226;&#24403;&#21069;&#30340;&#32472;&#22270;&#39068;&#33394;&#35774;&#32622;&#20026;&#32418;&#33394;</span>
+  <span style="color: #ffd700;">//               </span><span style="color: #ffd700;">R     G         B</span>
+  glColor3f(1.0f, 0.0f, 0.0f);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#29992;&#24403;&#21069;&#39068;&#33394;&#32472;&#21046;&#19968;&#20010;&#22635;&#20805;&#30697;&#24418;</span>
+  glRectf(x, y, x + rsize, y - rsize);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#21047;&#26032;&#32472;&#22270;&#21629;&#20196;&#24182;&#36827;&#34892;&#20132;&#25442;</span>
+  glutSwapBuffers();
+}
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#24403;&#31354;&#38386;&#26102;&#30001;GLUT&#20989;&#25968;&#24211;&#35843;&#29992;&#65288;&#31383;&#21475;&#26410;&#25913;&#21464;&#22823;&#23567;&#25110;&#31227;&#21160;&#26102;&#65289;</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">TimerFunction</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">value</span>)
+{
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#22312;&#21040;&#36798;&#24038;&#36793;&#25110;&#21491;&#36793;&#26102;&#32763;&#36716;&#26041;&#21521;</span>
+  <span style="color: #00ffff; font-weight: bold;">if</span>(x &gt; windowWidth-rsize || x &lt; -windowWidth)
+    xstep = -xstep;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#22312;&#21040;&#36798;&#39030;&#36793;&#25110;&#24213;&#36793;&#26102;&#32763;&#36716;&#26041;&#21521;</span>
+  <span style="color: #00ffff; font-weight: bold;">if</span>(y &gt; windowHeight || y &lt; -windowHeight + rsize)
+    ystep = -ystep;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23454;&#38469;&#31227;&#21160;&#26041;&#22359;</span>
+  x += xstep;
+  y += ystep;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#26816;&#26597;&#36793;&#30028;&#65292;&#36825;&#26159;&#20026;&#20102;&#38450;&#27490;&#26041;&#22359;&#22312;&#21453;&#24377;&#26102;&#31383;&#21475;&#21464;&#23567;&#65292;&#20351;&#26041;&#22359;&#20986;&#29616;&#22312;&#26032;&#30340;&#35009;&#21098;&#21306;&#22495;&#20043;&#22806;</span>
+  <span style="color: #00ffff; font-weight: bold;">if</span>(x &gt; (windowWidth-rsize + xstep))
+    x = windowWidth-rsize-1;
+  <span style="color: #00ffff; font-weight: bold;">else</span> <span style="color: #00ffff; font-weight: bold;">if</span>(x &lt; -(windowWidth + xstep))
+    x = -windowWidth -1;
+
+  <span style="color: #00ffff; font-weight: bold;">if</span>(y &gt; (windowHeight + ystep))
+    y = windowHeight-1; 
+  <span style="color: #00ffff; font-weight: bold;">else</span> <span style="color: #00ffff; font-weight: bold;">if</span>(y &lt; -(windowHeight - rsize + ystep))
+    y = -windowHeight + rsize - 1;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#29992;&#26032;&#30340;&#22352;&#26631;&#37325;&#26032;&#32472;&#21046;&#22330;&#26223;</span>
+  glutPostRedisplay();
+  glutTimerFunc(33,TimerFunction, 1);
+}
+
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#35774;&#32622;&#28210;&#26579;&#29366;&#24577;</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">SetupRC</span>(<span style="color: #00ffff; font-weight: bold;">void</span>)
+{
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25226;&#28165;&#38500;&#39068;&#33394;&#35774;&#32622;&#20026;&#34013;&#33394;</span>
+  glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+}
+
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#24403;&#31383;&#21475;&#25913;&#21464;&#22823;&#23567;&#26102;&#30001;GLUT&#20989;&#25968;&#24211;&#35843;&#29992;</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">ChangeSize</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">w</span>, <span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">h</span>)
+{
+  <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">aspectRatio</span>;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#38450;&#27490;&#34987; 0 &#25152;&#38500;</span>
+  <span style="color: #00ffff; font-weight: bold;">if</span>(h == 0)
+    h = 1;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25226;&#35270;&#21475;&#35774;&#32622;&#20026;&#31383;&#21475;&#30340;&#22823;&#23567;</span>
+  glViewport(0, 0, w, h);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#37325;&#32622;&#22352;&#26631;&#31995;&#32479;</span>
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#24314;&#31435;&#35009;&#21098;&#21306;&#22495;&#65288;&#24038;&#12289;&#21491;&#12289;&#24213;&#12289;&#39030;&#12289;&#36817;&#12289;&#36828;&#65289;</span>
+  aspectRatio = (<span style="color: #00ffff; font-weight: bold;">GLfloat</span>)w / (<span style="color: #00ffff; font-weight: bold;">GLfloat</span>)h;
+  <span style="color: #00ffff; font-weight: bold;">if</span> (w &lt;= h) 
+  {
+    windowWidth = 100;
+    windowHeight = 100 / aspectRatio;
+    glOrtho (-100.0, 100.0, -windowHeight, windowHeight, 1.0, -1.0);
+  }
+  <span style="color: #00ffff; font-weight: bold;">else</span> 
+  {
+    windowWidth = 100 * aspectRatio;
+    windowHeight = 100;
+    glOrtho (-windowWidth, windowWidth, -100.0, 100.0, 1.0, -1.0);
+  }
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+}
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#20027;&#31243;&#24207;&#20837;&#21475;</span>
+<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-weight: bold;">main</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">argc</span>, <span style="color: #00ffff; font-weight: bold;">char</span>* <span style="color: #ffd700; font-style: italic;">argv</span>[])
+{
+  glutInit(&amp;argc, argv);
+  glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+  glutInitWindowSize(800,600);
+  glutCreateWindow(<span style="color: #f0e68c;">"Bounce"</span>);
+  glutDisplayFunc(RenderScene);
+  glutReshapeFunc(ChangeSize);
+  glutTimerFunc(33, TimerFunction, 1);
+
+  SetupRC();
+
+  glutMainLoop();
+
+  <span style="color: #00ffff; font-weight: bold;">return</span> 0;
+}
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 输出</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+  <img src="./images/opengl_fig04.png"  alt="./images/opengl_fig04.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 分析</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 双缓冲</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+<p>
+   所有图形程序包最重要的特性之一就是对双缓冲的支持。这个特性允许在一个屏幕之外的缓冲区中执行绘图代码，然后使用一条交换命令把完成绘制的图形立即显示在屏幕上。
+</p>
+<p>
+   双缓冲有两个用途：
+</p>
+<ol>
+<li>合成图像后再显示。一些复杂的绘图可能需要很长的时间，我们可能并不希望在屏幕上显示图形合成的每个步骤。使用双缓冲，可以合成一幅图像，并在完成之后再显示。用户绝不会看到一幅不完整的图像，图像只有在完全完成之后才会在屏幕上显示。
+</li>
+<li>动画。每个帧都在屏幕之外的缓冲区中绘制，等绘图完成之后快速交换到屏幕中。
+</li>
+</ol>
+
+
+<p>      
+   在程序中，我们使用 <code>GLUT_DOUBLE</code> ，这个修改将导致所有的绘图代码在一个屏幕之外的缓冲区中进行渲染。接着，我们还修改了RenderScene函数的尾部。
+</p>
+
+
+
+
+<pre class="src src-c">...
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#21047;&#26032;&#32472;&#22270;&#21629;&#20196;&#24182;&#36827;&#34892;&#20132;&#25442;</span>
+glutSwapBuffers();
+</pre>
+
+
+<p>
+   我们不再调用 <a href="opengl_simple.html#sec-4-10">glFlush</a> ，这个函数已不再需要，因为在执行缓冲区交换时，就已经隐式地执行了一次刷新操作。
+</p>
+<p>
+   这些修改的结果就是产生了一个平滑的反弹方块动画。即使在单缓冲模式下进行， <code>glutSwapBuffers</code> 仍然执行刷新任务。我们可以在这个程序中简单的把 <code>GLUT_DOUBLE</code> 改回到 <code>GLUT_SINGLE</code> ，观察不使用双缓冲的动画效果。可以看到，方块不断地闪烁和停顿。也就是说，在单缓冲模式下，动画的效果是非常差的。
+</p>
+
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:20 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

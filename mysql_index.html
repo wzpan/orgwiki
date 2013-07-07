@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>MySQL's Notes</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="MySQL's Notes"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-04-11 Wed"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content="Ubuntu"/>
+<meta name="keywords" content="Wiki"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">MySQL's Notes</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 参考</a></li>
+<li><a href="#sec-2">2 安装MySQL</a></li>
+<li><a href="#sec-3">3 文件结构</a></li>
+<li><a href="#sec-4">4 进入MySQL</a></li>
+<li><a href="#sec-5">5 简单的操作</a></li>
+<li><a href="#sec-6">6 mysql的数据库存放路径</a></li>
+<li><a href="#sec-7">7 导入导出</a>
+<ul>
+<li><a href="#sec-7-1">7.1 导出整个数据库</a></li>
+<li><a href="#sec-7-2">7.2 导出一个表</a></li>
+<li><a href="#sec-7-3">7.3 导出一个数据库结构</a></li>
+<li><a href="#sec-7-4">7.4 导入数据库</a></li>
+</ul>
+</li>
+<li><a href="#sec-8">8 忘了mysql的root口令怎么办</a></li>
+<li><a href="#sec-9">9 如何优化mysql</a></li>
+<li><a href="#sec-10">10 修改mysql的root口令</a></li>
+<li><a href="#sec-11">11 mysql命令行中文显示?号</a></li>
+<li><a href="#sec-12">12 常用mysql管理语句</a>
+<ul>
+<li>
+<ul>
+<li><a href="#sec-12-1">12.1 查询表状态</a></li>
+<li><a href="#sec-12-2">12.2 查询mysql进程</a></li>
+<li><a href="#sec-12-3">12.3 转换表为MyISAM类型，转表锁为行锁</a></li>
+<li><a href="#sec-12-4">12.4 查看 mysql 变量</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-13">13 mysql的自动备份</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 参考</h2>
+<div class="outline-text-2" id="text-1">
+
+<ol>
+<li><a href="http://wiki.ubuntu.org.cn/UbuntuSkills">UbuntuSkills</a>
+</li>
+</ol>
+
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 安装MySQL</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  要安装 MySQL，可以在终端提示符后运行下列命令：
+</p>
+
+
+
+<pre class="example">sudo apt-get install mysql-server mysql-client #中途会让你输入一次root用户密码
+</pre>
+
+
+<p>  
+  一旦安装完成，MySQL 服务器应该自动启动。
+</p>
+
+
+
+<pre class="example">sudo start mysql #手动的话这样启动
+sudo stop mysql #手动停止
+</pre>
+
+
+<p>
+  当你修改了配置文件後，你需要重启 mysqld 才能使这些修改生效。
+</p>
+<p>  
+  要想检查 mysqld 进程是否已经开启，可以使用下面的命令：
+</p>
+
+
+
+<pre class="example">pgrep mysqld
+</pre>
+
+
+<p>
+  如果进程开启，这个命令将会返回该进程的 id。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 文件结构</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>  MySQL配置文件：/etc/mysql/my.cnf ，其中指定了数据文件存放路径
+</p>
+
+
+
+<pre class="example">datadir         = /var/lib/mysql   
+</pre>
+
+
+<p>
+  如果你创建了一个名为 test 的数据库，那么这个数据库的数据会存放到 /var/lib/mysql/test 目录下。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 进入MySQL</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+
+
+<pre class="example">mysql -uroot -p 
+</pre>
+
+
+<p>
+  (输入mysql的root密码)
+</p>
+
+
+
+<pre class="example">qii@ubuntu:~$ mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 37
+Server version: 5.1.41-3ubuntu12.3 (Ubuntu)
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql&gt; 
+</pre>
+
+
+<p>
+  修改 MySQL 的管理员密码：
+</p>
+
+
+
+<pre class="example">sudo mysqladmin -u root password newpassword；
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 简单的操作</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+   显示数据库：
+</p>
+
+
+
+<pre class="example">mysql&gt; show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
++--------------------+
+2 rows in set (0.00 sec)   
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> mysql的数据库存放路径</h2>
+<div class="outline-text-2" id="text-6">
+
+
+
+
+
+<pre class="example">/var/lib/mysql
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> 导入导出</h2>
+<div class="outline-text-2" id="text-7">
+
+
+
+</div>
+
+<div id="outline-container-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> 导出整个数据库</h3>
+<div class="outline-text-3" id="text-7-1">
+
+
+
+
+
+<pre class="example">  mysqldump -u 用户名 -p 数据库名 &gt; 导出的文件名
+　mysqldump -u wcnc -p smgp_apps_wcnc &gt; wcnc.sql
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-7-2" class="outline-3">
+<h3 id="sec-7-2"><span class="section-number-3">7.2</span> 导出一个表</h3>
+<div class="outline-text-3" id="text-7-2">
+
+
+
+
+
+<pre class="example">mysqldump -u 用户名 -p 数据库名 表名&gt; 导出的文件名
+mysqldump -u wcnc -p smgp_apps_wcnc users&gt; wcnc_users.sql
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-7-3" class="outline-3">
+<h3 id="sec-7-3"><span class="section-number-3">7.3</span> 导出一个数据库结构</h3>
+<div class="outline-text-3" id="text-7-3">
+
+
+
+
+
+<pre class="example">mysqldump -u wcnc -p -d --add-drop-table smgp_apps_wcnc &gt;d:\wcnc_db.sql
+</pre>
+
+
+<p>
+   说明：-d 没有数据 &ndash;add-drop-table 在每个create语句之前增加一个drop table
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-7-4" class="outline-3">
+<h3 id="sec-7-4"><span class="section-number-3">7.4</span> 导入数据库</h3>
+<div class="outline-text-3" id="text-7-4">
+
+
+<p>
+   常用source 命令
+</p>
+
+
+
+<pre class="example">mysql&gt;use 数据库
+</pre>
+
+
+<p>   
+   然后使用source命令，后面参数为脚本文件(如这里用到的.sql)
+</p>
+
+
+
+<pre class="example">　mysql&gt;source d:\wcnc_db.sql  
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> 忘了mysql的root口令怎么办</h2>
+<div class="outline-text-2" id="text-8">
+
+
+
+
+
+<pre class="example">sudo /etc/init.d/mysql stop
+sudo mysqld_safe --skip-grant-tables &amp;
+sudo mysqladmin -u user password 'newpassword
+sudo mysqladmin flush-privileges
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> 如何优化mysql</h2>
+<div class="outline-text-2" id="text-9">
+
+
+
+
+
+<pre class="example">wget  http://www.day32.com/MySQL/tuning-primer.sh
+chmod +x tuning-primer.sh
+./tuning-primer.sh
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> 修改mysql的root口令</h2>
+<div class="outline-text-2" id="text-10">
+
+
+
+
+
+<pre class="example">sudo mysqladmin -u root -p password '你的新密码'
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> mysql命令行中文显示?号</h2>
+<div class="outline-text-2" id="text-11">
+
+
+
+
+
+<pre class="example">mysql&gt; set names utf8;
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> 常用mysql管理语句</h2>
+<div class="outline-text-2" id="text-12">
+
+
+
+</div>
+
+<div id="outline-container-12-1" class="outline-4">
+<h4 id="sec-12-1"><span class="section-number-4">12.1</span> 查询表状态</h4>
+<div class="outline-text-4" id="text-12-1">
+
+
+
+
+
+<pre class="example">show table status;
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-12-2" class="outline-4">
+<h4 id="sec-12-2"><span class="section-number-4">12.2</span> 查询mysql进程</h4>
+<div class="outline-text-4" id="text-12-2">
+
+
+
+
+<pre class="example">show full processlist;  
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-12-3" class="outline-4">
+<h4 id="sec-12-3"><span class="section-number-4">12.3</span> 转换表为MyISAM类型，转表锁为行锁</h4>
+<div class="outline-text-4" id="text-12-3">
+
+
+
+
+
+<pre class="example">alter table site_stats engine=MyISAM;   
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-12-4" class="outline-4">
+<h4 id="sec-12-4"><span class="section-number-4">12.4</span> 查看 mysql 变量</h4>
+<div class="outline-text-4" id="text-12-4">
+
+
+
+
+
+<pre class="example">show variables; 
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> mysql的自动备份</h2>
+<div class="outline-text-2" id="text-13">
+
+
+
+
+
+<pre class="example">#备份 forum myweb 数据库到 /backup/mysql 目录，并删除7天之前的备份记录
+mysqldump --opt --skip-lock-tables -u root forum | gzip -9 &gt; /backup/mysql/forum.`date +%Y%m%d`.sql.gz
+mysqldump --opt --skip-lock-tables -u root myweb | gzip -9 &gt; /backup/mysql/myweb.`date +%Y%m%d`.sql.gz
+find /backup/mysql/ -type f -ctime +7 -exec rm {} \;
+</pre>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-04-11 Wed</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

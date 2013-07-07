@@ -1,0 +1,947 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>模型视图矩阵</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="模型视图矩阵"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-16T23:58+0800"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">模型视图矩阵</h1>
+
+
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+<p>
+   模型视图矩阵是个\(4\times 4\)的矩阵，代表经过变换的坐标系统，我们可以用这个坐标系统放置物体并设置其方向。我们为图元所提供的顶点将按照单列矩阵（也就是一个向量）的形式使用，并乘以一个模型视图矩阵，将产生与视觉坐标系统相对应的经过变换的新坐标。
+</p>
+<p>
+   示例：一个包含了单个顶点数据的矩阵与模型视图矩阵相乘，产生了新的视觉坐标。这个顶点数据实际上由4个元素表示，包括那个 <b>额外的表示缩放因子的</b> \(\omega\) <b>值</b> 。这个值在默认情况下设置为1.0，我们很少需要自己修改这个值。
+</p>
+<p>
+\[\begin{bmatrix} X \\ Y \\ Z \\ \omega \end{bmatrix}\begin{bmatrix} 4 \times 4 \\ M \end{bmatrix}=\begin{bmatrix}X_0 \\ Y_0 \\ Z_0 \\ W_0 \end{bmatrix}\]
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 构造模型视图矩阵</a>
+<ul>
+<li><a href="#sec-1-1">1.1 单位矩阵</a></li>
+<li><a href="#sec-1-2">1.2 平移</a></li>
+<li><a href="#sec-1-3">1.3 旋转</a></li>
+<li><a href="#sec-1-4">1.4 缩放</a></li>
+<li><a href="#sec-1-5">1.5 综合变换</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 运用模型视图矩阵</a></li>
+<li><a href="#sec-3">3 更多对象</a>
+<ul>
+<li><a href="#sec-3-1">3.1 使用三角形批次类</a></li>
+<li><a href="#sec-3-2">3.2 示例程序</a></li>
+<li><a href="#sec-3-3">3.3 创建一个球体</a></li>
+<li><a href="#sec-3-4">3.4 创建一个花托</a></li>
+<li><a href="#sec-3-5">3.5 创建一个圆柱或圆锥</a></li>
+<li><a href="#sec-3-6">3.6 创建一个圆盘</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 构造模型视图矩阵</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+  OpenGL在表示一个\(4\times 4\)的矩阵时并没有使用浮点型的二维数组，而是用了一个包含16个浮点值的一维数组来表示。这个方法和许多数学函数库所使用的方法不同，后者常常采用二维数组来表示矩阵。例如，在下面这两个例子中，OpenGL更倾向于使用前者。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">matrix</span>[16];     <span style="color: #ffd700;">// </span><span style="color: #ffd700;">OpenGL&#25152;&#37319;&#29992;&#30340;&#21451;&#22909;&#30697;&#38453;</span>
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">matrix</span>[4][4];   <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#26356;&#20026;&#27969;&#34892;&#65292;&#20294;&#19981;&#22914;OpenGL&#25152;&#37319;&#29992;&#30340;&#26041;&#24335;&#39640;&#25928;</span>
+</pre>
+
+
+<p>
+  OpenGL也可以使用第二种类型的表示形式，但第一种类型更为高效。其中的缘由很快就会变得更清楚。这16个元素代表一个\(4\times 4\)的矩阵，如下所示。
+</p>
+<p>  
+  \[\begin{bmatrix} a_0 &amp; a_4 &amp; a_8 &amp; a_{12} \\ a_1 &amp; a_5 &amp; a_9 &amp; a_{13} \\ a_2 &amp; a_6 &amp; a_{10} &amp; a_{14} \\ a_3 &amp; a_7 &amp; a_{11} &amp; a_{15} \end{bmatrix}\]
+</p>
+<p>  
+  当我们按列逐个遍历数组中的元素时，就称为列主序的矩阵顺序。在内存中，用二维数组表示的\(4\times 4\)矩阵是以行主序存储的。这两种方向之间是转置关系。
+</p>
+<p>  
+  真正的奥秘在于这16个值表示空间中 <b>一个特定的位置和三个轴的方向</b> 。
+</p>
+<p>  
+  下面是一个变换矩阵的例子：
+</p>
+<p>
+\[\begin{bmatrix} X_x &amp; Y_x &amp; Z_x &amp; T_x \\ X_y &amp; Y_y &amp; Z_y &amp; T_y \\ X_z &amp; Y_z &amp; Z_z &amp; T_z \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}\]
+</p>
+<ul>
+<li>前三列：方向向量，表示空间中x、y和z轴的方向。在绝大多数情况下，这3个向量相互之间呈90°垂直（正交）。
+</li>
+<li>最后一列：经过变换的坐标系统的x、y和z值。
+
+<p>  
+  最奇妙的是：如果一个\(4\times 4\)的矩阵包含了一个不同的坐标系统的位置和方向。那么，把一个顶点（以一个列矩阵或向量的形式）与这个矩阵相乘，其结果就是一个变换到该坐标系统的新顶点。这意味着空间中的任何位置以及自己所需要的任何方向都可以通过一个\(4\times 4\)的矩阵进行唯一的定义，并且，如果把一个物体的所有顶点与这个矩阵相乘，就可以把整个物体变换到空间中指定的位置和方向！
+</p></li>
+</ul>
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 单位矩阵</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+<p>
+  有一些重要类型的变换矩阵，在我们开始尝试使用它们之前，首先要熟悉它们。第一个就是单位矩阵，将一个向量乘以一个单位矩阵，就相当于用这个向量乘以1，不会发生改变。
+</p>
+<p>  
+  \(\begin{bmatrix} 8.0 \\ 4.5 \\ -2.0 \\ 1.0 \end{bmatrix}\begin{bmatrix} 1.0 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 1.0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1.0 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1.0 \end{bmatrix}=\begin{bmatrix}  8.0 \\ 4.5 \\ -2.0 \\ 1.0 \end{bmatrix}\)
+</p>
+<p>
+  使用单位矩阵绘制的对象不会发生变换，他们还在原点（最后一列），并且x轴、y轴和z轴与视觉坐标中一样。
+</p>
+<p>  
+  我们可以在OpenGL中这样生成一个单位矩阵：
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">m</span>[] = { 1.0f, 0.0f, 0.0f, 0.0f,  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">X Column</span>
+                0.0f, 1.0f, 0.0f, 0.0f,  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Y Column</span>
+                0.0f, 0.0f, 1.0f, 0.0f,  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Z Column </span>
+                0.0f, 0.0f, 0.0f, 1.0f }; <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Translation</span>
+</pre>
+
+
+<p>
+  或者使用 math3d 的 <code>M3DMatrix44f</code> 类型：
+</p>
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">m</span> = { 1.0f, 0.0f, 0.0f, 0.0f,  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">X Column</span>
+                   0.0f, 1.0f, 0.0f, 0.0f,  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Y Column</span>
+                   0.0f, 0.0f, 1.0f, 0.0f,  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Z Column </span>
+                   0.0f, 0.0f, 0.0f, 1.0f }; <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Translation</span>
+</pre>
+
+
+<p>
+  在math3d库中还有一个快捷函数 <code>m3dLoadIdentity44</code> ，这个函数初始化一个空单位矩阵。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">m3dLoadIdentity44</span>(<span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">m</span>);
+</pre>
+
+
+<p>
+  我们可以回忆一下，我们使用过的第一个存储（顶点）着色器就叫做<a href="./opengl_shadermanager.html#sec-3-1">单位着色器</a>。这个着色器完全不对顶点做任何改变，而是将这些顶点绘制在默认坐标系中，并且不在这些顶点上应用任何矩阵。
+</p>
+<p>
+  加载单位矩阵意味着在顶点上不进行任何变换。从本质上来说，它相当于把模型视图矩阵重置回原点。
+</p>
+<p>
+  变换函数的效果是累积性的。如果不希望前面的操作影响后面的变换，那就需要将模型视图矩阵重置为一个已知的状态。
+</p>
+<p>
+  我们可以通过在模型视图矩阵中加载单位矩阵来实现把它重置到原点的目标。单位矩阵表示没有发生变换，加载单位矩阵的效果相当于在绘图时所指定的所有坐标都位于视觉坐标中。所谓单位矩阵，就是矩阵对角线的元素均为1,其余元素均为0的矩阵。当这种矩阵与任意顶点矩阵相乘时，其结果就是顶点矩阵不会发生改变。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 平移</h3>
+<div class="outline-text-3" id="text-1-2">
+
+
+
+<p>   
+   一个平移矩阵仅仅是将我们的顶点沿着3个坐标中的一个或多个进行平移。
+</p>
+<p>
+   我们可以调用math3d库中的 <code>m3dTranslationMatrix44</code> 函数来使用变换矩阵。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">m3dTranslationMatrix44</span>(<span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">m</span>, <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">y</span>, <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">z</span>);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 旋转</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+<p>
+   为了将一个对象沿着3个坐标轴中的一个或者任意向量进行旋转，需要找到一个旋转矩阵，又有一个math3d函数来帮助我们了。
+</p>
+
+
+
+<pre class="src src-c">m3dRotationMatrix44(<span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">m</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">angle</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">y</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">z</span>;
+</pre>
+
+
+<p>
+   在此，我们绕着由x、y和z参数所指定的向量执行旋转操作。旋转的角度就是angle参数所指定的度数（以 <b>弧度</b> 为单位， <b>逆时针方向</b> ）。在最简单的情况下，旋转是绕着其中一条轴进行的。
+</p>
+<p>
+   我们也可以用x、y和z指定一个向量，让旋转围绕这个向量进行。为了观察旋转的角度，只需画一条由原点到点(x,y,z)的直线。下面的代码绕着向量(1,1,1)所指定的轴旋转45°。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">m</span>;
+m3dRotationMatrix(m3dDegToRad(45.0), 1.0f, 1.0f, 1.0f);
+</pre>
+
+
+<p>
+   注意在这个例子中 math3d 宏 <code>m3dDegToRad</code> 的使用。这个宏将角度换成弧度值。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> 缩放</h3>
+<div class="outline-text-3" id="text-1-4">
+
+
+<p>   
+   缩放变换可以沿着3个坐标轴方向按照指定因子放大或缩小所有顶点，从而改变物体的大小。使用 math3d 库创建一个缩放矩阵，方法与创建平移或旋转矩阵的方法类似。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">m</span>;
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">m3dScaleMatrix44</span>(<span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">m</span>, <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">xScale</span>, <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">yScale</span>, <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">zScale</span>);
+</pre>
+
+
+<p>
+   缩放并不一定是一致的，可以在不同的方向上分别扩大或缩小物体。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5"><span class="section-number-3">1.5</span> 综合变换</h3>
+<div class="outline-text-3" id="text-1-5">
+
+
+
+<p>   
+   我们很少会只进行这些变换类型的一种。实际上，我们总是想同时进行这些变换。为了将对象移动到想要的位置，我们可能需要先将它平移到指定位置，然后再旋转到想要的方向。由于 \(4\times 4\)变换矩阵包含一个位置和一个方向，我们可能会想到，一个变换矩阵就可以完成这两种操作。我们是对的！
+</p>
+<p>
+   将两种变换加在一起很简单，只需要将两个矩阵相乘（或者叫做“连接”）。不过在矩阵乘法中有一个小陷阱需要注意，就是运算的顺序是有影响的。例如，用一个旋转矩阵乘以一个平移矩阵，与用一个平移矩阵乘以一个旋转矩阵是不同的。
+</p>
+<p>
+   math3d库函数 <code>m3dMatrixMultiply44</code> 用来将两个矩阵相乘并返回运算结果。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">m3dMatrixMultiply44</span>(<span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">product</span>, <span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">a</span>, <span style="color: #00ffff; font-weight: bold;">const</span> <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">b</span>);
+</pre>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 运用模型视图矩阵</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  运用模型视图矩阵，可以使用<a href="./opengl_shadermanager.html#sec-3-2">平面着色器</a>，接受 \(4\times 4\) 变换矩阵作为它的参数之一。
+</p>
+
+
+
+<pre class="src src-c">GLShaderManager::UseStockShader(GLT_SHADER_FLAT, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">mvp</span>[16], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vColor</span>[4]); 
+</pre>
+
+
+<p>
+  这个着色器在对图元进行渲染之前用每个向量乘以矩阵m。
+</p>
+<p>
+  下面的示例程序是对<a href="./opengl_animation.html#sec-2">Move程序</a>的修改版，我们使用变量yPos和xPos来记录正方形的位置。现在可以方便的创建一个变换矩阵了。
+</p>
+
+
+
+<pre class="src src-c">m3dTranslationMatrix44(mTranslationMatrix, xPos, yPos, 0.0f);
+</pre>
+
+
+<p>
+  然后，这个变换矩阵就可以在绘制之前被发送到着色器了，如下所示。
+</p>
+
+
+
+<pre class="src src-c">shaderManager.UseStockShader(GLT_SHADER_FLAT, mTranslationMatrix, vRed);
+</pre>
+
+
+<p>
+  为了让事情更加有趣，我们在移动这个正方形的同时还对它进行了旋转。在xy平面中旋转这个正方形也包括围绕z轴旋转。下面程序演示了 Move 示例程序中的整个 <code>RenderScene</code> 函数。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">///////////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Called to draw scene</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">RenderScene</span>(<span style="color: #00ffff; font-weight: bold;">void</span>)
+{
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Clear the window with current clearing color</span>
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+  <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vRed</span>[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+
+  <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">mFinalTransform</span>, <span style="color: #ffd700; font-style: italic;">mTranslationMatrix</span>, <span style="color: #ffd700; font-style: italic;">mRotationMatrix</span>;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Just Translate</span>
+  m3dTranslationMatrix44(mTranslationMatrix, xPos, yPos, 0.0f); <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#24179;&#31227;&#21464;&#25442;&#30697;&#38453;</span>
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Rotate 5 degrees evertyime we redraw</span>
+  <span style="color: #00ffff; font-weight: bold;">static</span> <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #ffd700; font-style: italic;">yRot</span> = 0.0f;
+  yRot += 5.0f;
+  m3dRotationMatrix44(mRotationMatrix, m3dDegToRad(yRot), 0.0f, 0.0f, 1.0f); <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#26059;&#36716;&#21464;&#25442;&#30697;&#38453;</span>
+
+  m3dMatrixMultiply44(mFinalTransform, mTranslationMatrix, mRotationMatrix); <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#20004;&#20010;&#21464;&#25442;&#30697;&#38453;&#30456;&#20056;&#65292;&#24471;&#21040;&#19968;&#20010;&#32508;&#21512;&#21464;&#25442;&#30697;&#38453;</span>
+
+  shaderManager.UseStockShader(GLT_SHADER_FLAT, mFinalTransform, vRed); 
+  squareBatch.Draw();
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Perform the buffer swap</span>
+  glutSwapBuffers();
+}
+</pre>
+
+
+<p>
+  平面着色器只接受一个矩阵变量，然后它会用这些顶点乘以这个矩阵。这个“模型视图”矩阵通过在默认坐标系中平移这些顶点来使我们的正方形在屏幕上移动，我们可以回忆一下，在这个坐标系中所有3个坐标轴范围都在 -1 和 +1 之间。然后，这个简单的坐标系并不是总能满足我们的需要，而且在更大的坐标空间中考虑我们的对象会更加方便。那么就可能会有另外一个矩阵能够允许我们将任何我们想要的坐标空间缩放到 -1 到 +1 的范围内。确实，这就是第二种类型的矩阵变换，称为投影，很快就会介绍相关内容。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 更多对象</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 使用三角形批次类</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+
+<p>
+   GLTriangleBatch类是专门作为三角形的批次容器的，每个顶点都可以有一个表面法线，以进行光照计算和纹理坐标。
+</p>
+<p>   
+   建立自己的三角形批次对象是一件非常简单的事。
+</p>
+<p>
+   首先，我们需要为对象创建一个事件。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLTriangleBatch</span> <span style="color: #ffd700; font-style: italic;">myCoolObject</span>;
+</pre>
+
+
+<p>
+   然后通知容器最多打算使用的顶点数，以开始创建网格。
+</p>
+
+
+
+<pre class="src src-c">myCoolObject.BeginMesh(200); <span style="color: #ffd700;">// </span><span style="color: #ffd700;">200 verts in my cool object.</span>
+</pre>
+
+
+<p>
+   现在来添加三角形。 <code>AddTriangle</code> 成员函数接受一个包含3个顶点的数组，一个包含3个法线的数组，以及一个包含3个纹理坐标的数组。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLTriangleBatch</span>::AddTriangle(<span style="color: #00ffff; font-weight: bold;">M3DVector3f</span> <span style="color: #ffd700; font-style: italic;">verts</span>[3], <span style="color: #00ffff; font-weight: bold;">M3DVector3f</span> <span style="color: #ffd700; font-style: italic;">vNorms</span>[3],
+                                  <span style="color: #00ffff; font-weight: bold;">M3DVector3f</span> <span style="color: #ffd700; font-style: italic;">vTexCoords</span>[3])
+</pre>
+
+
+<p>
+   不要担心会出现重复的顶点数据（读者可能会认为三角形带或三角形扇效率会更高）。在我们每一次添加一个顶点时， <code>GLTriangleBatch</code> 类都会搜索重复值并对我们的批次进行优化。实际上，对于非常大的批次来说，我们可能会发现这种操作在每次添加一个新三角形时都会越来越明显地降低速度。
+</p>
+<p>
+   当我们添加完三角形时，调用End。
+</p>
+
+
+
+<pre class="src src-c">myCoolObject.End();
+</pre>
+
+
+<p>
+   现在，我们只要选择想要的存储着色器并调用Draw函数。
+</p>
+
+
+
+<pre class="src src-c">myCoolObject.Draw();
+</pre>
+
+
+<p>
+   库包含很多实用函数，它们可以将一个对象填充到一个 <code>GLTriangleBatch</code> 类中。示例程序 Objects 随着按下空格键而重复进行这个过程。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 示例程序</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+<ul>
+<li><a href="program/opengl/Src/Chapter04/Objects/Objects.cpp">Objects.cpp</a>
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">Objects.cpp</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">OpenGL SuperBible, Chapter 4</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Demonstrates GLTools built-in objects</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Program by Richard S. Wright Jr.</span>
+
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GLTools.h&gt;</span>    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">OpenGL toolkit</span>
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GLMatrixStack.h&gt;</span>
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GLFrame.h&gt;</span>
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GLFrustum.h&gt;</span>
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GLBatch.h&gt;</span>
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GLGeometryTransform.h&gt;</span>
+
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;math.h&gt;</span>
+<span style="color: #00ffff; font-weight: bold;">#ifdef</span> __APPLE__
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;glut/glut.h&gt;</span>
+<span style="color: #00ffff; font-weight: bold;">#else</span>
+<span style="color: #00ffff; font-weight: bold;">#define</span> <span style="color: #ffd700; font-style: italic;">FREEGLUT_STATIC</span>
+<span style="color: #00ffff; font-weight: bold;">#include</span> <span style="color: #f0e68c;">&lt;GL/glut.h&gt;</span>
+<span style="color: #00ffff; font-weight: bold;">#endif</span>
+
+<span style="color: #ffd700;">/////////////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">An assortment of needed classes</span>
+<span style="color: #00ffff; font-weight: bold;">GLShaderManager</span>         <span style="color: #ffd700; font-style: italic;">shaderManager</span>;
+<span style="color: #00ffff; font-weight: bold;">GLMatrixStack</span>           <span style="color: #ffd700; font-style: italic;">modelViewMatrix</span>;
+<span style="color: #00ffff; font-weight: bold;">GLMatrixStack</span>           <span style="color: #ffd700; font-style: italic;">projectionMatrix</span>;
+<span style="color: #00ffff; font-weight: bold;">GLFrame</span>                         <span style="color: #ffd700; font-style: italic;">cameraFrame</span>;
+<span style="color: #00ffff; font-weight: bold;">GLFrame</span>             <span style="color: #ffd700; font-style: italic;">objectFrame</span>;
+<span style="color: #00ffff; font-weight: bold;">GLFrustum</span>                       <span style="color: #ffd700; font-style: italic;">viewFrustum</span>;
+
+<span style="color: #00ffff; font-weight: bold;">GLTriangleBatch</span>     <span style="color: #ffd700; font-style: italic;">sphereBatch</span>;
+<span style="color: #00ffff; font-weight: bold;">GLTriangleBatch</span>     <span style="color: #ffd700; font-style: italic;">torusBatch</span>;
+<span style="color: #00ffff; font-weight: bold;">GLTriangleBatch</span>     <span style="color: #ffd700; font-style: italic;">cylinderBatch</span>;
+<span style="color: #00ffff; font-weight: bold;">GLTriangleBatch</span>     <span style="color: #ffd700; font-style: italic;">coneBatch</span>;
+<span style="color: #00ffff; font-weight: bold;">GLTriangleBatch</span>     <span style="color: #ffd700; font-style: italic;">diskBatch</span>;
+
+
+<span style="color: #00ffff; font-weight: bold;">GLGeometryTransform</span>     <span style="color: #ffd700; font-style: italic;">transformPipeline</span>;
+<span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span>            <span style="color: #ffd700; font-style: italic;">shadowMatrix</span>;
+
+
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vGreen</span>[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vBlack</span>[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Keep track of effects step</span>
+<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">nStep</span> = 0;
+
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">This function does any needed initialization on the rendering context. </span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">This is the first opportunity to do any OpenGL related tasks.</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">SetupRC</span>()
+        {
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Black background</span>
+    glClearColor(0.7f, 0.7f, 0.7f, 1.0f );
+
+        shaderManager.InitializeStockShaders();
+
+        glEnable(GL_DEPTH_TEST);
+
+        transformPipeline.SetMatrixStacks(modelViewMatrix, projectionMatrix);
+
+        cameraFrame.MoveForward(-15.0f);
+
+
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Sphere</span>
+    gltMakeSphere(sphereBatch, 3.0, 10, 20);
+
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Torus</span>
+    gltMakeTorus(torusBatch, 3.0f, 0.75f, 15, 15);
+
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Cylinder</span>
+    gltMakeCylinder(cylinderBatch, 2.0f, 2.0f, 3.0f, 13, 2);
+
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Cone</span>
+    gltMakeCylinder(coneBatch, 2.0f, 0.0f, 3.0f, 13, 2);
+
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Disk</span>
+    gltMakeDisk(diskBatch, 1.5f, 3.0f, 13, 3);
+    }
+
+
+<span style="color: #ffd700;">/////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">DrawWireFramedBatch</span>(<span style="color: #00ffff; font-weight: bold;">GLTriangleBatch</span>* <span style="color: #ffd700; font-style: italic;">pBatch</span>)
+    {
+    shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(), vGreen);
+    pBatch-&gt;Draw();
+
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Draw black outline</span>
+    glPolygonOffset(-1.0f, -1.0f);
+    glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_POLYGON_OFFSET_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glLineWidth(2.5f);
+    shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(), vBlack);
+    pBatch-&gt;Draw();
+
+    <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Restore polygon mode and depht testing</span>
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glDisable(GL_POLYGON_OFFSET_LINE);
+    glLineWidth(1.0f);
+    glDisable(GL_BLEND);
+    glDisable(GL_LINE_SMOOTH);
+    }
+
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Called to draw scene</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">RenderScene</span>(<span style="color: #00ffff; font-weight: bold;">void</span>)
+        {    
+        <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Clear the window with current clearing color</span>
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        modelViewMatrix.PushMatrix();
+                <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">mCamera</span>;
+                cameraFrame.GetCameraMatrix(mCamera);
+                modelViewMatrix.MultMatrix(mCamera);
+
+        <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">mObjectFrame</span>;
+        objectFrame.GetMatrix(mObjectFrame);
+        modelViewMatrix.MultMatrix(mObjectFrame);
+
+        shaderManager.UseStockShader(GLT_SHADER_FLAT, transformPipeline.GetModelViewProjectionMatrix(), vBlack);
+
+        <span style="color: #00ffff; font-weight: bold;">switch</span>(nStep) {
+            <span style="color: #00ffff; font-weight: bold;">case</span> 0:
+                DrawWireFramedBatch(&amp;sphereBatch);
+                <span style="color: #00ffff; font-weight: bold;">break</span>;
+            <span style="color: #00ffff; font-weight: bold;">case</span> 1:
+                DrawWireFramedBatch(&amp;torusBatch);
+                <span style="color: #00ffff; font-weight: bold;">break</span>;
+            <span style="color: #00ffff; font-weight: bold;">case</span> 2:
+                DrawWireFramedBatch(&amp;cylinderBatch);
+                <span style="color: #00ffff; font-weight: bold;">break</span>;
+            <span style="color: #00ffff; font-weight: bold;">case</span> 3:
+                DrawWireFramedBatch(&amp;coneBatch);
+                <span style="color: #00ffff; font-weight: bold;">break</span>;
+            <span style="color: #00ffff; font-weight: bold;">case</span> 4:
+                DrawWireFramedBatch(&amp;diskBatch);
+                <span style="color: #00ffff; font-weight: bold;">break</span>;
+            }
+
+        modelViewMatrix.PopMatrix();
+
+        <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Flush drawing commands</span>
+        glutSwapBuffers();
+    }
+
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Respond to arrow keys by moving the camera frame of reference</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">SpecialKeys</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">key</span>, <span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">y</span>)
+    {
+        <span style="color: #00ffff; font-weight: bold;">if</span>(key == GLUT_KEY_UP)
+                objectFrame.RotateWorld(m3dDegToRad(-5.0f), 1.0f, 0.0f, 0.0f);
+
+        <span style="color: #00ffff; font-weight: bold;">if</span>(key == GLUT_KEY_DOWN)
+                objectFrame.RotateWorld(m3dDegToRad(5.0f), 1.0f, 0.0f, 0.0f);
+
+        <span style="color: #00ffff; font-weight: bold;">if</span>(key == GLUT_KEY_LEFT)
+                objectFrame.RotateWorld(m3dDegToRad(-5.0f), 0.0f, 1.0f, 0.0f);
+
+        <span style="color: #00ffff; font-weight: bold;">if</span>(key == GLUT_KEY_RIGHT)
+                objectFrame.RotateWorld(m3dDegToRad(5.0f), 0.0f, 1.0f, 0.0f);
+
+        glutPostRedisplay();
+    }
+
+
+
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">A normal ASCII key has been pressed.</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">In this case, advance the scene when the space bar is pressed</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">KeyPressFunc</span>(<span style="color: #00ffff; font-weight: bold;">unsigned</span> <span style="color: #00ffff; font-weight: bold;">char</span> <span style="color: #ffd700; font-style: italic;">key</span>, <span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">x</span>, <span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">y</span>)
+        {
+        <span style="color: #00ffff; font-weight: bold;">if</span>(key == 32)
+                {
+                nStep++;
+
+                <span style="color: #00ffff; font-weight: bold;">if</span>(nStep &gt; 4)
+                        nStep = 0;
+                }
+
+    <span style="color: #00ffff; font-weight: bold;">switch</span>(nStep)
+        {
+        <span style="color: #00ffff; font-weight: bold;">case</span> 0: 
+            glutSetWindowTitle(<span style="color: #f0e68c;">"Sphere"</span>);
+            <span style="color: #00ffff; font-weight: bold;">break</span>;
+        <span style="color: #00ffff; font-weight: bold;">case</span> 1:
+            glutSetWindowTitle(<span style="color: #f0e68c;">"Torus"</span>);
+            <span style="color: #00ffff; font-weight: bold;">break</span>;
+        <span style="color: #00ffff; font-weight: bold;">case</span> 2:
+            glutSetWindowTitle(<span style="color: #f0e68c;">"Cylinder"</span>);
+            <span style="color: #00ffff; font-weight: bold;">break</span>;
+        <span style="color: #00ffff; font-weight: bold;">case</span> 3:
+            glutSetWindowTitle(<span style="color: #f0e68c;">"Cone"</span>);
+            <span style="color: #00ffff; font-weight: bold;">break</span>;
+        <span style="color: #00ffff; font-weight: bold;">case</span> 4:
+            glutSetWindowTitle(<span style="color: #f0e68c;">"Disk"</span>);
+            <span style="color: #00ffff; font-weight: bold;">break</span>;
+        }
+
+    glutPostRedisplay();
+        }
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Window has changed size, or has just been created. In either case, we need</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">to use the window dimensions to set the viewport and the projection matrix.</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">ChangeSize</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">w</span>, <span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">h</span>)
+        {
+        glViewport(0, 0, w, h);
+        viewFrustum.SetPerspective(35.0f, <span style="color: #00ffff; font-weight: bold;">float</span>(w) / <span style="color: #00ffff; font-weight: bold;">float</span>(h), 1.0f, 500.0f);
+        projectionMatrix.LoadMatrix(viewFrustum.GetProjectionMatrix());
+        modelViewMatrix.LoadIdentity();
+        }
+
+<span style="color: #ffd700;">///////////////////////////////////////////////////////////////////////////////</span>
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">Main entry point for GLUT based programs</span>
+<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-weight: bold;">main</span>(<span style="color: #00ffff; font-weight: bold;">int</span> <span style="color: #ffd700; font-style: italic;">argc</span>, <span style="color: #00ffff; font-weight: bold;">char</span>* <span style="color: #ffd700; font-style: italic;">argv</span>[])
+        {
+        gltSetWorkingDirectory(argv[0]);
+
+        glutInit(&amp;argc, argv);
+        glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_STENCIL);
+        glutInitWindowSize(800, 600);
+        glutCreateWindow(<span style="color: #f0e68c;">"Sphere"</span>);
+    glutReshapeFunc(ChangeSize);
+    glutKeyboardFunc(KeyPressFunc);
+    glutSpecialFunc(SpecialKeys);
+    glutDisplayFunc(RenderScene);
+
+        <span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">err</span> = glewInit();
+        <span style="color: #00ffff; font-weight: bold;">if</span> (GLEW_OK != err) {
+                fprintf(stderr, <span style="color: #f0e68c;">"GLEW Error: %s\n"</span>, glewGetErrorString(err));
+                <span style="color: #00ffff; font-weight: bold;">return</span> 1;
+                }
+
+
+        SetupRC();
+
+        glutMainLoop();
+        <span style="color: #00ffff; font-weight: bold;">return</span> 0;
+        }
+</pre>
+
+
+<ul>
+<li><a href="program/opengl/Linux/Chapter04/Objects/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 创建一个球体</h3>
+<div class="outline-text-3" id="text-3-3">
+
+<p>   <code>gltMakeSphere</code> 函数引用一个三角形批次、球的半径和组成球体的片段及其堆叠数量。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">gltMakeSphere</span>(GLTriangleBatch&amp; sphereBatch, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">fRadius</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">iSlices</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">iStacks</span>);
+</pre>
+
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig12.png"  alt="./images/opengl_fig12.png" /></p>
+<p>一个球体</p>
+</div>
+
+<p>
+   iSlices 参数和 iStacks 参数需要进行一点解释。我们可以将球体想像成围绕成球形的一系列三角形带。参数 iStacks 是这些从球体底部堆叠到顶部的三角形的数量。而 iSlices 参数则是围绕着球体排列的三角形对数。典型情况下一个对称性较好的球体的片段数量是堆叠数量的2倍，这是因为围绕球体一周是360°，而从底部到顶部只有180°（360°的一半）。另外需要注意的一点是，这些球体都是围绕z轴的，这样+z就是球体的顶点，而-z则是球体的底。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> 创建一个花托</h3>
+<div class="outline-text-3" id="text-3-4">
+
+
+<p>
+   花托是一种环状的像面包圈一样的物体。用来创建花托的GLTools函数是 <code>gltMakeTorus</code> 。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">gltMakeTorus</span>(GLTriangleBatch&amp; torusBatch, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">majorRadius</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">minorRadius</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">numMajor</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">numMinor</span>);
+</pre>
+
+
+<p>
+   其中 numMajor 和 numMinor参数的作用与球体中的 iSlices 和 iStacks 参数类似，它们是沿着主半径和内部较小半径的细分单元的数量。
+</p>
+
+<div class="figure">
+<p><img src="./images/opengl_fig13.png"  alt="./images/opengl_fig13.png" /></p>
+<p>一个花托</p>
+</div>
+
+</div>
+
+</div>
+
+<div id="outline-container-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> 创建一个圆柱或圆锥</h3>
+<div class="outline-text-3" id="text-3-5">
+
+
+
+<p>   
+   <code>gltMakeCylinder</code> 函数可以创建一个空心圆柱体。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">gltMakeCylinder</span>(GLTriangleBatch&amp; cylinderBatch, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">baseRadius</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">topRadius</span>, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">fLength</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">numSlices</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">numStacks</span>);   
+</pre>
+
+
+<p>
+   圆柱体从0开始向z轴正方向延伸，我们既可以指定底部半径，也可以设置顶部半径。参数 numSlices 代表围绕z轴的三角形对的数量，而参数 numStacks 则代表从底部堆叠到顶部圆环的数量。
+</p>
+
+<div class="figure">
+<p><img src="./images/opengl_fig14.png"  alt="./images/opengl_fig14.png" /></p>
+<p>一个两端半径相等的圆柱体</p>
+</div>
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig15.png"  alt="./images/opengl_fig15.png" /></p>
+<p>一个一端半径设置为0的圆柱体，也就是一个圆锥</p>
+</div>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-6" class="outline-3">
+<h3 id="sec-3-6"><span class="section-number-3">3.6</span> 创建一个圆盘</h3>
+<div class="outline-text-3" id="text-3-6">
+
+
+
+<p>
+   圆盘是通过分解成若干片段的三角形带绘制而成的。我们可以指定一个内部半径来创建一个类似垫圈的形状，也可以让这个值保持为0来创建一个实心圆盘。 <code>gltMakeDisk</code> 用圆盘形状来填充一个 GLTriangleBatch。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">gltMakeDisk</span>(GLTriangleBatch&amp; diskBatch, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">innerRadius</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">outerRadius</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">nSlices</span>, <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">nStacks</span>);   
+</pre>
+
+
+
+<div class="figure">
+<p><img src="./images/opengl_fig16.png"  alt="./images/opengl_fig16.png" /></p>
+<p>设置了内部和外部半径的圆盘</p>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-16T23:58+0800</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

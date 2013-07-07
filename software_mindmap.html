@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>心智图</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="心智图"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-4-25 三"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content="心智图"/>
+<meta name="keywords" content="xmind freemind VYM Mind42"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./software_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">心智图</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 参考材料</a></li>
+<li><a href="#sec-2">2 什么是心智图（Mindmap）？</a></li>
+<li><a href="#sec-3">3 心智图的用途</a>
+<ul>
+<li><a href="#sec-3-1">3.1 我用心智图来&hellip;</a></li>
+<li><a href="#sec-3-2">3.2 它还可以&hellip;</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 常用的几个心智图工具</a>
+<ul>
+<li><a href="#sec-4-1">4.1 XMind</a></li>
+<li><a href="#sec-4-2">4.2 Freemind</a></li>
+<li><a href="#sec-4-3">4.3 VYM</a></li>
+<li><a href="#sec-4-4">4.4 Mind42</a></li>
+<li><a href="#sec-4-5">4.5 Graphviz</a></li>
+<li><a href="#sec-4-6">4.6 我的方案</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 Emacs与心智图</a>
+<ul>
+<li><a href="#sec-5-1">5.1 org-mode导出为freemind</a></li>
+<li><a href="#sec-5-2">5.2 freemind转为outline文件</a></li>
+</ul>
+</li>
+<li><a href="#sec-6">6 LaTeX与心智图</a>
+<ul>
+<li><a href="#sec-6-1">6.1 在LaTeX中绘制心智图</a></li>
+<li><a href="#sec-6-2">6.2 Beamer使用心智图作为outline</a>
+<ul>
+<li><a href="#sec-6-2-1">6.2.1 设置方法</a></li>
+<li><a href="#sec-6-2-2">6.2.2 缺点和思考</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-7">7 作品示例</a>
+<ul>
+<li><a href="#sec-7-1">7.1 手绘系列</a></li>
+<li><a href="#sec-7-2">7.2 工具绘图系列</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 参考材料</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<ol>
+<li>心智图-维基百科 <a href="http://zh.wikipedia.org/wiki/心智图">http://zh.wikipedia.org/wiki/心智图</a>
+</li>
+</ol>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 什么是心智图（Mindmap）？</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  心智图（Mind Map），又称脑图、心智地图、脑力激荡图、思维导图、灵感触发图、概念地图、树状图、树枝图或思维地图，是一种图像式思维的工具与及一种利用图像式思考辅助工具来表达思维的工具。
+</p>
+<p>  
+  心智图是使用一个中央关键词或想法引起形象化的构造和分类的想法; 它用一个中央关键词或想法以辐射线形连接所有的代表字词、想法、任务或其它关联项目的图解方式。它可以利用不同的方式去表现人们的想法，如引题式，可见形象化式，建构系统式和分类式。它是普遍地用作在研究、组织、解决问题和政策制定中。
+</p>
+<p>  
+  心智图是一张集中了所有关连资讯的语义网路或认知体系图像。所有关连资讯都是被辐射线形及非线性图解方式接连在一起，以头脑风暴（激发灵感）方法为本去建立一个适当或相关的概念性组织任务框架。但脑力激荡（激发灵感）方法，语义网路 或 认知体系是没有一个既定制式链去互相连接使用，亦即是可以自由相连接使用的。元素是直觉地以概念的重要性而被安排及组织入分组、分支，或区域中。会集知识方法是能够支援现有的记忆，去思考语义的结构资讯。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 心智图的用途</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 我用心智图来&hellip;</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+<ol>
+<li>做笔记。在阅读的时候，我喜欢同时开着xmind画心智图，将这篇文章的大体结构画出来；
+
+</li>
+<li>复习、记忆。我喜欢通过画心智图来回顾我一段时间的学习，这通常是在实验室的白板上完成的；
+
+</li>
+<li>沟通、组织。和别人合作的时候，我喜欢用心智图表达我的想法，然后发给他看；
+
+</li>
+<li>做报告。对于平常的一些不太正式的学术交流，我都是用心智图来整理成报告材料，然后在讲解的时候投影给其他人看；
+
+</li>
+<li>写论文。构思论文的结构；
+
+</li>
+<li>演讲准备。构思演讲的流程，据此准备课件。
+</li>
+</ol>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 它还可以&hellip;</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+<p>
+   GTD，计划，项目管理，会议，培训，谈判，面试，评估，头脑风暴&hellip;
+</p>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 常用的几个心智图工具</h2>
+<div class="outline-text-2" id="text-4">
+
+
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> XMind</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+<p>
+   官方网站：<a href="http://www.xmind.net/">http://www.xmind.net/</a>
+</p>
+<p>
+   XMind是使用Java开发的跨平台心智图工具。XMind 绘制的的心智图、鱼骨图、二维图、树形图、逻辑图、组织结构图等以结构化的方式来展示具体的内容，人们在用XMind绘制图形的时候，可以时刻保持头脑清晰，随时把握计划或任务的全局，它可以帮助人们在学习和工作用提高效率。值得一提的是，它还是中国人开发的。
+</p>
+<p>
+   XMind的优点在于：
+</p>
+<ol>
+<li>界面美观，操作很人性化，支持多种主题风格，支持导入新的图标，因此画出的心智图要比Freemind美观得多；
+
+</li>
+<li>支持插图和附件，商业版本还拥有独特的演示模式；
+
+</li>
+<li>大多数功能开源免费提供，只有少数功能商业化（这点很慷慨）；
+
+</li>
+<li>支持将你的心智图作品同步到XMind的服务器上。
+</li>
+</ol>
+
+
+<p>
+   不足：   
+</p>
+<ol>
+<li>与Ubuntu的Unity风格界面不太兼容；
+
+</li>
+<li>支持导出的格式较少；
+
+</li>
+<li>缺乏其他同类工具对它的文件格式的支持。
+</li>
+</ol>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Freemind</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+<p>
+   官方网站：<a href="http://freemind.sourceforge.net/">http://freemind.sourceforge.net/</a>
+</p>
+<p>
+   Freemind是一个开源的Mindmap工具，在这么多个心智图工具中，它的格式*.mm是最受支持的心智图格式，其他很多工具都支持导入这种格式。事实上，如果你用文本编辑器打开*.mm文件，你就会发现这个文件其实就是标准的xml格式文件。
+</p>
+<p>
+   Freemind的优点在于：
+</p>
+<ol>
+<li>完全开源，免费使用；
+
+</li>
+<li>生成的文件很小，而且格式最通用；
+
+</li>
+<li>支持导出的格式较多。
+</li>
+</ol>
+
+
+<p>
+   不足：
+</p>
+<ol>
+<li>界面比较简陋，操作不是很人性化，绘制的心智图效果难以和XMind比肩；
+
+</li>
+<li>不支持附件、插图功能。   
+</li>
+</ol>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> VYM</h3>
+<div class="outline-text-3" id="text-4-3">
+
+
+<p>
+   官方网站：<a href="http://www.insilmaril.de/vym/">http://www.insilmaril.de/vym/</a>
+</p>
+<p>
+   VYM (View your mind)同样也是一款开源的心智图工具，它与Freemind相比的一个优势是可以导出为PostScript代码，另外，借助于<a href="http://blog.lindoze.net/software/convert-vym-mindmap-pgftikz/">Vym2TikZ</a>还可以将VYM的绘图导出为TikZ代码。我使用它也主要是冲着它的这两个特性。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> Mind42</h3>
+<div class="outline-text-3" id="text-4-4">
+
+
+<p>
+   官方网站：<a href="http://mind42.com/">http://mind42.com/</a>
+</p>
+<p>
+   一款在线心智图工具，最大优点是支持iframe框架，因此可以轻松的将画好的心智图发布到博客上。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> Graphviz</h3>
+<div class="outline-text-3" id="text-4-5">
+
+
+<p>
+   Graphviz也可以用来绘制心智图，甚至有人拿它做成了一个酷酷的主页（<a href="http://zoomquiet.org/">http://zoomquiet.org/</a>）。Graphviz使用的是dot语言，这个语言还是挺简单的，可以看看官方的<a href="http://www.graphviz.org/Gallery.php">Gallery</a>。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-6" class="outline-3">
+<h3 id="sec-4-6"><span class="section-number-3">4.6</span> 我的方案</h3>
+<div class="outline-text-3" id="text-4-6">
+
+
+<ol>
+<li>使用XMind做为主要的心智图编辑工具；
+
+</li>
+<li>需要导出成pdf或者其他格式的文件，先另存为*.mm格式文件，然后用Freemind导入，再做格式转换；
+
+</li>
+<li>需要导出成TikZ代码或PostScript代码，就使用VYM；
+
+</li>
+<li>需要在博客中引用，或者让没有安装心智图工具的同学也能够查看我画的心智图，就先另存为*.mm格式的文件，然后在Mind42里导入这个文件，最后发布出去；
+
+</li>
+<li>未来也许会考虑使用VYM或者Graphviz做些页面。
+</li>
+</ol>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Emacs与心智图</h2>
+<div class="outline-text-2" id="text-5">
+
+
+
+</div>
+
+<div id="outline-container-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> org-mode导出为freemind</h3>
+<div class="outline-text-3" id="text-5-1">
+
+
+<p>  
+  Emacs 的 org-mode 可以直接导出为 freemind 格式。按 C-c C-e m 即可。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5-2" class="outline-3">
+<h3 id="sec-5-2"><span class="section-number-3">5.2</span> freemind转为outline文件</h3>
+<div class="outline-text-3" id="text-5-2">
+
+
+<p>
+   如果要将freemind文件转换为 Emacs的 outline-mode文件（org-mode的前身，其格式可以和org-mode兼容），
+   Christian Lemburg写了一个perl脚本：
+</p>
+
+
+
+<pre class="src src-perl">   <span style="color: #66747B;">#!/usr/bin/perl -w</span>
+   <span style="color: #7ab847;">use</span> <span style="color: #ffc0ff;">strict</span>;
+
+   <span style="color: #7ab847;">use</span> <span style="color: #ffc0ff;">Getopt</span>::Std;
+   <span style="color: #7ab847;">use</span> <span style="color: #ffc0ff;">XML</span>::Simple;
+   <span style="color: #7ab847;">use</span> <span style="color: #ffc0ff;">Data</span>::Dumper qw<span style="color: #e08d00;">(Dumper)</span>;
+
+   <span style="color: #66747B;"># Copyright (c) 2004 Christian Lemburg.</span>
+   <span style="color: #66747B;">#</span>
+   <span style="color: #66747B;"># All rights reserved. This program is free software;</span>
+   <span style="color: #66747B;"># you can redistribute it and/or modify it under the</span>
+   <span style="color: #66747B;"># same terms as Perl itself.</span>
+
+   <span style="color: #66747B;"># usage</span>
+
+   <span style="color: #7ab847;">my</span> $<span style="color: #F5DA81;">usage</span> = &lt;&lt;<span style="color: #e08d00;">'EOU'</span>;
+
+   <span style="color: #ffc0ff;">Usage</span>: $<span style="color: #F5DA81;">0</span> &lt; freemind.mm &gt; emacs-outline.txt
+
+   <span style="color: #ffc0ff;">Options</span>:
+
+       <span style="color: #ffc0ff;">h</span>: print help
+       <span style="color: #ffc0ff;">p</span>: outline mode heading indicator pattern atom (default <span style="color: #e08d00;">"*"</span>)
+       <span style="color: #ffc0ff;">s</span><span style="color: #e08d00;">: suppress topic of mind map as title in outline output (default off)</span>
+
+<span style="color: #e08d00;">   EOU</span>
+
+
+<span style="color: #e08d00;">   # setup</span>
+
+<span style="color: #e08d00;">   my %opts;</span>
+<span style="color: #e08d00;">   getopts('hsp:', \%opts);</span>
+
+<span style="color: #e08d00;">   die $usage if $opts{h};</span>
+
+<span style="color: #e08d00;">   my $heading_pattern_atom = $opts{p} || "*";</span>
+<span style="color: #e08d00;">   my $suppress_title = $opts{'s'};</span>
+
+<span style="color: #e08d00;">   my $QUOTE = "&amp;quot;";</span>
+<span style="color: #e08d00;">   my $LESS_THAN = "&amp;lt;";</span>
+<span style="color: #e08d00;">   my $GREATER_THAN = "&amp;gt;";</span>
+<span style="color: #e08d00;">   my $NEWLINE = "&amp;#xa;";</span>
+
+<span style="color: #e08d00;">   # action</span>
+
+<span style="color: #e08d00;">   my $xs = new XML:</span>:Simple();
+   <span style="color: #7ab847;">my</span> $<span style="color: #F5DA81;">ref</span> = $<span style="color: #F5DA81;">xs</span>-&gt;XMLin(\*<span style="color: #F5DA81;">STDIN</span>);
+
+   <span style="color: #7ab847;">die</span> <span style="color: #e08d00;">"Could not find mind map in input"</span> <span style="color: #7ab847;">unless</span> exists $<span style="color: #F5DA81;">ref</span>-&gt;{node};
+
+   <span style="color: #7ab847;">my</span> $<span style="color: #F5DA81;">start</span> = $<span style="color: #F5DA81;">ref</span>-&gt;{node};
+   print unquote($<span style="color: #F5DA81;">start</span>-&gt;{TEXT}), <span style="color: #e08d00;">"\n\n"</span> <span style="color: #7ab847;">unless</span> $<span style="color: #F5DA81;">suppress_title</span>;
+
+   <span style="color: #7ab847;">my</span> $<span style="color: #F5DA81;">level</span> = 0;
+   process_children($<span style="color: #F5DA81;">start</span>);
+
+
+   <span style="color: #66747B;"># subs</span>
+
+   <span style="color: #7ab847;">sub</span> <span style="color: #ff8080;">process_node</span> {
+       <span style="color: #7ab847;">my</span> ($<span style="color: #F5DA81;">node</span>) = @<span style="color: #ffffff; text-decoration: underline;">_</span>;
+       process_node_text($<span style="color: #F5DA81;">node</span>, $<span style="color: #F5DA81;">level</span>);
+       <span style="color: #7ab847;">if</span> (not is_leaf($<span style="color: #F5DA81;">node</span>)) {
+           process_children($<span style="color: #F5DA81;">node</span>);
+       }
+   }
+
+   <span style="color: #7ab847;">sub</span> <span style="color: #ff8080;">process_children</span> {
+       <span style="color: #7ab847;">my</span> ($<span style="color: #F5DA81;">node</span>) = @<span style="color: #ffffff; text-decoration: underline;">_</span>;
+       $<span style="color: #F5DA81;">level</span>++;
+       <span style="color: #7ab847;">if</span> (ref($<span style="color: #F5DA81;">node</span>-&gt;{node}) eq <span style="color: #e08d00;">"ARRAY"</span>) {
+           <span style="color: #7ab847;">for</span> <span style="color: #7ab847;">my</span> $<span style="color: #F5DA81;">child</span> (@{$<span style="color: #F5DA81;">node</span>-&gt;{node}}) {
+               process_node($<span style="color: #F5DA81;">child</span>);
+           }
+       } <span style="color: #7ab847;">else</span> {
+           <span style="color: #7ab847;">my</span> $<span style="color: #F5DA81;">child</span> = $<span style="color: #F5DA81;">node</span>-&gt;{node};
+           process_node($<span style="color: #F5DA81;">child</span>);
+       }
+       $<span style="color: #F5DA81;">level</span>--;
+   }
+
+   <span style="color: #7ab847;">sub</span> <span style="color: #ff8080;">process_node_text</span> {
+       <span style="color: #7ab847;">my</span> ($<span style="color: #F5DA81;">node</span>, $<span style="color: #F5DA81;">level</span>) = @<span style="color: #ffffff; text-decoration: underline;">_</span>;
+       <span style="color: #7ab847;">if</span> (is_paragraph_leaf($<span style="color: #F5DA81;">node</span>)) {
+           print unquote($<span style="color: #F5DA81;">node</span>-&gt;{TEXT}), <span style="color: #e08d00;">"\n\n"</span>;
+       } <span style="color: #7ab847;">else</span> {
+           print make_heading($<span style="color: #F5DA81;">level</span>), <span style="color: #e08d00;">" "</span>, unquote($<span style="color: #F5DA81;">node</span>-&gt;{TEXT}), <span style="color: #e08d00;">"\n\n"</span>;
+       }
+   }
+
+   <span style="color: #7ab847;">sub</span> <span style="color: #ff8080;">is_leaf</span> {
+       <span style="color: #7ab847;">my</span> ($<span style="color: #F5DA81;">node</span>) = @<span style="color: #ffffff; text-decoration: underline;">_</span>;
+       <span style="color: #7ab847;">return</span> not exists $<span style="color: #F5DA81;">node</span>-&gt;{node};
+   }
+
+   <span style="color: #7ab847;">sub</span> <span style="color: #ff8080;">is_paragraph_leaf</span> {
+       <span style="color: #7ab847;">my</span> ($<span style="color: #F5DA81;">node</span>) = @<span style="color: #ffffff; text-decoration: underline;">_</span>;
+       <span style="color: #66747B;"># define: paragraph leaf = leaf with text that contains newlines</span>
+       <span style="color: #7ab847;">return</span> is_leaf($<span style="color: #F5DA81;">node</span>) &amp;&amp; $<span style="color: #F5DA81;">node</span>-&gt;{TEXT} =~ <span style="color: #e08d00;">/$NEWLINE/</span>;
+   }
+
+   <span style="color: #7ab847;">sub</span> <span style="color: #ff8080;">make_heading</span> {
+       <span style="color: #7ab847;">my</span> ($<span style="color: #F5DA81;">level</span>) = @<span style="color: #ffffff; text-decoration: underline;">_</span>;
+       <span style="color: #7ab847;">return</span> $<span style="color: #F5DA81;">heading_pattern_atom</span> x $<span style="color: #F5DA81;">level</span>;
+   }
+
+   <span style="color: #7ab847;">sub</span> <span style="color: #ff8080;">unquote</span> {
+       <span style="color: #7ab847;">my</span> ($<span style="color: #F5DA81;">s</span>) = @<span style="color: #ffffff; text-decoration: underline;">_</span>;
+       $<span style="color: #F5DA81;">s</span> =~ s<span style="color: #e08d00;">/$QUOTE/"/</span>g;
+    $<span style="color: #F5DA81;">s</span> =~ s<span style="color: #e08d00;">/$LESS_THAN/&lt;/</span>g;
+    $<span style="color: #F5DA81;">s</span> =~ s<span style="color: #e08d00;">/$GREATER_THAN/&gt;/</span>g;
+    $<span style="color: #F5DA81;">s</span> =~ s<span style="color: #e08d00;">/$NEWLINE/\n/</span>g;
+    <span style="color: #7ab847;">return</span> $<span style="color: #F5DA81;">s</span>;
+}
+</pre>
+
+
+<p>
+用法：将这个脚本保存为 mm2outline.pl 文件，然后复制到freemind文件所在目录，然后使用这条命令：
+</p>
+
+
+
+<pre class="src src-sh">perl mm2outline.pl $<span style="color: #F5DA81;">0</span> &lt; freemind.mm &gt; emacs-outline.txt
+</pre>
+
+
+<p>
+其中，freemind.mm 为你要转换的freemind文件，emacs-outline.txt为目标文件。$0是转换选项，可以是下面三种之一：
+</p>
+<ol>
+<li>h: 打印帮助
+</li>
+<li>p: 设置 outline mode 的标题格式（默认是"*"）
+</li>
+<li>s: 将心智图的topic作为outline的标题 (默认为 off)
+</li>
+</ol>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> LaTeX与心智图</h2>
+<div class="outline-text-2" id="text-6">
+
+
+
+</div>
+
+<div id="outline-container-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> 在LaTeX中绘制心智图</h3>
+<div class="outline-text-3" id="text-6-1">
+
+
+<p>
+要在LaTeX中绘制心智图，效果最好的是使用<a href="../../compose/tikz/index.html">TikZ</a>来绘制。你可以看看<a href="http://www.tsrc.net/tikz/srcs/feature/mindmaps/">画出来的效果</a>。
+</p>
+<p>
+官方的一段示例代码如下：
+</p>
+
+
+
+<pre class="example">% Author: Till Tantau
+% Source: The PGF/TikZ manual
+\documentclass{article}
+
+\usepackage{tikz}
+\usetikzlibrary{mindmap,trees}
+\begin{document}
+\pagestyle{empty}
+\begin{tikzpicture}
+  \path[mindmap,concept color=black,text=white]
+    node[concept] {Computer Science}
+    [clockwise from=0]
+    child[concept color=green!50!black] {
+      node[concept] {practical}
+      [clockwise from=90]
+      child { node[concept] {algorithms} }
+      child { node[concept] {data structures} }
+      child { node[concept] {pro\-gramming languages} }
+      child { node[concept] {software engineer\-ing} }
+    }  
+    child[concept color=blue] {
+      node[concept] {applied}
+      [clockwise from=-30]
+      child { node[concept] {databases} }
+      child { node[concept] {WWW} }
+    }
+    child[concept color=red] { node[concept] {technical} }
+    child[concept color=orange] { node[concept] {theoretical} };
+\end{tikzpicture}\end{document}
+</pre>
+
+
+<p>
+其中，"node"的表示个节点，可以在进跟着的中括号里设置颜色。node下面可以有child节点，这些节点是使用顺时针排列的。关于TikZ绘制心智图，更详细的教程可以参考《<a href="http://www.ctan.org/tex-archive/graphics/pgf/base/doc/generic/pgf/pgfmanual.pdf">PGF/TikZ manual</a>》第32章的内容。
+</p>
+<p>
+如果觉得TikZ代码太复杂，可以先用<a href="#sec-4.3">VYM</a>绘制心智图，然后使用<a href="http://blog.lindoze.net/software/convert-vym-mindmap-pgftikz/">Vym2TikZ</a>转换为TikZ代码，但直接生成的TikZ图案不是很好看，还需要对颜色、节点方向做进一步的微调。
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> Beamer使用心智图作为outline</h3>
+<div class="outline-text-3" id="text-6-2">
+
+<p>   在Beamer中使用心智图取代原来乏味的outline可以达到非常有趣的效果。比如我这份<a href="http://www.slideshare.net/pwz7689/ss-12678304#">课件</a>。
+</p>
+
+</div>
+
+<div id="outline-container-6-2-1" class="outline-4">
+<h4 id="sec-6-2-1"><span class="section-number-4">6.2.1</span> 设置方法</h4>
+<div class="outline-text-4" id="text-6-2-1">
+
+
+<ol>
+<li>首先去掉Beamer自带的outline，即确保你的文档中没有这段内容：
+
+
+
+
+<pre class="example">\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+</pre>
+
+
+</li>
+<li>使用TikZ为每一章画一张心智图，然后在每一章的开头手动插入这张图。
+</li>
+</ol>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6-2-2" class="outline-4">
+<h4 id="sec-6-2-2"><span class="section-number-4">6.2.2</span> 缺点和思考</h4>
+<div class="outline-text-4" id="text-6-2-2">
+
+
+<p>
+   比起原来的outline，这种方式缺点还是挺明显的：
+</p>
+<ol>
+<li>原来的outline是自动生成的，而这种心智图不是自动生成的，需要自己在每一章开头手动引入；
+
+</li>
+<li>没有点击跳转功能；
+
+</li>
+<li>耦合度太高，需要为每一章都画一份心智图，这样如果有一个节点发生改变，其他所有心智图都要做相应修改。所以建议在做课件前最好是先用XMind等工具把这份课件的整体框架都画好，以免制作课件过程中频繁修改outline。
+</li>
+</ol>
+
+
+<p>
+   我还没有解决这几个问题，但应该可以通过更好的代码来实现的。如果你有更好的建议，欢迎<a href="mailto:cs.wzpan@gmail.com">联系我</a>。
+</p>
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> 作品示例</h2>
+<div class="outline-text-2" id="text-7">
+
+
+
+</div>
+
+<div id="outline-container-7-1" class="outline-3">
+<h3 id="sec-7-1"><span class="section-number-3">7.1</span> 手绘系列</h3>
+<div class="outline-text-3" id="text-7-1">
+
+
+<ol>
+<li>开山祖师 Tony Buzan 所发表的心智图作品《蜂的技巧》（<a href="http://www.mindmapart.com/wp-content/uploads/2011/03/Bee-Skills-Mind-Map-by-Tony-Buzan.gif">查看图片</a>）
+
+</li>
+<li>我的一些笔记（<a href="./images/fig11.jpg">查看图片</a>）
+
+</li>
+<li>白板和心智图是一对绝配（<a href="./images/fig12.jpg">查看图片</a>）   
+</li>
+</ol>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-7-2" class="outline-3">
+<h3 id="sec-7-2"><span class="section-number-3">7.2</span> 工具绘图系列</h3>
+<div class="outline-text-3" id="text-7-2">
+
+
+<ol>
+<li>为一个演讲画的心智图（<a href="./images/fig04.png">查看图片</a>）
+
+</li>
+<li>我用TikZ画的心智图（<a href="./images/fig05.png">查看图片</a>）
+
+</li>
+<li>心智图小人（<a href="./images/fig06.png">查看图片</a>）   
+
+</li>
+<li>在Mind42发布的一份心智图：软件工程方法学相关知识体系（<a href="http://mind42.com/pub/mindmap?mid=80605e53-7367-448e-adcb-0d7f421984c4&amp;rel=url">查看图片</a>）
+</li>
+</ol>
+
+
+
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-4-25 三</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

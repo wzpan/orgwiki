@@ -1,0 +1,472 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>PDF相关</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="PDF相关"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-04-11 Wed"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content="PDF相关"/>
+<meta name="keywords" content="evince xournal inkscape"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./software_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">PDF相关</h1>
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 PDF阅读</a>
+<ul>
+<li><a href="#sec-1-1">1.1 Evince</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1 解决Evince乱码</a></li>
+</ul></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 PDF标注</a>
+<ul>
+<li><a href="#sec-2-1">2.1 安装Xournal</a></li>
+<li><a href="#sec-2-2">2.2 标注PDF</a></li>
+<li><a href="#sec-2-3">2.3 保存标注</a></li>
+<li><a href="#sec-2-4">2.4 导出PDF</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 PDF分割、合并</a>
+<ul>
+<li><a href="#sec-3-1">3.1 PDF分割</a></li>
+<li><a href="#sec-3-2">3.2 PDF合并</a></li>
+<li><a href="#sec-3-3">3.3 安装PDF-Shuffler</a></li>
+<li><a href="#sec-3-4">3.4 使用方法</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 PDF编辑</a>
+<ul>
+<li><a href="#sec-4-1">4.1 预备软件</a></li>
+<li><a href="#sec-4-2">4.2 步骤</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 PDF格式转换</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> PDF阅读</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Evince</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> 解决Evince乱码</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+
+
+
+
+<pre class="example">sudo apt-get install xpdf-chinese-simplified xpdf-chinese-traditional poppler-data
+</pre>
+
+<p>
+如果有必要，可能还需要修改 /etc/fonts/conf.d/49-sansserif.conf 的字体设置：
+</p>
+
+
+
+<pre class="example">sudo gedit /etc/fonts/conf.d/49-sansserif.conf
+</pre>
+
+
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> PDF标注</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+Xournal是我目前发现的在Linux下最好的一个pdf标注工具，支持手写标注、保存标注以及导出为pdf。
+</p>
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 安装Xournal</h3>
+<div class="outline-text-3" id="text-2-1">
+
+
+
+
+
+<pre class="example">sudo apt-get install xournal
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 标注PDF</h3>
+<div class="outline-text-3" id="text-2-2">
+
+
+<p>
+   启动Xournal后，在【File】菜单中找到【Annotate PDF】，导入一个pdf文件，之后就可以直接在这个pdf文件中手动标注。支持文字、画笔、直线、形状等多种标注方式，如下图所示。
+</p>
+<p>
+   <img src="./images/fig10.png"  alt="./images/fig10.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> 保存标注</h3>
+<div class="outline-text-3" id="text-2-3">
+
+
+<p>
+   标注完成后，可以将它保存为Xournal文件(.xoj)，以便下次修改。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> 导出PDF</h3>
+<div class="outline-text-3" id="text-2-4">
+
+
+<p>
+   完成标注后，在【File】菜单中有一个【Exported to PDF】的菜单项，可以将窗口中的内容导出为pdf文件。注意导出后的pdf文件里的标注将不能再修改，所以如果以后想继续编辑你的标注，最好多存一份Xournal文件。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> PDF分割、合并</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> PDF分割</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+<p>
+  PDF Chain是Linux下一个比较强大的pdf分割、合并工具，支持pdf的合并、分割、添加背景、添加附件等。这里主要介绍它的分割功能，它可以将一个pdf文件的所有页面分割成一个个单独的pdf文件，保存在指定的文件目录中。
+</p>
+<p>  
+  启动PDF Chain后，选择【Split】选项卡，点击【添加】按钮，导入一个pdf文件。Prefix输入框可以让你指定分割后的文件的前缀名，后面的Counter Digits是前缀名的计数器初始值。如无必要可以不用修改这两项。之后点击【保存(s)】按钮，指定要保存的文件夹，将按照刚刚的前缀名规则将这份pdf的每一页单独保存成一个pdf文件。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> PDF合并</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+<p>
+   PDF Chain可以提供pdf合并功能，但有张数限制（&lt;= 26张），但经过我测试，超过26张的pdf文件可以分几次合并，最后也能够合并成一个完整的pdf文件，但比较麻烦。
+</p>
+<p>   
+   因此对于PDF的合并，我推荐使用PDF-Shuffler。它是一个非常小巧的pdf合并工具，可以轻松的合并pdf文件，并且没有张数限制。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 安装PDF-Shuffler</h3>
+<div class="outline-text-3" id="text-3-3">
+
+
+
+
+
+<pre class="example">sudo apt-get install pdfshuffler
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> 使用方法</h3>
+<div class="outline-text-3" id="text-3-4">
+
+
+<p>
+    PDF-Shuffler 的使用非常简单，启动 PDF-Shuffler 后，界面的下面有几个按钮，分别是：
+</p>
+<ol>
+<li>退出(Q)：退出 PDF-Shuffler；
+
+</li>
+<li>Delete Page(s)：删除预览窗口中选定的页面；
+
+</li>
+<li>Import pdf：导入pdf文件，通常是启动 PDF-Shuffler 后要做的第一件事；
+
+</li>
+<li>Export pdf：导出pdf文件；
+
+</li>
+<li>About：关于 PDF-Shuffler 。
+</li>
+</ol>
+
+
+<p>
+    其他的交给读者去尝试吧。       
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> PDF编辑</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+  pdf是二进制文档，要直接编辑比较困难（不是不可能）。当然也有非常专业的pdf编辑器，但基本都是要收费的。如果想要方便的编辑pdf里的内容，又不想要花钱，可以考虑我下面的做法。
+</p>
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 预备软件</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+<ol>
+<li>PDF-Shuffler：pdf合并
+
+</li>
+<li>PDF Chain：pdf分割
+
+</li>
+<li>Inkscape：单张pdf编辑
+</li>
+</ol>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 步骤</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+<ol>
+<li>使用PDF Chain将待修改的pdf文件的每个页面分割成一个个单独的pdf文件，具体参考上面PDF分割的内容。
+
+</li>
+<li>找到要修改的那个页面，然后使用Inkscape打开并修改里面的内容。
+
+</li>
+<li>使用PDF Shuffler将所有页面重新合并为一个pdf文件。
+</li>
+</ol>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> PDF格式转换</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+  <a href="http://www.fileminx.com/">fileminx</a> 是一个很方便的在线转换文档的网站，支持很多种格式，包括：
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">文档</th><th scope="col" class="left">图像</th><th scope="col" class="left">音乐</th><th scope="col" class="left">视频</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">DOC, DOCX, LWP, MediaWiki, ODT, PDF, RTF, TXT, Word 6, Word 97-03, WPS</td><td class="left">BMP, GIF, ICO, JPEG, JPG, PCX, PIC, PICT, PNG, PSD, SUN, TGA, TIF, TIFF, WMF</td><td class="left">AAC, AIF, AIFF, AU, FLAC, iPhone, iPod, MKA, MP2, MP3, OGG, RA, SND, VOC, WAV, WMA</td><td class="left">3G2, 3GP, ASF, AVI, DIVX, DVD, Flash, GIF, iPod, MKV, MOV, MP4, MPEG, MPG, PSP, RM, WMV, XVID</td></tr>
+</tbody>
+</table>
+
+
+<p>
+  利用它可以很方便的将pdf文件转换成所需要的格式，而且转换后的效果很好。但是你可能会发现原来的文档里面的一些很漂亮的插图在转换之后变得非常难看，这类插图大多包含了文字，所以在转换的时候发生了错位。为了避免这个问题，我总结了几个比较好的 LaTeX 插图习惯：
+</p>
+<ol>
+<li>离线绘图。如果使用的是TikZ这类的在线绘图工具<sup><a class="footref" name="fnr-.1" href="#fn-.1">1</a></sup>，不要直接在你的文档里插入绘图代码，而是像离线绘图工具一样单独创建一个文件，然后编译生成 pdf/eps/ps 等独立的图形文件后再导入进你的文档里；
+
+</li>
+<li>在交给 fileminx 转换之前，先确保TeX文档中没有直接导入pdf格式的插图，如果有的话，就使用pdftops命令将这些插图转为ps文件或者eps文件，然后在TeX文档中改为对这类文件的引用，重新编译后再交给 fileminx去转换。这时你的文档里的所有插图都变成了位图，所以不会有文字错位的问题。完成后再将引用的格式改回pdf，毕竟文字可选中的图片才是真正意义上的高精度图片，呵呵。
+</li>
+</ol>
+
+
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn-.1" href="#fnr-.1">1</a></sup> 这里的在线不是指联网，而是指可以直接在TeX里插入绘图代码的工具，常见的是TikZ、pstricks等。与之相对的是离线绘图工具，即需要单独建立文件，然后生成eps等独立的图形文件的绘图工具。
+</p>
+
+
+
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-04-11 Wed</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

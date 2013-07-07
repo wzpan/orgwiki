@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>使用存储着色器 GLShaderManager</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="使用存储着色器 GLShaderManager"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:12 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">使用存储着色器 GLShaderManager</h1>
+
+
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+<p>
+本文介绍的存储着色器由GLTools的C++类GLShaderManager进行管理，它们能够满足进行通常渲染的基本要求。
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 初始化</a></li>
+<li><a href="#sec-2">2 属性</a></li>
+<li><a href="#sec-3">3 Uniform值</a>
+<ul>
+<li><a href="#sec-3-1">3.1 单位（Identity）着色器</a></li>
+<li><a href="#sec-3-2">3.2 平面（Flat）着色器</a></li>
+<li><a href="#sec-3-3">3.3 上色（Shaded）着色器</a></li>
+<li><a href="#sec-3-4">3.4 默认光源着色器</a></li>
+<li><a href="#sec-3-5">3.5 点光源着色器</a></li>
+<li><a href="#sec-3-6">3.6 纹理替换矩阵</a></li>
+<li><a href="#sec-3-7">3.7 纹理调整着色器</a></li>
+<li><a href="#sec-3-8">3.8 纹理光源着色器</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 初始化</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>GLShaderManager在使用前必须初始化，我们可以在所有示例程序源文件顶部附近找到GLShaderManager和调用InitializeStockShaders的例子。
+</p>
+
+
+
+<pre class="src src-c">GLShaderManager.InitializeStockShaders();
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 属性</h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+<p>
+  OpenGL支持多达16种可以为每个顶点设置的不同类型参数。这些参数编号为从0到15，并且可以与顶点着色器中的任何指定变量相关联。存储着色器为每个变量都使用一致的内部变量命名规则和相同的属性槽（Attribute Slot）。下表列出了这些属性。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption>GLShaderManager预定义的标识符</caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">标识符</th><th scope="col" class="left">描述</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">GLT_ATTRIBUTE_VERTEX</td><td class="left">3分量(x, y, z)顶点位置</td></tr>
+<tr><td class="left">GLT_ATTRIBUTE_COLOR</td><td class="left">4分量(r, g, b, a)颜色值</td></tr>
+<tr><td class="left">GLT_ATTRIBUTE_NORMAL</td><td class="left">3分量(x, y, z)表面法线</td></tr>
+<tr><td class="left">GLT_ATTRIBUTE_TEXTURE0</td><td class="left">第一对2分量(s, t)纹理坐标</td></tr>
+<tr><td class="left">GLT_ATTRIBUTE_TEXTURE1</td><td class="left">第二对2分量(s, t)纹理坐标</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Uniform值</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+  要对几何图形进行渲染，我们需要为对象递交属性矩阵，但首先要绑定到我们想要使用的着色器程序上，并提供相应的Uniform值。 <code>UseStockShader</code> 函数会选择一个存储着色器并提供这个着色器的Uniform值，这些工作通过一次函数调用就能完成。
+</p>
+
+<pre class="example">
+GLShaderManager::UseStockShader(GLenum shader, ... ...);  
+                                      |
+                                      |
+                                   Uniform值  
+
+</pre>
+
+
+<p>  
+在C语言（或C++语言）中，……表示函数接受一个可变的参数变量，这些参数就是特定着色器要求的Uniform值。
+</p>
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 单位（Identity）着色器</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+<p>
+   只是简单地使用默认的笛卡尔坐标系（在所有的坐标轴上的坐标范围都是-1.0~1.0）。所有片段都应用统一种颜色，几何图形为实心和未渲染的。
+</p>
+<p>
+   该着色器对每个顶点设置同一种颜色，因此顶点坐标可以作为属性，颜色值可以作为Uniform值。
+</p>
+<ul>
+<li>属性：这种着色器只使用一个属性GLT_ATTRIBUTE_VERTEX。
+</li>
+<li>Uniform值：vColor参数包含了要求的颜色。
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c">GLShaderManager::UseStockShader(GLT_SHADER_IDENTITY, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vColor</span>[4]); 
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 平面（Flat）着色器</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+<p>
+   将统一着色器进行了扩展，允许为几何图形变换指定一个 \(4\time 4\) 变换矩阵。典型情况下这是一种左乘模型视图矩阵和投影矩阵，经常被称作“模型视图投影矩阵”。
+</p>
+<p>
+   简单来讲，就是在单位着色器的基础上增加了一个变换矩阵，因此相应的要增加一个Uniform值，而属性值不变。
+</p>
+<ul>
+<li>属性值：只使用一个属性 GLT_ATTRIBUTE_VERTEX；
+</li>
+<li>Uniform值：模型视图投影矩阵mvp ，基本色矩阵vColor
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c">GLShaderManager::UseStockShader(GLT_SHADER_FLAT, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">mvp</span>[16], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vColor</span>[4]); 
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 上色（Shaded）着色器</h3>
+<div class="outline-text-3" id="text-3-3">
+
+
+<p>
+   颜色值会被平滑的插入顶点之间（称为平滑着色）。对每个顶点的着色值都不一样，因此需要增加一个针对每个顶点的属性值，而不再需要定义颜色的Uniform值。
+</p>
+<ul>
+<li>属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_COLOR；
+</li>
+<li>Uniform值： 模型视图投影矩阵 mvp。
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c">GLShaderManager::UseStockShader(GLT_SHADER_SHADED, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">mvp</span>[16]); 
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> 默认光源着色器</h3>
+<div class="outline-text-3" id="text-3-4">
+
+
+<p>
+    产生类似于由位于观察者位置的单漫射光所产生的（阴影和光照）效果。
+</p>
+<ul>
+<li>属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_NORMAL；
+</li>
+<li>Uniform值：模型视图矩阵 mvMatrix 、投影矩阵 pMatrix 和作为基本色的颜色值 vColor 等Uniform值。大多数着色器都需要正规矩阵（normal matrix）作为Uniform值。着色器从模型视图矩阵中推导出了正规矩阵——很方便，但是效率不太高。 <b>在性能敏感的应用程序中，我们要充分考虑这一点</b> 。
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c">GLShaderManager::UseStockShader(GLT_SHADER_DEFAULT_LIGHT, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">mvMatrix</span>[16], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">pMatrix</span>[16], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vColor</span>[4]); 
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> 点光源着色器</h3>
+<div class="outline-text-3" id="text-3-5">
+
+
+<p>
+   和默认光源着色器很相似，但是光源位置可能是特定的，因此这种着色器比默认光源着色器增加了一个表示视点坐标系中的光源位置的Uniform值。
+</p>
+<ul>
+<li>属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_NORMAL；
+</li>
+<li>Uniform值：模型视图矩阵 mvMatrix 、投影矩阵 pMatrix 、视点坐标系中的光源位置 vLightPos 和基本漫反射颜色值 vColor 等Uniform值。
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c">GLShaderManager::UseStockShader(GLT_SHADER_POINT_LIGHT_DIFF, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">mvMatrix</span>[16], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">pMatrix</span>[16], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vLightPos</span>[3], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vColor</span>[4]); 
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-6" class="outline-3">
+<h3 id="sec-3-6"><span class="section-number-3">3.6</span> 纹理替换矩阵</h3>
+<div class="outline-text-3" id="text-3-6">
+
+
+<p>
+   着色器通过给定的模型视图投影矩阵，使用绑定到 nTextureUnit 指定的纹理单元的纹理对几何图形进行变换。片段颜色是直接从纹理样本中直接获取的。
+</p>
+<ul>
+<li>属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_NORMAL ；
+</li>
+<li>Uniform值： 模型视图投影矩阵 mvpMatrix 、纹理单元 nTextureUnit 。
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c">GLShaderManager::UseStockShader(GLT_SHADER_TEXTURE_REPLACE, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">mvpMatrix</span>[16], <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">nTextureUnit</span>);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-7" class="outline-3">
+<h3 id="sec-3-7"><span class="section-number-3">3.7</span> 纹理调整着色器</h3>
+<div class="outline-text-3" id="text-3-7">
+
+
+<p>
+   这种着色器将一个基本色乘以一个取自纹理单元 nTextureUnit 的纹理，因此Uniform值需要多加一个基本色，属性值则需要将 GLT_ATTRIBUTE_NORMAL 换成 GLT_ATTRIBUTE_TEXTURE0 。
+</p>
+<ul>
+<li>属性值： GLT_ATTRIBUTE_VERTEX 和 GLT_ATTRIBUTE_TEXTURE0 ；
+</li>
+<li>Uniform值： 模型视图投影矩阵 mvpMatrix 、基本色 vColor、纹理单元 nTextureUnit 。
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c">GLShaderManager::UseStockShader(GLT_SHADER_TEXTURE_MODULATE, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">mvpMatrix</span>[16], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vColor</span>[4], <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">nTextureUnit</span>);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-8" class="outline-3">
+<h3 id="sec-3-8"><span class="section-number-3">3.8</span> 纹理光源着色器</h3>
+<div class="outline-text-3" id="text-3-8">
+
+
+<p>
+   这种着色器将一个纹理通过漫反射照明计算进行调整（相乘），光线在视觉空间中的位置是给定的。
+</p>
+<ul>
+<li>属性值： GLT_ATTRIBUTE_VERTEX 、 GLT_ATTRIBUTE_NORMAL 和 GLT_ATTRIBUTE_TEXTURE0 ；
+</li>
+<li>Uniform值： 模型视图矩阵 mvMatrix 、投影矩阵 pMatrix 、视觉空间中的光源位置 vLightPos 、几何图形的基本色 vColor 、 纹理单元 nTextureUnit。
+</li>
+</ul>
+
+
+
+
+
+<pre class="src src-c">GLShaderManager::UseStockShader(GLT_SHADER_TEXTURE_POINT_LIGHT_DIFF, <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">mvMatrix</span>[16], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">pMatrix</span>[16], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vLightPos</span>[3], <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vColor</span>[4], <span style="color: #00ffff; font-weight: bold;">GLint</span> <span style="color: #ffd700; font-style: italic;">nTextureUnit</span>);
+</pre>
+
+
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:12 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

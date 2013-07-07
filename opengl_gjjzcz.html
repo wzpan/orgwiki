@@ -1,0 +1,533 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>高级矩阵操作</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="高级矩阵操作"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:17 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">高级矩阵操作</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 理解变换矩阵</a></li>
+<li><a href="#sec-2">2 加载矩阵</a></li>
+<li><a href="#sec-3">3 自己执行变换</a>
+<ul>
+<li><a href="#sec-3-1">3.1 代码示例</a></li>
+<li><a href="#sec-3-2">3.2 Makefile</a></li>
+<li><a href="#sec-3-3">3.3 输出</a></li>
+<li><a href="#sec-3-4">3.4 分析</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 改进的程序</a>
+<ul>
+<li><a href="#sec-4-1">4.1 代码</a></li>
+<li><a href="#sec-4-2">4.2 分析</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 变换的叠加</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 理解变换矩阵</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+
+<script type="text/javascript" src="./other/mathjax/MathJax.js?config=TeX-AMS_HTML"></script>
+
+<p>
+OpenGL在表示一个\(4\times 4\)的矩阵时并没有使用浮点型的二维数组，而是用了一个包含16个浮点值的一维数组来表示。这个方法和许多数学函数库所使用的方法不同，后者常常采用二维数组来表示矩阵。例如，在下面这两个例子中，OpenGL更倾向于使用前者。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">matrix</span>[16];     <span style="color: #ffd700;">// </span><span style="color: #ffd700;">OpenGL&#25152;&#37319;&#29992;&#30340;&#21451;&#22909;&#30697;&#38453;</span>
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">matrix</span>[4][4];   <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#26356;&#20026;&#27969;&#34892;&#65292;&#20294;&#19981;&#22914;OpenGL&#25152;&#37319;&#29992;&#30340;&#26041;&#24335;&#39640;&#25928;</span>
+</pre>
+
+
+<p>
+OpenGL也可以使用第二种类型的表示形式，但第一种类型更为高效。其中的缘由很快就会变得更清楚。这16个元素代表一个\(4\times 4\)的矩阵，如下所示。
+</p>
+<p>
+\[\begin{bmatrix} a_0 &amp; a_4 &amp; a_8 &amp; a_{12} \\ a_1 &amp; a_5 &amp; a_9 &amp; a_{13} \\ a_2 &amp; a_6 &amp; a_{10} &amp; a_{14} \\ a_3 &amp; a_7 &amp; a_{11} &amp; a_{15} \end{bmatrix}\]
+</p>
+<p>
+当我们按列逐个遍历数组中的元素时，就称为列主序的矩阵顺序。在内存中，用二维数组表示的\(4\times 4\)矩阵是以行主序存储的。这两种方向之间是转置关系。
+</p>
+<p>
+真正的奥秘在于这16个值表示空间中 <b>一个特定的位置和三个轴的方向</b> 。
+</p>
+<p>
+下面是一个变换矩阵的例子：
+</p>
+<p>
+\[\begin{bmatrix} X_x &amp; Y_x &amp; Z_x &amp; T_x \\ X_y &amp; Y_y &amp; Z_y &amp; T_y \\ X_z &amp; Y_z &amp; Z_z &amp; T_z \\ 0 &amp; 0 &amp; 0 &amp; 1 \end{bmatrix}\]
+</p>
+<ul>
+<li>前三列：方向向量，表示空间中x、y和z轴的方向。在绝大多数情况下，这3个向量相互之间呈90°垂直（正交）。
+</li>
+<li>最后一列：经过变换的坐标系统的x、y和z值。
+</li>
+</ul>
+
+
+<p>  
+当我们在单位矩阵上调用 glTranslate 函数时，它所完成的任务就是把我们所提供的x、y、z值放在这个矩阵的第12、13和14位置上。
+</p>
+<p>
+重点：如果一个\(4\times 4\)的矩阵包含了一个不同的坐标系统的位置和方向。那么，把一个顶点（以一个列矩阵或向量的形式）与这个矩阵相乘，其结果就是一个变换到该坐标系统的新顶点。这意味着空间中的任何位置以及自己所需要的任何方向都可以通过一个\(4\times 4\)的矩阵进行唯一的定义，并且，如果把一个物体的所有顶点与这个矩阵相乘，就可以把整个物体变换到空间中指定的位置和方向！
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 加载矩阵</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  我们可以使用下面的函数在投影、模型视图或纹理矩阵堆栈中加载一个任意的列主序的矩阵。
+</p>
+
+
+
+<pre class="src src-c">glLoadMatrixf(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">m</span>);
+</pre>
+
+
+
+<pre class="src src-c">glLoadMatrixd(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">m</span>);
+</pre>
+
+
+<p>
+  绝大多数OpenGL实现用float而不是double类型存储和操作管线数据。因此，如果在程序中使用后者，可能会产生性能上的影响，因为16位的双精度浮点值必须转换为单精度浮点值。下面的代码显示了把一个数组加载到单位矩阵，然后再加载到模型视图堆栈。这个例子调用了高层函数 <code>glLoadIdentity</code> 。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#21152;&#36733;&#19968;&#20010;&#21333;&#20301;&#30697;&#38453;</span>
+<span style="color: #00ffff; font-weight: bold;">glFloat</span> <span style="color: #ffd700; font-style: italic;">m</span>[] = {1.0f, 0.0f, 0.0f, 0.0f,  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">X&#21015;</span>
+               0.0f, 1.0f, 0.0f, 0.0f,  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Y&#21015;</span>
+               0.0f, 0.0f, 1.0f, 0.0f,  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">Z&#21015;</span>
+               0.0f, 0.0f, 0.0f, 1.0f}; <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#31227;&#21160;</span>
+
+glMatrixMode(GL_MODELVIEW);
+glLoadMatrixf(m);
+</pre>
+
+
+<p>
+  尽管 OpenGL 实现内部使用列主序的矩阵顺序，但它还是提供了以行主序加载矩阵的函数。下面两个函数在矩阵加载到矩阵堆栈时对它进行转置操作。
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glLoadTransposeMatrixf</span>(<span style="color: #00ffff; font-weight: bold;">GLfloat</span>* <span style="color: #ffd700; font-style: italic;">m</span>);
+</pre>
+
+
+<p>
+  和
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glLoadTransposeMatrixd</span>(<span style="color: #00ffff; font-weight: bold;">GLdouble</span>* <span style="color: #ffd700; font-style: italic;">m</span>);
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 自己执行变换</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 代码示例</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+<ul>
+<li><a href="./program/opengl/transform.cpp">transform.cpp</a>
+</li>
+</ul>
+
+
+<p>     
+CANNOT INCLUDE FILE ./program/opengl/transform.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Makefile</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+
+
+
+<pre class="src src-makefile"><span style="color: #ffd700; font-style: italic;">objects</span> = transform.o math3d.o
+
+<span style="color: #ffd700; font-style: italic;">VPATH</span> = shared
+
+<span style="color: #ffd700; font-style: italic;">CFLAG</span> = -lGL -lglut -lGLU
+
+<span style="color: #ffd700; font-style: italic;">CC</span> = g++
+
+<span style="color: #ffd700; font-weight: bold;">transform</span>: $(<span style="color: #ffd700; font-style: italic;">objects</span>)
+        $(<span style="color: #ffd700; font-style: italic;">CC</span>) $(<span style="color: #ffd700; font-style: italic;">objects</span>) $(<span style="color: #ffd700; font-style: italic;">CFLAG</span>) -o transform
+
+<span style="color: #ffd700; font-weight: bold;">transform.o</span>: math3d.h
+
+<span style="color: #ffd700; font-weight: bold;">math3d.o</span>: math3d.h
+
+<span style="color: #ffd700; font-weight: bold;">clean</span>:
+        -rm *.o
+
+<span style="color: #ffd700; font-weight: bold;">run</span>:
+        ./transform
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 输出</h3>
+<div class="outline-text-3" id="text-3-3">
+
+
+<p>
+   <img src="./images/fig27.png"  alt="./images/fig27.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> 分析</h3>
+<div class="outline-text-3" id="text-3-4">
+
+
+<p>
+  在示例程序 TRANSFORM 中，我们在可视区域的前面绘制了一个圆环面，并让它在一个地方旋转。DrawTorus函数执行必要的数学操作来产生这个圆环面的几何形状，并接受一个参数（一个4\(\times 4\)的变换矩阵），把它应用到各个顶点。我们创建这个矩阵并手动的把这个变换矩阵应用到每个顶点，对圆环面进行变换。
+</p>
+<p>
+  我们首先观察主渲染函数。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">Called to draw scene</span>
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">RenderScene</span>(<span style="color: #00ffff; font-weight: bold;">void</span>)
+{
+  <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span>   <span style="color: #ffd700; font-style: italic;">transformationMatrix</span>;   <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#26059;&#36716;&#30697;&#38453;&#30340;&#23384;&#20648;&#31354;&#38388;</span>
+  <span style="color: #00ffff; font-weight: bold;">static</span> <span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">yRot</span> = 0.0f;         <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#21160;&#30011;&#30340;&#26059;&#36716;&#35282;&#24230;</span>
+  yRot += 0.5f;
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#29992;&#24403;&#21069;&#30340;&#28165;&#38500;&#39068;&#33394;&#28165;&#38500;&#31383;&#21475;</span>
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#21019;&#24314;&#19968;&#20010;&#26059;&#36716;&#30697;&#38453;</span>
+  m3dRotationMatrix44(transformationMatrix, m3dDegToRad(yRot), 0.0f, 1.0f, 0.0f);
+  transformationMatrix[12] = 0.0f;
+  transformationMatrix[13] = 0.0f;
+  transformationMatrix[14] = -2.5f;
+
+  DrawTorus(transformationMatrix);
+
+  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25191;&#34892;&#32531;&#20914;&#21306;&#20132;&#25442;</span>
+  glutSwapBuffers();
+}
+</pre>
+
+
+<p>
+  我们首先声明这个矩阵的存储空间。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span>   <span style="color: #ffd700; font-style: italic;">transformationMatrix</span>;   <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#26059;&#36716;&#30697;&#38453;&#30340;&#23384;&#20648;&#31354;&#38388;  </span>
+</pre>
+
+
+<p>
+  数据类型 M3DMatrix44f 是我们自己设计的，它只是 math3d.h 中的一个typedef声明，表示一个长度为16个元素的浮点型数组。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">typedef</span> <span style="color: #00ffff; font-weight: bold;">float</span> <span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span>[16];         <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#19968;&#20010; GLfloat &#31867;&#22411;&#30340;&#21015;&#20027;&#24207; 4 X 4 &#30697;&#38453;</span>
+</pre>
+
+
+<p>
+  这个例子中的动画是通过连续增加变量yRot的值实现的，这个变量表示绕y轴旋转的角度。在清除了颜色和深度缓冲区之后，我们像下面这样构建了自己的变换矩阵。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#21019;&#24314;&#19968;&#20010;&#26059;&#36716;&#30697;&#38453;</span>
+m3dRotationMatrix44(transformationMatrix, m3dDegToRad(yRot), 0.0f, 1.0f, 0.0f);
+transformationMatrix[12] = 0.0f;
+transformationMatrix[13] = 0.0f;
+transformationMatrix[14] = -2.5f;
+</pre>
+
+
+<p>
+  第一行代码包含了对另一个math3d函数 <code>m3dRotationMatrix44</code> 的调用，这个函数接受一个以弧度为单位的旋转角度（这是为了便于计算），另外3个参数指定了一个向量，旋转将绕着这个向量进行。宏函数 m3dDegToRad 在内部完成从角度到弧度的转换。除了角度是以弧度为单位而不是以角度为单位外，这个函数几乎和 OpenGL 函数 glRotate 完全相同。它的第一个参数是个矩阵，最终产生的旋转矩阵就存储在这里。
+</p>
+<p>
+  这个矩阵的最后一列表示了这个移动变换。我们不需要执行完整的矩阵乘法，而只需简单地在矩阵中插入所需要的移动向量。现在，这个矩阵既表示空间中的一个移动（放置圆环）面的位置，也表示在这个位置对物体的坐标系统应用一次旋转。
+</p>
+<p>
+  接着，我们把这个变换矩阵传递给 DrawTorus 函数。我们并不需要列出这个用来创建圆环面的函数的完整代码，而只需把注意力集中在下面这几行。
+</p>
+
+
+
+<pre class="src src-c">objectVertex[0] = x0*r;
+objectVertex[1] = y0*r;
+objectVertex[2] = z;
+m3dTransformVector3(transformedVertex, objectVertex, mTransform);
+glVertex3fv(transformedVertex);
+</pre>
+
+
+<p>
+  顶点的3个成分被加载到一个数组中，并传递给 <code>m3dTransformVector3</code> 函数，这个math3d函数执行这个顶点与矩阵的乘法并把经过变换的顶点返回到transformVertex数组中。然后，我们使用向量版本的glVertex函数，把该顶点数据发送给OpenGL。其结果是一个旋转的圆环面。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 改进的程序</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+  对于几何图形的处理，TRANSFORM示例程序是非常低效的。我们让CPU完成所有的矩阵运算，而不是让OpenGL的专用硬件为我们完成这些工作（它们的处理速度比CPU快得多！）。另外由于OpenGL具有模型视图矩阵，所有经过变量的顶点都会与单位矩阵相乘。这并不会改变这些经过变换的定点的值，但它仍然是一种纯属浪费的操作。
+</p>
+<p>
+  为了完整起见，我们提供了一个经过改进的例子。
+</p>
+
+</div>
+
+<div id="outline-container-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 代码</h3>
+<div class="outline-text-3" id="text-4-1">
+
+
+<ul>
+<li><a href="./program/opengl/transformgl.cpp">transformgl.cpp</a>
+</li>
+</ul>
+
+
+<p>
+CANNOT INCLUDE FILE ./program/opengl/transformgl.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 分析</h3>
+<div class="outline-text-3" id="text-4-2">
+
+
+<p>
+   这个程序并不使用我们自己的变换矩阵，并使用了一个更为通用的圆环面绘制函数 <code>gltDrawTorus</code> （来自 glTools 函数库），从而消除了对DrawTorus函数的调用。
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 变换的叠加</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+  在前面那个例子中，我们简单的构建了一个变换矩阵，并把它加载到了模型视图矩阵。使用这种技巧的效果相当于在渲染发生之前对这个矩阵之后的任意（或所有）几何图形进行变换。正如我们在前面的另一个例子中所看到的那样，我们常常把一个变换和另一个变换放在一起。例如，我们先使用 <code>glTranslate</code> 再接着使用 <code>glRotate</code> ，在绘制物体之前首先对它进行移动，然后对它进行旋转。在幕后，当我们调用多个变换函数时，OpenGL将在原有的变换矩阵和我们所添加的矩阵之间执行矩阵乘法操作。例如，在TRANSFORMGLn例子中，可以用类似下面的代码替换原代码中的相应代码段：
+</p>
+
+
+
+<pre class="src src-c">glPushMatrix();
+      glTranslatef(0.0f, 0.0f, -2.5f);
+      glRotatef(yRot, 0.0f, 1.0f, 0.0f);
+
+      gltDrawTorus(0.35, 0.15, 40, 20);
+glPopMatrix();
+</pre>
+
+
+<p>
+  上述代码的效果就是保存当前的单位矩阵，与移动矩阵相乘，与旋转矩阵相乘，然后根据相乘结果绘制圆环面。我们也可以使用 math3d 函数 <code>m3dMatrixMultiply</code> 来完成这些矩阵乘法。如下所示。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">rotationMatrix</span>, <span style="color: #ffd700; font-style: italic;">translationMatrix</span>, <span style="color: #ffd700; font-style: italic;">transformationMatrix</span>;
+...
+m3dRotationmatrix44(rotationMatrix, m3dDegToRad(yRot),0.0f, 1.0f, 0.0f);
+m3dTranslationMatrix44(translationMatrix, 0.0f, 0.0f, -2.5f);
+m3dMatrixMultiply44(transformationMatrix, translationMatrix, rotationMatrix);
+glLoadMatrixf(transformationMatrix);
+
+gltDrawTorus(0.35f, 0.15f, 40, 20);
+</pre>
+
+
+<p>
+  OpenGL还提供了自己的矩阵乘法函数： <code>glMultMatrix</code> 。这个函数接受一个矩阵，并把它与当前加载的矩阵相乘，然后把结果存储在矩阵堆栈的顶部。最后，我们再次显示与前面等价的代码段，但这次让OpenGl完成实际的矩阵乘法。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">M3DMatrix44f</span> <span style="color: #ffd700; font-style: italic;">rotationMatrix</span>, <span style="color: #ffd700; font-style: italic;">translationMatrix</span>, <span style="color: #ffd700; font-style: italic;">transformationMatrix</span>;
+...
+glPushMatrix();
+      m3dRotationmatrix44(rotationMatrix, m3dDegToRad(yRot), 0.0f, 1.0f, 0.0f);
+      m3dTranslationMatrix44(translationMatrix, 0.0f, 0.0f, -2.5f);
+
+      glMultMatrixf(translationMatrix);
+      glMultMatrixf(rotationMatrix);
+
+      gltDrawTorus(0.35f, 0.15f, 40, 20);
+glPopMatrix();
+</pre>
+
+
+
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:17 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

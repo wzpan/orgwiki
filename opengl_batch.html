@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>一个简单批次容器</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="一个简单批次容器"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:19 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">一个简单批次容器</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 GBatch</a></li>
+<li><a href="#sec-2">2 用法示例</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> GBatch</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>GLTools库中包含一个简单的容器类，叫做GLBatch。这个类可以作为对几种图元简单批次的容器使用，而且它知道在使用GLShaderManager支持的任意存储着色器时如何对图元进行渲染。使用GLBatch类非常简单。首先对批次进行初始化，告诉这个类它代表哪种图元，其中包括的顶点数，以及（可选）一组或两组纹理坐标。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLBatch</span>::Begin(<span style="color: #00ffff; font-weight: bold;">GLenum</span> <span style="color: #ffd700; font-style: italic;">primitive</span>, <span style="color: #00ffff; font-weight: bold;">GLunit</span> <span style="color: #ffd700; font-style: italic;">nVerts</span>, <span style="color: #00ffff; font-weight: bold;">GLuint</span> <span style="color: #ffd700; font-style: italic;">nTextureUnits</span>=0);
+</pre>
+
+
+<p>
+然后，至少要复制一个由3分量(x,y,z)顶点组成的数组。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLBatch</span>::CopyVertexData3f(GLfloat *vVerts);
+</pre>
+
+
+<p>
+我们还可以选择复制表面法线、颜色和纹理坐标。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLBatch</span>::CopyNormalDataf(GLfloat *vNorms);
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLBatch</span>::CopyColorData4f(GLfloat *vColor);
+<span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLBatch</span>::CopyTexCoordData2f(GLfloat *vTexCoords, <span style="color: #00ffff; font-weight: bold;">GLunit</span> <span style="color: #ffd700; font-style: italic;">uiTextureLayer</span>);
+</pre>
+
+
+<p>
+在完成上述工作之后，我们可以调用End来表明已经完成了数据复制工作，并且将设置内部标记，以通知这个类包含哪些属性。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">GLBatch</span>::End(<span style="color: #00ffff; font-weight: bold;">void</span>);
+</pre>
+
+
+<p>
+实际上，可以在任何我们想要的时候来进行复制，只要不改变类的大小即可。而一旦调用End函数就不能再增加新的属性了（也就是说我们现在也不能确定是否要有表面法线了）。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 用法示例</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+现在我们来快速浏览一下如何使用这个类渲染一个单个三角形。我们在源文件开头部分声明了GLBatch类的一个实例。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLBatch</span> <span style="color: #ffd700; font-style: italic;">triangleBatch</span>;
+</pre>
+
+
+<p>
+然后在函数中，我们用3个顶点设定了一个三角形。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #ffd700;">// </span><span style="color: #ffd700;">Load up a triangle</span>
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vVerts</span>[] = { -0.5f, 0.0f, 0.0f,
+                     0.5f, 0.0f, 0.0f,
+                     0.0f, 0.5f, 0.0f };
+
+triangleBatch.Begin(GL_TRIANGLES, 3);
+triangleBatch.CopyVertexData3f(vVerts);
+triangleBatch.End();
+</pre>
+
+
+<p>
+最后，在RenderScene函数中，我们选择了适当的存储着色器并调用Draw函数。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">vRed</span>[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+shaderManager.UseStockShader(GLT_SHADER_IDENTITY, vRed);
+triangleBatch.Draw();
+</pre>
+
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:19 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

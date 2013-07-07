@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>OpenGL工作原理</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="OpenGL工作原理"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-12-31T01:05+0800"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012  Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">OpenGL工作原理</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 基础图形管线</a></li>
+<li><a href="#sec-2">2 客户机-服务器</a></li>
+<li><a href="#sec-3">3 着色器</a>
+<ul>
+<li><a href="#sec-3-1">3.1 属性</a></li>
+<li><a href="#sec-3-2">3.2 Uniform值</a></li>
+<li><a href="#sec-3-3">3.3 纹理</a></li>
+<li><a href="#sec-3-4">3.4 输出</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 基础图形管线</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+  OpenGL中的图元只不过是顶点的集合以预定义的方式结合在一起罢了。例如，一个单独的点就是一个图元，它只需要一个顶点。三角形则是另外一个例子，它是由3个顶点组成的图元。在我们讨论不同种类的图元之前，先来看看一个图元是如何由独立的顶点组合而成的。
+</p>
+<p>
+  基础管线接受3个顶点个顶点并将它们转换成一个三角形。它还可能应用颜色、一个或多个纹理并且移动它们的位置。这种管线也是可编程的，实际上我们编写了两个程序，图形硬件执行它们来处理顶点数据，并在屏幕上填充像素。为了便于理解OpenGL上的这种基础处理工作，让我们来看一看OpenGL渲染管线的一个简化版本。
+</p>
+<pre class="example">
+                    
+  如何渲染一个三角形
+                    +------------------------------------+
+                    |    Application Code: C/C++, etc.   |
+                    +------------------------------------+
+                    |            OpenGL API              |
+                    +-+-----------+-----------------+----+        客户机
+                    --+-----------+-----------------+------------------------
+                      |           |                 |   属性      服务器
+                      |纹理       |Uniforms         | （输入）        
+                      |           |         +-------+-------+           
+                      |           +---------+   顶点着色器   |          
+                      |           |         | void main(){  |
+                      +-----------+---------+    ...        |
+                      |           |         |    ...        |
+                      |           |         |    }          |
+                      |           |         +---+----+------+
+                      |           |      Vertex |    |      
+                      |纹理       |    Positions|    |  输出
+                      |           |Uniforms     |    |      
+                      |           |          ---+----+/--   
+                      |           |          |Primitive     
+                      |           |          |  --/+-       
+                      |           |          | -/- |        
+                      |           |          ++    |     
+                      |           |                |        
+                      |           |         +------+--------+
+                      |           +---------+  片段着色器    |
+                      |                     | void main(){  |
+                      +---------------------+    ...        |
+                                            |    ...        |
+                                            |    }          |
+                                            +------+--------+
+                                                   |
+                                                   |
+                                             Result Graphics
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 客户机-服务器</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  首先请注意我们将管线分成了两部分。上半部分是客户端，而下半部分则是服务器端。就OpenGL而言：
+</p>
+<ul>
+<li>客户端：存储在CPU存储器中，并且在应用程序执行，或者在主系统内存驱动程序中执行。
+</li>
+<li>服务器端：驱动程序将渲染命令与数据结合起来，发送到服务器执行。在一台典型的桌面计算机上，服务器会跨越系统总线，实际上，它就是图形加速卡上的硬件和内存。
+</li>
+</ul>
+
+
+<p>    
+  服务器和客户机上功能上也是异步的，我们希望两方面都尽可能不停的工作。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 着色器</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+  着色器是使用GLSL编写的程序。GLSL看起来与C语言非常类似，实际上GLSL语言的程序甚至是以我们熟悉的main函数开始的。这些着色器必须从源代码中编译和链接到一起，最终准备就绪的着色器程序随后在第一阶段构成顶点着色器，在第二阶段构成片段着色器。
+</p>
+<p>
+  这个简化模型中，顶点着色器处理从客户机输入的数据，应用变换，或者进行其他类型的数学运算来计算光照效果、位移、颜色值，等等。为了渲染一个共有3个顶点的三角形，顶点着色器将执行3次，也就是为每个顶点执行一次。在目前的硬件上有多个执行单元同时执行，这就意味着所有这3个顶点都可以同时进行处理。今天的图形处理器属于大规模并行计算机。不要将它们和CPU相比而被时钟速度蒙蔽，它们比图形操作要快上几个数量级。
+</p>
+<p>
+  现在，3个顶点都已经做好了光栅化的准备。图元组合（Primitive Assembly）框图意在说明3个顶点已经组合在了一起，而三角形已经逐个片段的进行了光栅化。每个片段都通过执行片段着色器而进行了填充，片段着色器会输出我们在屏幕上看到的最终颜色值。再强调一次，今天的硬件是大规模并行运算的，同时执行上百个甚至更多这种片段程序并不困难。
+</p>
+<p>
+  当然我们必须首先为这些着色器提供数据，否则什么都做不成。有3种向OpenGL着色器传递渲染数据的方法可供程序员选择，即 <b>属性</b> 、 <b>Uniform值</b> 和 <b>纹理</b> 。
+</p>
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 属性</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+<p>
+   所谓属性就是一个对每个顶点都要做改变的数据元素。实际上，顶点位置本身就是一个属性。属性值可以是浮点数、整数或布尔数据。属性总是以四维向量的形式进行内部存储的，即使我们不会使用到所有分量。如果只用到前面3个，OpenGL会将第4个分量自动设为1。
+</p>
+<p>
+   属性会从本地客户机内存中复制存储在图形硬件中（这种情况的可能性最大）的一个缓冲区上。这些属性只供顶点着色器使用，对于片段着色器h来说没什么意义。还要声明一点，这些属性对每个顶点都要做改变，并不意味着它们的值不能重复，而只是说明对于每个顶点都有一个实际存储值。当然，通常情况下它们都是不同的，但是也有可能会有整个数组都是同一个值的情况。但是这种情况是非常浪费的，而且如果我们需要在某个批次中都是同一个值的数据元素，我们还有更好的方案。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Uniform值</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+<p>
+   Uniform值是一种对于整个批次的属性都取统一值的单个值，也就是说，它是不变的。我们通常设置完Uniform值就紧接着发出渲染一个图元批次的命令。Uniform变量实际上可以无次数限制地使用，我们可以设置一个应用于整个表面的单个颜色值，还可以设置一个时间值，在每次渲染某种类型的顶点动画时修改它（请注意，这里的Uniform变量在每个批次改变一次，而不是每个顶点改变一次）。Uniform变量一个最常见的应用实在顶点渲染中设置变换矩阵。
+</p>
+<p>
+   Uniform值在本质上像属性一样，可以是浮点值、整数或布尔值，但和属性不同的是，顶点着色器和片段着色器中都可以有Uniform变量。Uniform变量既可以是标量类型，也可以是矢量类型，我们也可以使用Uniform矩阵。从技术上来说，我们也可以使用属性矩阵，矩阵中每一列对应4个分量中的一个，但是我们通常不这么做。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 纹理</h3>
+<div class="outline-text-3" id="text-3-3">
+
+
+<p>
+   从顶点着色器和片段着色器中都可以对纹理值进行采样和筛选。典型情况下，片段着色器对一个纹理进行采样，并在一个三角形的表面上应用图形数据。
+</p>
+<p>
+   但是，纹理数据的作用并不仅仅是表现图形。任何大型浮点数据块（例如消耗资源很大的函数的大型查询表）都可以通过这种方式传递给着色器。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> 输出</h3>
+<div class="outline-text-3" id="text-3-4">
+
+
+<p>
+   输出（Out）数据是作为一个阶段着色器的输出定义的，而在后续阶段的着色器则是作为输入（In）定义的。输出类型的数据可以简单地从一个阶段传递到下一个阶段，也可以以不同的方式插入。客户端的代码接触不到这些内部变量，但是它们在顶点着色器和片段着色器中（还可能包括可选的几何着色器）都进行了声明。顶点着色器为输出变量分配一个值，这个值是常量，也可以在图元被光栅化时插入到顶点之间。片段着色器对应的同名输入值接受这个常量或插入值。
+</p>
+
+
+
+</div>
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-12-31T01:05+0800</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

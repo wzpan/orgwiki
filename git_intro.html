@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>Git入门</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="Git入门"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-06-01 五"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content="Git"/>
+<meta name="keywords" content="Wiki"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./git_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">Git入门</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 什么是Git？</a></li>
+<li><a href="#sec-2">2 哪些网站支持Git的源码存取服务</a></li>
+<li><a href="#sec-3">3 本文参考资料</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 什么是Git？</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+  Git &mdash; The stupid content tracker，傻瓜内容跟踪器。它是由 Linus Torvalds 开发的一个分布式版本控制／软件配置管理软件。
+</p>
+<p>
+  所谓版本控制，说白了就好像游戏存档一样。我们在玩游戏的时候总希望将当前进度存档，而且每到一些关键时刻（比如关键的选择），我们都希望另存一个新档，这样当我们发现选择错误了，我们可以读取那个关键的存档，而放弃在这之后的进度。版本控制做的就是这样的事情，当我们在写代码的时候，我们总希望能够备份当前的代码，并且当我们面临一些重要的更改的时候，为了当发现需要推倒重做的时候能够顺利回滚到更改之前，我们往往需要另外保存一份。版本控制系统就是帮我们处理这类工作的，它可以监视我们的代码，当代码发生更改，就提示我们将这个更改提交，作为一个版本。这样当我们后悔对代码所做的修改时，可以通过它回滚到我们之前所提交的任何一个版本。
+</p>
+<p>
+  早期Linux的开发人员是使用BitKeeper来管理版本控制和维护程式码。2005年的时候，开发BitKeeper的公司同Linux内核开源社区结束合作关系，并收回使用BitKeeper的权利。Torvalds开始着手开发Git来替代BitKeeper。Git的优点包括：
+</p>
+<ol>
+<li>分布式。与常用的版本控制工具CVS、Subversion等不同，它采用了分布式版本库的方式，不必服务器端软件支持，使源代码的发布和交流极其方便。
+</li>
+<li>速度快，体积小。以往的版本控制工具如SVN等在提交的时候都是提交整个文件的，速度慢，体积也比较大。而Git把内容按元数据方式存储，每次提交的时候都只是提交代码中变更的部分，因此速度非常快，体积也小很多。这个特性对于诸如Linux kernel这样的大项目来说非常重要。
+</li>
+<li>合并跟踪。GIT的分支管理非常简单和有趣。用户可以从同一个工作目录下快速的在几个分支间切换，可以很容易发现未被合并的分支，并且能简单而快捷的合并这些文件。
+</li>
+<li>高可靠性。GIT的内容存储使用的是SHA-1哈希算法。这能确保代码内容的完整性，确保在遇到磁盘故障和网络问题时降低对版本库的破坏。     
+</li>
+</ol>
+
+
+<p>
+  实际上内核开发团队决定开始开发和使用Git来作为内核开发的版本控制系统的时候，世界开源社群的反对声音不少，最大的理由是Git太艰涩难懂，从Git的内部工作机制来说，的确是这样。但是随着开发的深入，Git的正常使用都由一些友好的脚本命令来执行，使Git变得非常好用，即使是用来管理我们自己的开发项目，Git都是一个友好，有力的工具。现在，越来越多的著名项目采用Git来管理项目开发，例如：wine、U-boot等。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 哪些网站支持Git的源码存取服务</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  以下是部分知名的支持Git的源码存取服务：
+</p>
+<ul>
+<li>BerliOS
+</li>
+<li>Beanstalk
+</li>
+<li>Bitbucket
+</li>
+<li>CodePlex
+</li>
+<li>GitHub
+</li>
+<li>Gitorious
+</li>
+<li>GNU Savannah
+</li>
+<li>Google Code
+</li>
+<li>JavaForge
+</li>
+<li>Pikacode
+</li>
+<li>SourceForge  
+</li>
+</ul>
+
+
+<p>    
+  其中，<a href="http://www.github.com">Github</a> 应该是最出名的一个服务商了。<a href="https://github.com/torvalds/linux">Linux内核</a>就寄存在那里。 Github 拥有非常漂亮的 Web 界面和易于上手的教程文档，把基于 Git 的项目管理变得非常简单。不过它也不是非常完美的，Linus Torvalds 就曾在 Github 上毫不留情的喷过它， 推荐<a href="https://github.com/torvalds/linux/pull/17">前往围观</a>。 如果你对Google Code的简洁情有独钟，也许你会更倾向于使用 Google Code + Git 来托管项目。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 本文参考资料</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<ol>
+<li><a href="http://zh.wikipedia.org/wiki/Git">http://zh.wikipedia.org/wiki/Git</a>
+</li>
+<li><a href="http://www.aqee.net/5-fundamental-differences-between-git-svn/">http://www.aqee.net/5-fundamental-differences-between-git-svn/</a>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-06-01 五</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>理解变换</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="理解变换"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:10 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">理解变换</h1>
+
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 OpenGL变换术语总结</a></li>
+<li><a href="#sec-2">2 视觉坐标</a></li>
+<li><a href="#sec-3">3 视图变换</a></li>
+<li><a href="#sec-4">4 模型变换</a></li>
+<li><a href="#sec-5">5 模型视图对偶性</a></li>
+<li><a href="#sec-6">6 投影变换</a></li>
+<li><a href="#sec-7">7 视口变换</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> OpenGL变换术语总结</h2>
+<div class="outline-text-2" id="text-1">
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption></caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">变换</th><th scope="col" class="left">用途</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">视图（Viewing）</td><td class="left">指定观察者或照相机的位置</td></tr>
+<tr><td class="left">模型（Modeling）</td><td class="left">在场景中移动物体</td></tr>
+<tr><td class="left">模型视图（Modelview）</td><td class="left">描述视图和模型变换的对偶性</td></tr>
+<tr><td class="left">投影（Projection）</td><td class="left">改变可视区域的大小或重新设置它的形状</td></tr>
+<tr><td class="left">视口（Viewport）</td><td class="left">这是一种伪变换，只是对窗口上的最终输出进行缩放</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 视觉坐标</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  用 OpenGl 在3D空间中进行绘图时，所使用的是笛卡尔坐标系统。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 视图变换</h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+  <b>用于确定场景的拍摄点</b> ，是场景所应用的第一个变换<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>。视图变换允许把观察点放在自己所希望的任何位置，并允许在任何方向上观察场景。确定视图变换就像在场景中放置照相机并让它指向某个方向。
+</p>
+<p>
+  在默认情况下，在透视投影中，观察者是从原点向z轴的负方向看过去（垂直“穿入”监视器屏幕）。这个观察点相对于视觉坐标系统进行移动，以提供一个特定的拍摄点。当观察者位于原点时，场景中所绘制的z值为正的物体就位于观察者的后面。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 模型变换</h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+  <b>用于对模型以及模型内部的特定物体进行操纵</b> 。它可以移动物体，对它们进行旋转，或者对它们进行缩放。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 模型视图对偶性</h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+  事实上，根据视图和模型变换的内部结果以及它们对场景的最终外观所产生的效果，它们实际上是一样的。模型视图这个术语表示我们既可以把这个变换看成是模型变换，也可以把它看成是视图变换，它们之间并不存在区别。因此，我们可以将其统称为模型视图变换。
+</p>
+<p>
+  因此，视图变换并没有特别之处，从本质上说，它只是在绘制物体之前应用到一个虚拟物体（观察者之上的一种模型变换）。读者很快就会看到，在场景中放置更多的物体时，需要不断指定新的变换。按照约定，最初进行的变换作为参照，其他所有变换均以它为基础。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> 投影变换</h2>
+<div class="outline-text-2" id="text-6">
+
+
+<p>
+  投影变换是在模型视图变换之后应用于物体的顶点之上的。这种投影实际上定义了可视区域，并建立了裁剪平面。裁剪平面是3D空间的平面方程式，OpenGL用它来确定几何图形能否被观察者所看到。更为具体的说，投影变换指定了一个完成的场景（在所有的模型变换都已完成之后）投影到屏幕上的最终图像。
+</p>
+<ul>
+<li>正投影
+
+<p>
+   在正投影（或平行投影）中，屏幕上所绘制的所有多边形都按照指定的相对大小出现。直线和多边形使用平行线直接映射到2D屏幕上。这意味着不管物体有多远，都仍然按照相同的大小进行绘制，平面地出现在屏幕上。
+</p>
+</li>
+<li>透视投影
+
+<p>
+   透视投影所显示的场景更接近真实。其标志性特点就是透视缩短（foreshortening），它会使远处物体看上去比相同大小的近处物体小一些。
+</p></li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> 视口变换</h2>
+<div class="outline-text-2" id="text-7">
+
+
+<p>
+  当上面这些操作全部完成之后，最终所获得的是场景的二维投影，将被映射到屏幕上的某个窗口。这种到物理窗口坐标的映射是最后一个完成的变换，称为视口变换。通常，颜色缓冲区和窗口像素之间存在一对一的对应关系，但并非严格如此。在有些情况下，视口变换要把一种“规范化”的设备坐标重新映射到窗口坐标。幸运的是，我们不必操心这方面的细节。
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 作为总体原则， <b>在进行任何其他变换之前必须先指定视图变换</b> 。原因是视图变换的效果相当于根据视觉坐标系统移动当前所使用的坐标系统。然后，根据最新修改的坐标系统进行其他所有的后续变换。
+</p>
+
+
+
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:10 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

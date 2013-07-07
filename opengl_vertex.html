@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ch" xml:lang="ch">
+<head>
+<title>绘制点</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="绘制点"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-10-18 14:49:08 CST"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./opengl_index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">绘制点</h1>
+
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 绘制图形</a></li>
+<li><a href="#sec-2">2 综合例子</a></li>
+<li><a href="#sec-3">3 点</a>
+<ul>
+<li><a href="#sec-3-1">3.1 3个参数的 glVertex</a></li>
+<li><a href="#sec-3-2">3.2 2个参数的 glVertex</a></li>
+<li><a href="#sec-3-3">3.3 4个参数的 glVertex</a></li>
+<li><a href="#sec-3-4">3.4 画点</a>
+<ul>
+<li><a href="#sec-3-4-1">3.4.1 第一个例子</a></li>
+<li><a href="#sec-3-4-2">3.4.2 输出</a></li>
+<li><a href="#sec-3-4-3">3.4.3 分析</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-5">3.5 设置点的大小</a>
+<ul>
+<li><a href="#sec-3-5-1">3.5.1 例子</a></li>
+<li><a href="#sec-3-5-2">3.5.2 输出</a></li>
+<li><a href="#sec-3-5-3">3.5.3 分析</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 绘制图形</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+<p>
+  简单来说，图元只是一组顶点的集合，它们构成了在屏幕上所绘制的形状。OpenGL共有 <b>10种图元</b> ，从空间中简单的一个点到任意数量边的闭合多边形。
+</p>
+<p>
+  绘制图元的其中一种方式就是使用 <code>glBegin</code> 命令告诉OpenGL开始对一组顶点进行解释，把它作为一个特定的图元。然后，可以调用 <code>glEnd</code> 命令结束组成这个图元的顶点列表。但我们可以使用 GLTools 提供的批处理器来完成绘制，具体参见 <a href="./opengl_batch.html">一个简单批次容器</a> 。
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<caption>OpenGL几何图元</caption>
+<colgroup><col class="left" /><col class="left" />
+</colgroup>
+<thead>
+<tr><th scope="col" class="left">图元</th><th scope="col" class="left">描述</th></tr>
+</thead>
+<tbody>
+<tr><td class="left">GL_POINTS</td><td class="left">每个顶点在屏幕上都是一个单独的点</td></tr>
+<tr><td class="left">GL_LINES</td><td class="left">每一对顶点定义了一个线段</td></tr>
+<tr><td class="left">GL_LINE_STRIP</td><td class="left">一个从第一个顶点依次经过每个后续顶点而绘制的线条</td></tr>
+<tr><td class="left">GL_LINE_LOOP</td><td class="left">和GL_LINE_STRIP相同，但最后一个顶点和第一个顶点也连接了起来</td></tr>
+<tr><td class="left">GL_TRIANGLES</td><td class="left">和3个顶点定义了一个新的三角形</td></tr>
+<tr><td class="left">GL_TRIANGLE_STRIP</td><td class="left">三角形带：共用一个条带（strip）上的顶点的一组三角形</td></tr>
+<tr><td class="left">GL_TRIANGLE_FAN</td><td class="left">以一个圆点为中心呈扇形排列，共用相邻顶点的一组三角形</td></tr>
+<tr><td class="left">GL_QUADS</td><td class="left">用于绘制四边形（不常用）</td></tr>
+<tr><td class="left">GL_QUAD_STRIP</td><td class="left">四边形带（不常用）</td></tr>
+<tr><td class="left">GL_POLYGON</td><td class="left">绘制任意数量边的多边形（不常用）</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 综合例子</h2>
+<div class="outline-text-2" id="text-2">
+
+
+<p>
+  下面的例子展示了前面7种常用的图元的渲染效果图。运行示例程序，并按空格键，程序将依次从GL_POINTS到GL_TRIANGLE_STRIP图元进行演示。我们还可以用方向键来沿x轴和y轴旋转这些渲染效果图。
+</p>
+<ul>
+<li><a href="program/opengl/Src/Chapter03/Primitives/Primitives.cpp">Primitives.cpp</a>
+</li>
+</ul>
+
+
+<p>    
+CANNOT INCLUDE FILE ./program/opengl/Src/Chapter03/Primitives/Primitives.cpp
+</p>
+<ul>
+<li><a href="program/opengl/Linux/Chapter03/Primitives/Makefile">Makefile</a>
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 点</h2>
+<div class="outline-text-2" id="text-3">
+
+
+
+<p>
+  为了在3D画布中绘制一个点，可以使用OpenGL函数 <code>glVertex</code> 。在所有OpenGL API中，这无疑是最常用的函数之一。这是所有 OpenGL 图元的“最小公约数”，即空间中的点。 <code>glVertex</code> 函数可以接受 <b>1至4个</b> 任意数值类型（从byte到double）的参数。
+</p>
+
+</div>
+
+<div id="outline-container-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> 3个参数的 glVertex</h3>
+<div class="outline-text-3" id="text-3-1">
+
+
+<p>
+  下面这行代码在坐标系统中指定了一个点，其位置在x轴上为50个单位，在y轴上为50个单位，在z轴上为0个单位。
+</p>
+
+
+
+<pre class="src src-c">glVertex3f(50.0f, 50.0f, 0.0f);
+</pre>
+
+
+<p>
+  我们所使用的这种 <code>glVertex</code> 形式接受3个参数，分别表示x、y和z值。
+</p>
+<pre class="example">
+  由 glVertex3f(50.0f,50.0f,0.0f)所
+  指定的点 (50, 50, 0)
+                             | y
+                             |
+                             |     --
+                             +----/ (50,50,0)
+                             |--/ |
+                  -----------/----+-------  x
+                         --/ |
+                       -/    |
+                     -/      |
+                    z        |
+                             |
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> 2个参数的 glVertex</h3>
+<div class="outline-text-3" id="text-3-2">
+
+
+<p>
+  glVertex的其他两种形式分别接受2个和4个参数。例如上面的代码可以改写成：
+</p>
+
+
+
+<pre class="src src-c">glVertex2f(50.0f, 50.0f);
+</pre>
+
+
+<p>
+  只接受2个参数的 <code>glVertex</code> 指定了x和y的值，z坐标的值总是默认为0.0。
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> 4个参数的 glVertex</h3>
+<div class="outline-text-3" id="text-3-3">
+
+
+<p>
+  带4个参数的 <code>glVertex</code> 函数 —— =glVertex4=，使用第4个坐标值w来表示 <b>缩放度</b> （如果未指定这个值，表示采用默认值1.0）。
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> 画点</h3>
+<div class="outline-text-3" id="text-3-4">
+
+
+
+
+
+
+<pre class="src src-c">glBegin(GL_POINTS);  <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#36873;&#25321;&#28857;&#20316;&#20026;&#22270;&#20803;</span>
+     glVertex3f(0.0f, 0.0f, 0.0f);   <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25351;&#23450;&#19968;&#20010;&#28857;</span>
+     glVertex3f(50.0f, 50.0f, 50.0f);<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#25351;&#23450;&#21478;&#22806;&#19968;&#20010;&#28857;</span>
+glEnd();     <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23436;&#25104;&#32472;&#28857;</span>
+</pre>
+
+
+<p>
+   glBegin 的参数 GL_POINTS 告诉OpenGL接下来的顶点将被用来画点。这里列出了2个顶点，它们将被解释成2个特定的点，并且都将被绘制。
+</p>
+
+</div>
+
+<div id="outline-container-3-4-1" class="outline-4">
+<h4 id="sec-3-4-1"><span class="section-number-4">3.4.1</span> 第一个例子</h4>
+<div class="outline-text-4" id="text-3-4-1">
+
+
+<p>
+    （下面的例子使用老的管道，仅供参考）
+</p>
+<ul>
+<li><a href="program/opengl/points.cpp">points.cpp</a>
+</li>
+</ul>
+
+
+<p>
+CANNOT INCLUDE FILE ./program/opengl/points.cpp
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-3-4-2" class="outline-4">
+<h4 id="sec-3-4-2"><span class="section-number-4">3.4.2</span> 输出</h4>
+<div class="outline-text-4" id="text-3-4-2">
+
+
+<p>
+     <img src="./images/fig15.png"  alt="./images/fig15.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-4-3" class="outline-4">
+<h4 id="sec-3-4-3"><span class="section-number-4">3.4.3</span> 分析</h4>
+<div class="outline-text-4" id="text-3-4-3">
+
+
+<p>
+    重点考虑 glBegin 和 glEnd 之间的代码，这段代码计算 0° 和 360° 之间的一个角度<sup><a class="footref" name="fnr.1" href="#fn.1">1</a></sup>，共进行3次。在这个程序中，我们用弧度而不是角度来表示角。每次当一个点被绘制时，z值都会稍微增加。
+</p>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> 设置点的大小</h3>
+<div class="outline-text-3" id="text-3-5">
+
+
+
+<p>
+  当我们绘制一个点时，在默认情况下点的大小是1个像素。我们可以使用 <code>glPointSize</code> 函数修改点的大小。
+</p>
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">void</span> <span style="color: #ffd700; font-weight: bold;">glPointSize</span>(<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">size</span>);
+</pre>
+
+
+<p>
+  glPointSize 函数接受1个参数，它用于指定被绘点的近似直径（以像素计）。但是，点的大小设置还是存在限制，我们应该确保自己所指定的点大小是可行的。我们可以使用下面的代码，获得点大小的范围以及它们之间的最小间隔值：
+</p>
+
+
+
+
+<pre class="src src-c"><span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">sizes</span>[2];     <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23384;&#20648;&#21463;&#25903;&#25345;&#30340;&#28857;&#22823;&#23567;&#33539;&#22260;</span>
+<span style="color: #00ffff; font-weight: bold;">GLfloat</span> <span style="color: #ffd700; font-style: italic;">step</span>;         <span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#23384;&#20648;&#21463;&#25903;&#25345;&#30340;&#28857;&#22823;&#23567;&#22686;&#37327;</span>
+
+<span style="color: #ffd700;">// </span><span style="color: #ffd700;">&#33719;&#24471;&#21463;&#25903;&#25345;&#30340;&#28857;&#22823;&#23567;&#33539;&#22260;&#20197;&#21450;&#22686;&#37327;&#22823;&#23567;</span>
+glGetFloatv(GL_POINT_SIZE_RANGE, sizes);
+glGetFloatv(GL_POINT_SIZE_GRANULARITY, &amp;step);
+</pre>
+
+
+<p>
+  这里，size数组将包含两个元素，分别表示 glPointSize 的最小有效值和最大有效值。另外，变量 step 表示点大小范围之内最小允许的步进值。指定一个位于范围之外的值并不会产生错误，系统将使用最大或最小受支持的值，也就是靠近指定值的有效值。
+</p>
+<p>
+  点和其他几何图形不同，它并 <b>不会受到透视除法的影响</b> 。也就是说不会有“近大远小”的变化。另外，点总是正方形的像素，即便使用 glPointSize 增加点的大小，情况也不会发生变化，我们所得到的只是更大的方块而已！为了获得圆点，必须在抗锯齿模式下绘制点。
+</p>
+<p>
+  还可以通过使用程序点大小模式来设置点的大小。
+</p>
+
+
+
+<pre class="src src-c">glEnable(GL_PROGRAM_POINT_SIZE);
+</pre>
+
+
+<p>
+  这种模式下允许我们通过编程在顶点着色器或几何着色器中设置点的大小。着色器内建变量为 gl_PointSize，并且在着色器源代码中，只要如下设置即可。
+</p>
+
+
+
+<pre class="src src-c">gl_PointSize=5.0;
+</pre>
+
+
+
+</div>
+
+<div id="outline-container-3-5-1" class="outline-4">
+<h4 id="sec-3-5-1"><span class="section-number-4">3.5.1</span> 例子</h4>
+<div class="outline-text-4" id="text-3-5-1">
+
+
+<p>
+    （下面的例子使用了老的管道，仅供参考）
+</p>
+<ul>
+<li><a href="program/opengl/pointsz.cpp">pointsz.cpp</a>
+</li>
+</ul>
+
+
+<p>
+CANNOT INCLUDE FILE ./program/opengl/pointsz.cpp
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-5-2" class="outline-4">
+<h4 id="sec-3-5-2"><span class="section-number-4">3.5.2</span> 输出</h4>
+<div class="outline-text-4" id="text-3-5-2">
+
+
+<p>
+    <img src="./images/fig16.png"  alt="./images/fig16.png" />
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3-5-3" class="outline-4">
+<h4 id="sec-3-5-3"><span class="section-number-4">3.5.3</span> 分析</h4>
+<div class="outline-text-4" id="text-3-5-3">
+
+
+<p>
+    这个例子说明了一些重要的概念。初学者必须注意，必须在 glBegin/glEnd 语句之外调用 glPointSize 函数。在 glBegin/glEnd 之间，并不是所有的OpenGL函数都是合法的。尽管 glPointSize 会影响它后面所有将被绘制的点，但是在调用 glBegin(GL_POINTS)之前，这些点并不会被绘制。
+</p>
+<p>
+    另外，读者可能会疑惑为什么可以用有一个小于1的值作为点大小的步进值。如果值1.0表示1个像素，那么怎样才能绘制有一个大小为2.5像素的点呢？
+</p>
+<p>
+    这个问题的答案是，glPointSize函数所指定的点大小并不是以像素为单位的准确点大小，而是一个圆的近似直径，这个圆恰好包含了绘制这个点所使用的所有像素。我们可以通过启用点平滑功能，让OpenGL把点画得更像圆（也就是说，画成小型的填充圆）。点平滑和直线平滑都属于抗锯齿的话题。
+</p>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+<p class="footnote"><sup><a class="footnum" name="fn.1" href="#fnr.1">1</a></sup> 要注意：C运行时函数 <code>sin()</code> 和 <code>cos()</code> 接受的是 <b>弧度</b> 而不是 <b>角度</b> 表示的角度。一个圆的弧度是2xPI，而PI是个无理数，其值近似为3.1416。
+</p></div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-10-18 14:49:08 CST</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>

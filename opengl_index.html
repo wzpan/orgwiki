@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>OpenGL' Notes</title>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="title" content="OpenGL' Notes"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2012-09-27 Thu"/>
+<meta name="author" content="Joseph Pan"/>
+<meta name="description" content="Git"/>
+<meta name="keywords" content="Wiki"/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  div.inlinetask {
+    padding:10px;
+    border:2px solid gray;
+    margin:10px;
+    background: #ffffcc;
+  }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style><link rel="stylesheet" href="./other/style.css" type="text/css"/>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="org-div-home-and-up" style="text-align:right;font-size:70%;white-space:nowrap;">
+ <a accesskey="h" href="./index.html"> UP </a>
+ |
+ <a accesskey="H" href="./index.html"> HOME </a>
+</div>
+
+<div id="preamble">
+
+</div>
+
+<div id="content">
+<h1 class="title">OpenGL' Notes</h1>
+
+<ul>
+<li>OpenGL基础知识
+
+<ul>
+<li><a href="./opengl_intro.html">3D图形和OpenGL的介绍</a>
+
+</li>
+<li><a href="./opengl_setup.html">Linux下安装配置OpenGL</a>
+
+</li>
+<li><a href="./opengl_basic.html">OpenGL入门知识</a>
+
+</li>
+<li><a href="./opengl_simple.html">第一个OpenGL程序</a>
+
+</li>
+<li><a href="./opengl_key.html">按键</a>
+
+</li>
+<li><a href="./opengl_animation.html">动画</a>
+
+</li>
+</ul>
+
+</li>
+<li>空间绘图
+
+<ul>
+<li><a href="./opengl_yuanli.html">基础图形管线</a>
+
+</li>
+<li><a href="./opengl_shadermanager.html">使用存储着色器</a>
+
+</li>
+<li><a href="./opengl_vertex.html">点</a>
+
+</li>
+<li><a href="./opengl_line.html">线</a>
+
+</li>
+<li><a href="./opengl_triangle.html">三角形</a>
+
+</li>
+<li><a href="./opengl_batch.html">一个简单批次容器</a>
+
+</li>
+<li><a href="./opengl_shixinwuti.html">实心物体</a>
+
+</li>
+<li><a href="./opengl_blending.html">混合</a>
+
+</li>
+<li><a href="./opengl_primitive.html">其他图元</a>
+
+</li>
+<li><a href="./opengl_qthcqjq.html">其他缓冲区技巧</a>
+
+</li>
+</ul>
+
+</li>
+<li>几何变换
+
+<ul>
+<li><a href="./opengl_transform.html">理解变换</a>
+
+</li>
+<li><a href="./opengl_mvmatrix.html">模型视图矩阵</a>
+
+</li>
+<li><a href="./opengl_trianglebatch.html">三角形批次类</a>
+
+</li>
+<li><a href="./opengl_pmatrix.html">投影矩阵</a>
+
+</li>
+<li><a href="./opengl_transpipeline.html">变换管线</a>
+
+</li>
+<li><a href="./opengl_camera.html">照相机和角色</a>
+
+</li>
+</ul>
+
+</li>
+<li>基础纹理
+</li>
+</ul>
+
+
+
+</div>
+
+<div id="postamble">
+<p class="date">Date: 2012-09-27 Thu</p>
+<p class="author">Author: Joseph Pan</p>
+<a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a>
+
+</div>
+</body>
+</html>
